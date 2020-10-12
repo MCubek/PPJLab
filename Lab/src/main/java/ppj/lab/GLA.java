@@ -68,7 +68,9 @@ public class GLA {
         while (scanner.hasNextLine() && (line = scanner.nextLine()).matches("<.*>.*")) {
             //Parsiraj ime i regex
             int index = line.indexOf('>');
-            RuleRegex ruleRegex = new RuleRegex(line.substring(1, index), line.substring(index + 1));
+            String state = line.substring(1, index);
+            String regex = line.substring(index + 1);
+            RuleRegex ruleRegex = new RuleRegex(state, regex);
             rules.put(ruleRegex, new ArrayList<>());
             //Parsiraj naredbe
             while (! (line = scanner.nextLine()).matches("}")) {
