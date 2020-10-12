@@ -116,7 +116,7 @@ public class GLA {
             if (! referenceList.isEmpty()) {
                 for (String reference : referenceList) {
                     for (RegEx regExReplace : regexList) {
-                        if (regExReplace.getName().equals(regEx.getName())) {
+                        if (regExReplace.getName().equals(reference)) {
                             regEx.addExpressionFromAnother(regExReplace);
                             break;
                         }
