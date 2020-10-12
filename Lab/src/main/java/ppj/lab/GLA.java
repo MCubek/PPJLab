@@ -31,7 +31,7 @@ public class GLA {
     }
 
     /**
-     * Konstuktor generaora s Stringom kao izborom konfiguracije
+     * Konstuktor generatora s Stringom kao izvorom konfiguracije
      *
      * @param inputString String konfiguracije
      * @throws IllegalArgumentException ako je predana nevalidna konfiguracija
@@ -42,7 +42,7 @@ public class GLA {
     }
 
     /**
-     * Konstruktor koji koristi scanner
+     * Konstruktor koji koristi scanner i nad njime parsira ulaznu konfirguraciju
      *
      * @param scanner scanner konfiguracije
      * @throws IllegalArgumentException ako nije predan scanner ili je predana nevalidna konfiguracija
