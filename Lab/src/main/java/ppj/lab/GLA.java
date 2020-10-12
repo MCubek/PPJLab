@@ -87,7 +87,7 @@ public class GLA {
 
     public static void main(String[] args) {
         try {
-            File file = new File("Lab/src/main/resources/lab1_ppjLang.txt");
+            File file = new File("Lab/src/main/resources/lab1_ppjLang[1].txt");
             System.out.println(file.getAbsolutePath());
             GLA gla = new GLA(file);
         } catch (FileNotFoundException exception) {
