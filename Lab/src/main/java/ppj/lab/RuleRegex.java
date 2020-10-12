@@ -1,5 +1,8 @@
 package ppj.lab;
 
+/**
+ * Klasa koja sadrzi stanje i regularni izraz
+ */
 class RuleRegex {
     String state;
     String regex;
