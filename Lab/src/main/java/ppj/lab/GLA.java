@@ -56,7 +56,24 @@ public class GLA {
         while ((line = scanner.nextLine()).matches("\\{..*} .*")) {
             //Pronadi index kraja imena
             int index = line.indexOf('}');
-            regex.put(line.substring(1, index), line.substring(index + 1));
+            String regDef = line.substring(1, index);
+            regex.put(line.substring(1, index), line.substring(index + 2));
+        }
+
+        //Pripremi regularne izraze za generiranje konacnog automata
+        for(String reg : regex.keySet()) {
+            String regEx = regex.get(reg);
+            //Za svaku regularnu definiciju pronađi u regularnom izrazu druge regularne definicije ako postoje
+            for(int indexOfRegDef = regEx.indexOf('{') ; indexOfRegDef >= 0; indexOfRegDef = regEx.indexOf('{', indexOfRegDef + 1)) {
+                String regRefDef = regEx.substring(indexOfRegDef + 1,regEx.indexOf('}', indexOfRegDef));
+                String replaceRegex = regex.get(regRefDef);
+                //Zamjeni regularne definicije regularnim izrazima
+                if(replaceRegex != null) {
+                    regEx = regEx.replace(regEx.substring(indexOfRegDef, regEx.indexOf('}') + 1), "(" + replaceRegex + ")");
+                }
+
+            }
+            regex.replace(reg, regEx);
         }
 
         //Populiraj stanja
