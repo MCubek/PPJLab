@@ -1,10 +1,10 @@
 package ppj.lab;
 
-class RuleName {
+class RuleRegex {
     String state;
     String regex;
 
-    RuleName(String state, String regex) {
+    RuleRegex(String state, String regex) {
         this.regex = regex;
         this.state = state;
     }
@@ -30,10 +30,10 @@ class RuleName {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 
-        RuleName ruleName = (RuleName) o;
+        RuleRegex ruleRegex = (RuleRegex) o;
 
-        if (! state.equals(ruleName.state)) return false;
-        return regex.equals(ruleName.regex);
+        if (! state.equals(ruleRegex.state)) return false;
+        return regex.equals(ruleRegex.regex);
     }
 
     @Override
