@@ -1,9 +1,10 @@
 package ppj.lab;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class RegEx {
+public class RegEx implements Serializable {
     private final String name;
     private String expression;
 

@@ -11,7 +11,7 @@ import java.util.stream.Collectors;
  * @author MatejC FraneB
  */
 public class GLA {
-    private final Map<String, String> regex;
+    private final Set<RegEx> regexList;
     //prvo stanje je pocetno
     private final List<String> states;
     private final Set<String> uniformSymbols;
@@ -49,14 +49,14 @@ public class GLA {
      */
     private GLA(Scanner scanner) {
         if (scanner == null) throw new IllegalArgumentException("Scanner is null");
-        regex = new HashMap<>();
 
+        regexList = new HashSet<>();
         String line;
         //Populirati regex
         while ((line = scanner.nextLine()).matches("\\{..*} .*")) {
             //Pronadi index kraja imena
             int index = line.indexOf('}');
-            regex.put(line.substring(1, index), line.substring(index + 1));
+            regexList.add(new RegEx(line.substring(1, index), line.substring(index + 1)));
         }
 
         //Populiraj stanja
@@ -103,6 +103,27 @@ public class GLA {
             ruleRegAction.put(state, regexMap);
         }
         scanner.close();
+
+        replaceRegexReferences();
+    }
+
+    /**
+     * Popuniti reference regularnih izraza sa njihovim vrijednostima
+     */
+    private void replaceRegexReferences() {
+        regexList.forEach(regEx -> {
+            List<String> referenceList = regEx.getReferences();
+            if (! referenceList.isEmpty()) {
+                for (String reference : referenceList) {
+                    for (RegEx regExReplace : regexList) {
+                        if (regExReplace.getName().equals(regEx.getName())) {
+                            regEx.addExpressionFromAnother(regExReplace);
+                            break;
+                        }
+                    }
+                }
+            }
+        });
     }
 
     public static void main(String[] args) {
