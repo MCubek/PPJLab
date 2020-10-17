@@ -11,7 +11,7 @@ import java.util.stream.Collectors;
  * @author MatejC FraneB
  */
 public class GLA {
-    private final Set<RegEx> regexList;
+    private final Map<String, String> regex;
     //prvo stanje je pocetno
     private final List<String> states;
     private final Set<String> uniformSymbols;
@@ -31,7 +31,7 @@ public class GLA {
     }
 
     /**
-     * Konstuktor generatora s Stringom kao izvorom konfiguracije
+     * Konstuktor generaora s Stringom kao izborom konfiguracije
      *
      * @param inputString String konfiguracije
      * @throws IllegalArgumentException ako je predana nevalidna konfiguracija
@@ -42,21 +42,38 @@ public class GLA {
     }
 
     /**
-     * Konstruktor koji koristi scanner i nad njime parsira ulaznu konfirguraciju
+     * Konstruktor koji koristi scanner
      *
      * @param scanner scanner konfiguracije
      * @throws IllegalArgumentException ako nije predan scanner ili je predana nevalidna konfiguracija
      */
     private GLA(Scanner scanner) {
         if (scanner == null) throw new IllegalArgumentException("Scanner is null");
+        regex = new HashMap<>();
 
-        regexList = new HashSet<>();
         String line;
         //Populirati regex
         while ((line = scanner.nextLine()).matches("\\{..*} .*")) {
             //Pronadi index kraja imena
             int index = line.indexOf('}');
-            regexList.add(new RegEx(line.substring(1, index), line.substring(index + 1)));
+            String regDef = line.substring(1, index);
+            regex.put(line.substring(1, index), line.substring(index + 2));
+        }
+
+        //Pripremi regularne izraze za generiranje konacnog automata
+        for(String reg : regex.keySet()) {
+            String regEx = regex.get(reg);
+            //Za svaku regularnu definiciju pronađi u regularnom izrazu druge regularne definicije ako postoje
+            for(int indexOfRegDef = regEx.indexOf('{') ; indexOfRegDef >= 0; indexOfRegDef = regEx.indexOf('{', indexOfRegDef + 1)) {
+                String regRefDef = regEx.substring(indexOfRegDef + 1,regEx.indexOf('}', indexOfRegDef));
+                String replaceRegex = regex.get(regRefDef);
+                //Zamjeni regularne definicije regularnim izrazima
+                if(replaceRegex != null) {
+                    regEx = regEx.replace(regEx.substring(indexOfRegDef, regEx.indexOf('}') + 1), "(" + replaceRegex + ")");
+                }
+
+            }
+            regex.replace(reg, regEx);
         }
 
         //Populiraj stanja
@@ -103,27 +120,6 @@ public class GLA {
             ruleRegAction.put(state, regexMap);
         }
         scanner.close();
-
-        replaceRegexReferences();
-    }
-
-    /**
-     * Popuniti reference regularnih izraza sa njihovim vrijednostima
-     */
-    private void replaceRegexReferences() {
-        regexList.forEach(regEx -> {
-            List<String> referenceList = regEx.getReferences();
-            if (! referenceList.isEmpty()) {
-                for (String reference : referenceList) {
-                    for (RegEx regExReplace : regexList) {
-                        if (regExReplace.getName().equals(reference)) {
-                            regEx.addExpressionFromAnother(regExReplace);
-                            break;
-                        }
-                    }
-                }
-            }
-        });
     }
 
     public static void main(String[] args) {
