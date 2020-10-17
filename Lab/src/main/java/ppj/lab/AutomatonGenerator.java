@@ -12,7 +12,7 @@ import java.util.*;
 public class AutomatonGenerator implements Serializable {
 
     private final Map<RuleRegex, List<String>> initialRules;
-    private final Map<Pair<String,Automaton>, List<String>> automatonRules;
+    private final Map<Pair<String, Automaton>, List<String>> automatonRules;
 
     /**
      * Konstuktor generatora automata koji prima listu pripadnih stanja, regularnih izraza i pravila
@@ -21,9 +21,8 @@ public class AutomatonGenerator implements Serializable {
      * @throws IllegalArgumentException ako je predana nevalidna konfiguracija
      */
     public AutomatonGenerator(Map<RuleRegex, List<String>> initialRules) {
-        if(initialRules == null) throw new IllegalArgumentException("initalRules cannot be null!");
-        this.initialRules = initialRules;
-        this. automatonRules = new HashMap<>();
+        this.initialRules = Objects.requireNonNull(initialRules);
+        this.automatonRules = new HashMap<>();
     }
 
     public Map<RuleRegex, List<String>> getInitialRules() {
@@ -41,9 +40,9 @@ public class AutomatonGenerator implements Serializable {
      * @throws IllegalArgumentException ako nije zadan valjan automat
      */
     int newState(Automaton automaton) {
-        if(automaton == null) throw new IllegalArgumentException("Automaton cannot be null!");
+        if (automaton == null) throw new IllegalArgumentException("Automaton cannot be null!");
         automaton.setStateCount(automaton.getStateCount() + 1);
-        return automaton.getStateCount()-1;
+        return automaton.getStateCount() - 1;
     }
 
     /**
@@ -53,14 +52,14 @@ public class AutomatonGenerator implements Serializable {
      * @return vrijednost true ako je znak operator, false ako nije
      * @throws IllegalArgumentException ako nisu zadani valjani parametri
      */
-    boolean isOperator(String regEx,int i) {
-        if(regEx == null) throw new IllegalArgumentException("Regex cannot be null!");
+    boolean isOperator(String regEx, int i) {
+        if (regEx == null) throw new IllegalArgumentException("Regex cannot be null!");
         int counter = 0;
-        while(i - 1 >= 0 && regEx.charAt(i - 1) == '\\') {
+        while (i - 1 >= 0 && regEx.charAt(i - 1) == '\\') {
             counter++;
             i--;
         }
-        return counter%2 == 0;
+        return counter % 2 == 0;
     }
 
 
@@ -69,16 +68,17 @@ public class AutomatonGenerator implements Serializable {
      *
      * @param automaton automat kojem se dodaje prijelaz
      * @param fromState početno stanje
-     * @param toState konačno stanje
+     * @param toState   konačno stanje
      * @param transChar ulazni znak
      */
-    void addTransition(Automaton automaton, int fromState, int toState, char transChar ) {
+    void addTransition(Automaton automaton, int fromState, int toState, char transChar) {
         //dohvaća se mapa prijelaznih funkcija
         Map<Pair<Integer, String>, List<Integer>> newTransitions = automaton.getTransitions();
         //Par stanja i ulaznog znaka kojim se provjerava postoje li već neke funkcije prijelaza
-        Pair<Integer,String> checkTransition = new Pair<>(fromState, String.valueOf(transChar));
+        Pair<Integer, String> checkTransition = new Pair<>(fromState, String.valueOf(transChar));
+
         //ako ne postoji funkcija prijelaza, stvara se nova lista
-        if (!newTransitions.containsKey(checkTransition)) {
+        if (! newTransitions.containsKey(checkTransition)) {
             newTransitions.put(checkTransition, new LinkedList<>());
         }
         newTransitions.get(checkTransition).add(toState);
@@ -90,13 +90,14 @@ public class AutomatonGenerator implements Serializable {
      *
      * @param automaton automat kojem se dodaju stanja
      * @param fromState stanje iz kojeg se prelazi
-     * @param toState stanje u koje se prelazi
+     * @param toState   stanje u koje se prelazi
      */
     void addEpsilonTransition(Automaton automaton, int fromState, int toState) {
         //funkcionira na identičan način kao i funkcija addTransition, epsilon se označava praznih Stringom
         Map<Pair<Integer, String>, List<Integer>> newTransitions = automaton.getTransitions();
-        Pair<Integer,String> checkTransition = new Pair<>(fromState,"");
-        if (!newTransitions.containsKey(checkTransition)) {
+        Pair<Integer, String> checkTransition = new Pair<>(fromState, "");
+
+        if (! newTransitions.containsKey(checkTransition)) {
             newTransitions.put(checkTransition, new LinkedList<>());
         }
         newTransitions.get(checkTransition).add(toState);
@@ -107,22 +108,22 @@ public class AutomatonGenerator implements Serializable {
      * Za dobivenu listu stanja i regularnih izraza stvara novu listu stanja i pripadnih automata
      */
     void generateAutomatons() {
-        for(RuleRegex rulReg : initialRules.keySet()) {
+        for (RuleRegex rulReg : initialRules.keySet()) {
             Automaton generatedAutomaton = new Automaton();
             //poziva se funkcija transformRegex za regularni izraz
-            Pair<Integer,Integer> result = transformRegex(rulReg.getRegex(), generatedAutomaton);
+            Pair<Integer, Integer> result = transformRegex(rulReg.getRegex(), generatedAutomaton);
             //postavljaju se početno i prihvatljivo stanje
             generatedAutomaton.setStartState(result.getLeft());
             generatedAutomaton.setAcceptableState(result.getRight());
-            Pair<String,Automaton> stateAutomaton = new Pair<>(rulReg.getState(),generatedAutomaton);
-            automatonRules.put(stateAutomaton,initialRules.get(rulReg));
+            Pair<String, Automaton> stateAutomaton = new Pair<>(rulReg.getState(), generatedAutomaton);
+            automatonRules.put(stateAutomaton, initialRules.get(rulReg));
         }
     }
 
     /**
      * Transformira regularni izraz u ENKA automat
      *
-     * @param regex regularni izraz nad kojim se provodi transformacija
+     * @param regex     regularni izraz nad kojim se provodi transformacija
      * @param automaton prazan automat koji će se popuniti pripadnim stanjima
      * @return Par koji predstavlja početno i prihvatljivo stanje
      * @throws IllegalArgumentException ako nisu zadani valjani parametri
@@ -138,19 +139,19 @@ public class AutomatonGenerator implements Serializable {
         int orCounter = 0;
         //za svaki se znak traži operator izbora, ignoriraju se operatori unutar zagrada i znakovi koji su uistinu operatori
         //Je li znak operator provjerava se funkcijom isOperator
-        for(int i = 0; i < regex.length(); i++) {
-            if(regex.charAt(i) == '(' && isOperator(regex, i)) {
+        for (int i = 0; i < regex.length(); i++) {
+            if (regex.charAt(i) == '(' && isOperator(regex, i)) {
                 parenthCounter++;
-            } else if(regex.charAt(i) == ')' && isOperator(regex, i)) {
+            } else if (regex.charAt(i) == ')' && isOperator(regex, i)) {
                 parenthCounter--;
-            } else if(parenthCounter == 0 && regex.charAt(i) == '|' && isOperator(regex, i)) {
+            } else if (parenthCounter == 0 && regex.charAt(i) == '|' && isOperator(regex, i)) {
                 choices.add(regex.substring(groupMarker, i));
                 orCounter++;
                 groupMarker = i + 1;
             }
         }
         //ako postoje operatori, u listu izbora dodaje se i posljednji podniz
-        if(orCounter != 0) {
+        if (orCounter != 0) {
             choices.add(regex.substring(groupMarker));
         }
 
@@ -158,7 +159,7 @@ public class AutomatonGenerator implements Serializable {
         int leftState = newState(automaton);
         int rightState = newState(automaton);
         //za svaki se podniz rekurzivno poziva funkcija transformRegex
-        if(orCounter != 0) {
+        if (orCounter != 0) {
             for (String choice : choices) {
                 Pair<Integer, Integer> temporary = transformRegex(choice, automaton);
                 //podnizovi se epsilon prijelazima povezuju s ostatkom automata
@@ -169,17 +170,17 @@ public class AutomatonGenerator implements Serializable {
             //varijabla prefixed predstavlja postojanje znaka \ ispred traženog znaka
             boolean prefixed = false;
             int lastState = leftState;
-            for(int i = 0; i < regex.length(); i++) {
-                int a,b;
+            for (int i = 0; i < regex.length(); i++) {
+                int a, b;
                 //ako postoji znak \, provjeravaju se posebni znakovi tabulatora, novo reda i praznine
-                if(prefixed) {
+                if (prefixed) {
                     prefixed = false;
                     char transChar;
-                    if(regex.charAt(i) == 't')
+                    if (regex.charAt(i) == 't')
                         transChar = '\t';
-                    else if(regex.charAt(i) == 'n')
+                    else if (regex.charAt(i) == 'n')
                         transChar = '\n';
-                    else if(regex.charAt(i) == '_')
+                    else if (regex.charAt(i) == '_')
                         transChar = ' ';
                     else
                         transChar = regex.charAt(i);
@@ -190,29 +191,29 @@ public class AutomatonGenerator implements Serializable {
                     addTransition(automaton, a, b, transChar);
                 } else {
                     //provjera posebnog znaka \
-                    if(regex.charAt(i) == '\\') {
+                    if (regex.charAt(i) == '\\') {
                         prefixed = true;
                         continue;
                     }
                     //provjera izraza u zagradama
-                    if(regex.charAt(i) != '(') {
+                    if (regex.charAt(i) != '(') {
                         a = newState(automaton);
-                        b =  newState(automaton);
+                        b = newState(automaton);
                         //provjera posebnog znaka za prazan niz
-                        if(regex.charAt(i) == '$')
-                            addEpsilonTransition(automaton, a ,b);
+                        if (regex.charAt(i) == '$')
+                            addEpsilonTransition(automaton, a, b);
                         else
                             addTransition(automaton, a, b, regex.charAt(i));
                     } else {
                         //ako je izraz unutar zagrade, traži se znak zatvaranja zagrade
-                        int j = -1;
-                        for(int k = i; k < regex.length(); k++) {
-                            if(regex.charAt(k) == ')' && isOperator(regex,k))
+                        int j = - 1;
+                        for (int k = i; k < regex.length(); k++) {
+                            if (regex.charAt(k) == ')' && isOperator(regex, k))
                                 j = k;
                         }
 
                         //rekurzivno se poziva funkcija za izraz unutar zagrade
-                        Pair<Integer, Integer> temporary = transformRegex(regex.substring(i+1, j), automaton);
+                        Pair<Integer, Integer> temporary = transformRegex(regex.substring(i + 1, j), automaton);
                         a = temporary.getLeft();
                         b = temporary.getRight();
                         i = j;
@@ -220,7 +221,7 @@ public class AutomatonGenerator implements Serializable {
                 }
 
                 //provjerava se prisutnost Kleenovog operatora i dodaju se odgovarajući prijelazi
-                if(i + 1 < regex.length() && regex.charAt(i+1) == '*') {
+                if (i + 1 < regex.length() && regex.charAt(i + 1) == '*') {
                     int x = a;
                     int y = b;
                     a = newState(automaton);

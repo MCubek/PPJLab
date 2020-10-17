@@ -9,7 +9,7 @@ import java.util.*;
  * @author MatejC FraneB
  */
 public class Automaton implements Serializable {
-    private  int stateCount;
+    private int stateCount;
     private int startState;
     private int acceptableState;
     private Map<Pair<Integer, String>, List<Integer>> transitions;
@@ -35,11 +35,11 @@ public class Automaton implements Serializable {
      * @throws IllegalArgumentException ako je predana nevalidna konfiguracija
      */
     public Automaton(Automaton automaton) {
-        if(automaton == null) throw new IllegalArgumentException("Automaton is null");
+        if (automaton == null) throw new IllegalArgumentException("Automaton is null");
         this.stateCount = automaton.stateCount;
         this.startState = automaton.startState;
         this.acceptableState = automaton.acceptableState;
-        this.transitions = automaton.transitions;
+        this.transitions = Map.copyOf(automaton.transitions);
     }
 
     public int getStateCount() {
@@ -95,27 +95,27 @@ public class Automaton implements Serializable {
      * @return vrijednost true ako je izraz prihvatljiv, false ako nije
      * @throws IllegalArgumentException ako nije zadan valjan izraz
      */
-    public boolean computeInput(String regex) {
-        if(regex == null) throw new IllegalArgumentException("Regex is null");
+    public boolean computeInput(String input) {
+        if (input == null) throw new IllegalArgumentException("Input is null");
         //lista trenutnih stanja za koje se gledaju prijelazi
         Set<Integer> currentStates = new HashSet<>();
         //lista stanja nakon provedbe funkcija prijelaza trenutnih stanja
         Set<Integer> nextStates = new HashSet<>();
         currentStates.add(this.startState);
-        for(int i = 0; i <= regex.toCharArray().length; i++) {
+        for (int i = 0; i <= input.toCharArray().length; i++) {
             //svako stanje stavlja se u red stateQueue, već pređena stanja nalaze se u setu removed
             Set<Integer> removed = new HashSet<>();
             Queue<Integer> stateQueue = new LinkedList<>(currentStates);
             //prolazak svakog stanja i gledanje potencijalnih epsilon funkcija
-            while(!stateQueue.isEmpty()) {
+            while (! stateQueue.isEmpty()) {
                 Integer checkState = stateQueue.remove();
                 removed.add(checkState);
-                Pair<Integer,String> checkEpsilon = new Pair<>(checkState,"");
+                Pair<Integer, String> checkEpsilon = new Pair<>(checkState, "");
                 //u trenutna stanja se dodaju sve epsilon produkcije stanja koje se trenutno obraduje
-                if(transitions.containsKey(checkEpsilon)) {
+                if (transitions.containsKey(checkEpsilon)) {
                     currentStates.addAll(transitions.get(checkEpsilon));
-                    for(Integer t : transitions.get(checkEpsilon)) {
-                        if(!removed.contains(t)) {
+                    for (Integer t : transitions.get(checkEpsilon)) {
+                        if (! removed.contains(t)) {
                             stateQueue.add(t);
                         }
                     }
@@ -123,12 +123,12 @@ public class Automaton implements Serializable {
             }
 
             //za sve znakove osim zadnje provjeruju se funkcije prijelaza trenutnih stanja i zadanog znaka
-            if(i != regex.toCharArray().length) {
+            if (i != input.toCharArray().length) {
                 List<Integer> temporary;
-                String string = String.valueOf(regex.toCharArray()[i]);
-                for(Integer state : currentStates) {
-                    Pair<Integer, String> checkTransition = new Pair<>(state,string);
-                    if(transitions.containsKey(checkTransition)) {
+                String string = String.valueOf(input.toCharArray()[i]);
+                for (Integer state : currentStates) {
+                    Pair<Integer, String> checkTransition = new Pair<>(state, string);
+                    if (transitions.containsKey(checkTransition)) {
                         temporary = transitions.get(checkTransition);
                         nextStates.addAll(temporary);
                     }
