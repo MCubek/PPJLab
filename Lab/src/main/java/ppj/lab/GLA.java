@@ -1,7 +1,6 @@
 package ppj.lab;
 
-import java.io.File;
-import java.io.FileNotFoundException;
+import java.io.*;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -30,16 +29,11 @@ public class GLA {
         this(new Scanner(inputFile));
     }
 
-    /**
-     * Konstuktor generaora s Stringom kao izborom konfiguracije
-     *
-     * @param inputString String konfiguracije
-     * @throws IllegalArgumentException ako je predana nevalidna konfiguracija
-     */
+    /*
     public GLA(String inputString) {
         this(new Scanner(inputString));
 
-    }
+    }*/
 
     /**
      * Konstruktor koji koristi scanner
@@ -47,7 +41,7 @@ public class GLA {
      * @param scanner scanner konfiguracije
      * @throws IllegalArgumentException ako nije predan scanner ili je predana nevalidna konfiguracija
      */
-    private GLA(Scanner scanner) {
+    public GLA(Scanner scanner) {
         if (scanner == null) throw new IllegalArgumentException("Scanner is null");
         regex = new HashMap<>();
 
@@ -61,14 +55,14 @@ public class GLA {
         }
 
         //Pripremi regularne izraze za generiranje konacnog automata
-        for(String reg : regex.keySet()) {
+        for (String reg : regex.keySet()) {
             String regEx = regex.get(reg);
             //Za svaku regularnu definiciju pronađi u regularnom izrazu druge regularne definicije ako postoje
-            for(int indexOfRegDef = regEx.indexOf('{') ; indexOfRegDef >= 0; indexOfRegDef = regEx.indexOf('{', indexOfRegDef + 1)) {
-                String regRefDef = regEx.substring(indexOfRegDef + 1,regEx.indexOf('}', indexOfRegDef));
+            for (int indexOfRegDef = regEx.indexOf('{'); indexOfRegDef >= 0; indexOfRegDef = regEx.indexOf('{', indexOfRegDef + 1)) {
+                String regRefDef = regEx.substring(indexOfRegDef + 1, regEx.indexOf('}', indexOfRegDef));
                 String replaceRegex = regex.get(regRefDef);
                 //Zamjeni regularne definicije regularnim izrazima
-                if(replaceRegex != null) {
+                if (replaceRegex != null) {
                     regEx = regEx.replace(regEx.substring(indexOfRegDef, regEx.indexOf('}') + 1), "(" + replaceRegex + ")");
                 }
 
@@ -87,6 +81,9 @@ public class GLA {
             throw new IllegalArgumentException("File missing uniform Symbols");
         uniformSymbols = Arrays.stream(line.substring(3).split(" ")).collect(Collectors.toSet());
 
+
+        //Pravila
+        //TODO stvarati automate
         rules = new HashMap<>();
         ruleRegAction = new HashMap<>();
         //Dok ima pravila
@@ -122,14 +119,41 @@ public class GLA {
         scanner.close();
     }
 
+    /**
+     * Metoda serializira podatke generatora kako bi ih leksički analziator mogao korisiti
+     *
+     * @throws IOException ako datoteke gdje se zapisuje ne postoje
+     */
+    public void serializeOutput() throws IOException {
+        FileOutputStream fileOutputStream = new FileOutputStream("analizator/states.ser");
+        ObjectOutputStream objectOutputStream = new ObjectOutputStream(fileOutputStream);
+        objectOutputStream.writeObject(states);
+        fileOutputStream.close();
+        objectOutputStream.close();
+
+        fileOutputStream = new FileOutputStream("analizator/items.ser");
+        objectOutputStream = new ObjectOutputStream(fileOutputStream);
+        objectOutputStream.writeObject(uniformSymbols);
+        fileOutputStream.close();
+        objectOutputStream.close();
+
+        fileOutputStream = new FileOutputStream("analizator/rules.ser");
+        objectOutputStream = new ObjectOutputStream(fileOutputStream);
+        objectOutputStream.writeObject(rules);
+        fileOutputStream.close();
+        objectOutputStream.close();
+    }
+
     public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+        GLA gla = new GLA(scanner);
+
         try {
-            File file = new File("Lab/src/main/resources/lab1_ppjLang[1].txt");
-            System.out.println(file.getAbsolutePath());
-            GLA gla = new GLA(file);
-        } catch (FileNotFoundException exception) {
-            System.err.println("File not FOUND!");
+            gla.serializeOutput();
+        } catch (IOException e) {
+            System.err.println("Error, quit.");
         }
+
 
     }
 }
