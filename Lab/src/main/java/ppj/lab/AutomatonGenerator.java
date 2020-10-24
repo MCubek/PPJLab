@@ -1,6 +1,5 @@
 package ppj.lab;
 
-import java.io.Serializable;
 import java.util.*;
 
 /**
@@ -9,10 +8,11 @@ import java.util.*;
  *
  * @author MatejC FraneB
  */
-public class AutomatonGenerator implements Serializable {
+public class AutomatonGenerator {
 
     private final Map<RuleRegex, List<String>> initialRules;
     private final Map<Pair<String, Automaton>, List<String>> automatonRules;
+
 
     /**
      * Konstuktor generatora automata koji prima listu pripadnih stanja, regularnih izraza i pravila

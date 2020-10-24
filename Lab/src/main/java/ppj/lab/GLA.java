@@ -10,13 +10,11 @@ import java.util.stream.Collectors;
  * @author MatejC FraneB
  */
 public class GLA {
-    private final Map<String, String> regex;
-    //prvo stanje je pocetno
     private final List<String> states;
     private final Set<String> uniformSymbols;
     private final Map<RuleRegex, List<String>> rules;
-    //Key je stanje, value je mapa kojoj je key regex a value lista akcija
-    private final Map<String, Map<String, List<String>>> ruleRegAction;
+
+    private Map<Pair<String, Automaton>, List<String>> automatonRules;
 
     /**
      * Konstuktor generator s datotekom kao izvorom konfiguracije
@@ -29,12 +27,6 @@ public class GLA {
         this(new Scanner(inputFile));
     }
 
-    /*
-    public GLA(String inputString) {
-        this(new Scanner(inputString));
-
-    }*/
-
     /**
      * Konstruktor koji koristi scanner
      *
@@ -43,31 +35,30 @@ public class GLA {
      */
     public GLA(Scanner scanner) {
         if (scanner == null) throw new IllegalArgumentException("Scanner is null");
-        regex = new HashMap<>();
+        Map<String, String> regex1 = new HashMap<>();
 
         String line;
         //Populirati regex
         while ((line = scanner.nextLine()).matches("\\{..*} .*")) {
             //Pronadi index kraja imena
             int index = line.indexOf('}');
-            String regDef = line.substring(1, index);
-            regex.put(line.substring(1, index), line.substring(index + 2));
+            regex1.put(line.substring(1, index), line.substring(index + 2));
         }
 
         //Pripremi regularne izraze za generiranje konacnog automata
-        for (String reg : regex.keySet()) {
-            String regEx = regex.get(reg);
+        for (String reg : regex1.keySet()) {
+            String regEx = regex1.get(reg);
             //Za svaku regularnu definiciju pronađi u regularnom izrazu druge regularne definicije ako postoje
             for (int indexOfRegDef = regEx.indexOf('{'); indexOfRegDef >= 0; indexOfRegDef = regEx.indexOf('{', indexOfRegDef + 1)) {
                 String regRefDef = regEx.substring(indexOfRegDef + 1, regEx.indexOf('}', indexOfRegDef));
-                String replaceRegex = regex.get(regRefDef);
+                String replaceRegex = regex1.get(regRefDef);
                 //Zamjeni regularne definicije regularnim izrazima
                 if (replaceRegex != null) {
                     regEx = regEx.replace(regEx.substring(indexOfRegDef, regEx.indexOf('}') + 1), "(" + replaceRegex + ")");
                 }
 
             }
-            regex.replace(reg, regEx);
+            regex1.replace(reg, regEx);
         }
 
         //Populiraj stanja
@@ -85,7 +76,6 @@ public class GLA {
         //Pravila
         //TODO stvarati automate
         rules = new HashMap<>();
-        ruleRegAction = new HashMap<>();
         //Dok ima pravila
         while (scanner.hasNextLine() && (line = scanner.nextLine()).matches("<.*>.*")) {
             //Parsiraj ime i regex
@@ -93,30 +83,28 @@ public class GLA {
             String state = line.substring(1, index);
             String regex = line.substring(index + 1);
 
-            //1 nacin s posebnom klasom
+
             RuleRegex ruleRegex = new RuleRegex(state, regex);
             rules.put(ruleRegex, new ArrayList<>());
-
-            //2 nacin s mapom u mapi
-            Map<String, List<String>> regexMap = ruleRegAction.getOrDefault(state, new HashMap<>());
-            List<String> actionList = regexMap.getOrDefault(regex, new ArrayList<>());
-
 
             //Parsiraj naredbe
             while (! (line = scanner.nextLine()).matches("}")) {
                 if (! line.equals("{") && ! line.equals("}")) {
-                    //1 Nacin
+
                     List<String> ruleList = rules.get(ruleRegex);
                     ruleList.add(line);
                     rules.put(ruleRegex, ruleList);
-                    //2 Nacin
-                    actionList.add(line);
                 }
             }
-            regexMap.put(regex, actionList);
-            ruleRegAction.put(state, regexMap);
         }
+
         scanner.close();
+        createGenerator();
+    }
+
+    private void createGenerator() {
+        AutomatonGenerator generator = new AutomatonGenerator(rules);
+        this.automatonRules = generator.getAutomatonRules();
     }
 
     /**
@@ -131,7 +119,7 @@ public class GLA {
         fileOutputStream.close();
         objectOutputStream.close();
 
-        fileOutputStream = new FileOutputStream("analizator/items.ser");
+        fileOutputStream = new FileOutputStream("analizator/symbols.ser");
         objectOutputStream = new ObjectOutputStream(fileOutputStream);
         objectOutputStream.writeObject(uniformSymbols);
         fileOutputStream.close();
@@ -139,7 +127,7 @@ public class GLA {
 
         fileOutputStream = new FileOutputStream("analizator/rules.ser");
         objectOutputStream = new ObjectOutputStream(fileOutputStream);
-        objectOutputStream.writeObject(rules);
+        objectOutputStream.writeObject(automatonRules);
         fileOutputStream.close();
         objectOutputStream.close();
     }
@@ -153,7 +141,6 @@ public class GLA {
         } catch (IOException e) {
             System.err.println("Error, quit.");
         }
-
 
     }
 }
