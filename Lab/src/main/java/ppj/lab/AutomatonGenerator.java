@@ -22,7 +22,8 @@ public class AutomatonGenerator {
      */
     public AutomatonGenerator(Map<RuleRegex, List<String>> initialRules) {
         this.initialRules = Objects.requireNonNull(initialRules);
-        this.automatonRules = new HashMap<>();
+        this.automatonRules = new LinkedHashMap<>();
+        generateAutomatons();
     }
 
     public Map<RuleRegex, List<String>> getInitialRules() {
@@ -207,11 +208,19 @@ public class AutomatonGenerator {
                     } else {
                         //ako je izraz unutar zagrade, traži se znak zatvaranja zagrade
                         int j = - 1;
+                        parenthCounter = 0;
                         for (int k = i; k < regex.length(); k++) {
-                            if (regex.charAt(k) == ')' && isOperator(regex, k))
+                            if (regex.charAt(k) == '(' && isOperator(regex, k)) {
+                                parenthCounter++;
+                            } else if (regex.charAt(k) == ')' && isOperator(regex, k)) {
+                                parenthCounter--;
+                            }
+                            if(parenthCounter == 0) {
                                 j = k;
+                                break;
+                            }
                         }
-
+                        parenthCounter = 0;
                         //rekurzivno se poziva funkcija za izraz unutar zagrade
                         Pair<Integer, Integer> temporary = transformRegex(regex.substring(i + 1, j), automaton);
                         a = temporary.getLeft();

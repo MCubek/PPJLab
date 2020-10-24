@@ -21,6 +21,7 @@ public class LA {
         this(new Scanner(file));
     }
 
+    //nije gotovo
     private void parseProgram(Scanner scanner) {
         char line;
         List<Character> characterList = getCharacterList(scanner);
@@ -39,7 +40,7 @@ public class LA {
                     for (String action : this.getAutomatonRules().get(auto)) {
                         if (uniformSymbols.contains(action)) {
                             Pair<String, Integer> symbolPair = new Pair<>(action, counter);
-                            result.put(symbolPair, symbol);
+                            this.result.put(symbolPair, symbol);
                         } else if (action.equals("-")) {
                             continue;
                         } else if (action.equals("NOVI_REDAK")) {
@@ -99,6 +100,8 @@ public class LA {
         fileInputStream.close();
         bufferedInputStream.close();
         objectInputStream.close();
+
+        this.result = new LinkedHashMap<>();
     }
 
     public List<String> getStates() {

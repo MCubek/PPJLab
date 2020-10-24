@@ -1,5 +1,6 @@
 package ppj.lab;
 
+import java.io.Serializable;
 import java.util.Objects;
 
 /**
@@ -7,7 +8,7 @@ import java.util.Objects;
  *
  * @author MatejC FraneB
  */
-public class Pair<T,V> {
+public class Pair<T,V> implements Serializable {
 
     T left;
     V right;

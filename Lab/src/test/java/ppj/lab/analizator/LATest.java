@@ -261,4 +261,17 @@ public class LATest {
         is.close();
         return new String(data, StandardCharsets.UTF_8);
     }
+
+    @Test
+    public void testLAExample2() throws IOException, ClassNotFoundException {
+        LA lexer;
+        try {
+            lexer = new LA(new File("src/main/resources/lab1_program1[1].c"));
+            int i = 0;
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+    }
 }
