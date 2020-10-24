@@ -135,11 +135,10 @@ public class LA {
         try {
             LA lexer = new LA(new Scanner(System.in));
 
-/*            for(Pair<String,Integer> sym : lexer.getResult().keySet()){
-                System.out.println(sym.getLeft() + " " + sym.getRight() + " " + lexer.getResult().get(sym) + "\n");
-            }*/
-        } catch (Exception e) {
-            System.err.println(e.getMessage());
+            System.out.println(lexer.getOutput());
+
+        } catch (IOException | ClassNotFoundException exception) {
+            exception.printStackTrace();
         }
 
     }

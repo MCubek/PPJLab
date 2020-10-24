@@ -83,7 +83,7 @@ public class GLA {
             String regex = line.substring(index + 1);
 
             for (int indexOfRegDef = regex.indexOf('{'); indexOfRegDef >= 0; indexOfRegDef = regex.indexOf('{', indexOfRegDef + 1)) {
-                if(regex.indexOf('}', indexOfRegDef) != -1)  {
+                if (regex.indexOf('}', indexOfRegDef) != - 1) {
                     String regRefDef = regex.substring(indexOfRegDef + 1, regex.indexOf('}', indexOfRegDef));
                     String replaceRegex = regex1.get(regRefDef);
                     //Zamjeni regularne definicije regularnim izrazima
@@ -92,7 +92,6 @@ public class GLA {
                     }
                 }
             }
-
 
 
             RuleRegex ruleRegex = new RuleRegex(state, regex);
@@ -156,7 +155,7 @@ public class GLA {
         try {
             gla.serializeOutput();
         } catch (IOException e) {
-            System.err.println("Error, quit.");
+            e.printStackTrace();
         }
 
     }
