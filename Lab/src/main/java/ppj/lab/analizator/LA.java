@@ -127,8 +127,10 @@ public class LA {
      * @return izlaz kao string
      */
     public String getOutput() {
+        StringBuilder stringBuilder = new StringBuilder();
         //TODO
-        return null;
+
+        return stringBuilder.toString();
     }
 
     public static void main(String[] args) {
