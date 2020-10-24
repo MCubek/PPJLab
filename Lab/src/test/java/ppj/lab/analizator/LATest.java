@@ -14,7 +14,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 public class LATest {
 
     @Test
-    private void testLAExample1() throws IOException, ClassNotFoundException {
+    public void testLAExample1() throws IOException, ClassNotFoundException {
         File file = new File("src/main/resources/lab1_ppjLang[1].txt");
         System.out.println(file.getAbsolutePath());
         GLA gla = new GLA(file);
