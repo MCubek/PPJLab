@@ -74,7 +74,6 @@ public class GLA {
 
 
         //Pravila
-        //TODO stvarati automate
         rules = new LinkedHashMap<>();
         //Dok ima pravila
         while (scanner.hasNextLine() && (line = scanner.nextLine()).matches("<.*>.*")) {
