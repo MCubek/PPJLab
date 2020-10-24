@@ -25,8 +25,97 @@ public class LATest {
         System.out.println(file.getAbsolutePath());
         LA la = new LA(file);
 
-        //TODO Fix test0
         //assertEquals(readFileAsStringFromResources("src/main/resources/lab1_izlaz[1].txt"), la.getOutput());
+    }
+
+    @Test
+    public void testOrginalProblem1() throws IOException, ClassNotFoundException {
+        File file = new File("src/main/resources/orignalPrimjeri/minusLang.lan");
+        System.out.println(file.getAbsolutePath());
+        GLA gla = new GLA(file);
+        gla.serializeOutput();
+
+
+        file = new File("src/main/resources/orignalPrimjeri/minusLang.in");
+        System.out.println(file.getAbsolutePath());
+        LA la = new LA(file);
+
+        assertEquals(readFileAsStringFromResources("src/main/resources/orignalPrimjeri/minusLang.out"), la.getOutput());
+    }
+
+    @Test
+    public void testOrginalProblem2() throws IOException, ClassNotFoundException {
+        File file = new File("src/main/resources/orignalPrimjeri/nadji_a1.lan");
+        System.out.println(file.getAbsolutePath());
+        GLA gla = new GLA(file);
+        gla.serializeOutput();
+
+
+        file = new File("src/main/resources/orignalPrimjeri/nadji_a1.in");
+        System.out.println(file.getAbsolutePath());
+        LA la = new LA(file);
+
+        assertEquals(readFileAsStringFromResources("src/main/resources/orignalPrimjeri/nadji_a1.out"), la.getOutput());
+    }
+
+    @Test
+    public void testOrginalProblem3() throws IOException, ClassNotFoundException {
+        File file = new File("src/main/resources/orignalPrimjeri/nadji_a2.lan");
+        System.out.println(file.getAbsolutePath());
+        GLA gla = new GLA(file);
+        gla.serializeOutput();
+
+
+        file = new File("src/main/resources/orignalPrimjeri/nadji_a2.in");
+        System.out.println(file.getAbsolutePath());
+        LA la = new LA(file);
+
+        assertEquals(readFileAsStringFromResources("src/main/resources/orignalPrimjeri/nadji_a2.out"), la.getOutput());
+    }
+
+    @Test
+    public void testOrginalProblem4() throws IOException, ClassNotFoundException {
+        File file = new File("src/main/resources/orignalPrimjeri/simplePpjLang.lan");
+        System.out.println(file.getAbsolutePath());
+        GLA gla = new GLA(file);
+        gla.serializeOutput();
+
+
+        file = new File("src/main/resources/orignalPrimjeri/simplePpjLang.in");
+        System.out.println(file.getAbsolutePath());
+        LA la = new LA(file);
+
+        assertEquals(readFileAsStringFromResources("src/main/resources/orignalPrimjeri/simplePpjLang.out"), la.getOutput());
+    }
+
+    @Test
+    public void testOrginalProblem5() throws IOException, ClassNotFoundException {
+        File file = new File("src/main/resources/orignalPrimjeri/svaki_drugi_a1.lan");
+        System.out.println(file.getAbsolutePath());
+        GLA gla = new GLA(file);
+        gla.serializeOutput();
+
+
+        file = new File("src/main/resources/orignalPrimjeri/svaki_drugi_a1.in");
+        System.out.println(file.getAbsolutePath());
+        LA la = new LA(file);
+
+        assertEquals(readFileAsStringFromResources("src/main/resources/orignalPrimjeri/svaki_drugi_a1.out"), la.getOutput());
+    }
+
+    @Test
+    public void testOrginalProblem6() throws IOException, ClassNotFoundException {
+        File file = new File("src/main/resources/orignalPrimjeri/svaki_drugi_a2.lan");
+        System.out.println(file.getAbsolutePath());
+        GLA gla = new GLA(file);
+        gla.serializeOutput();
+
+
+        file = new File("src/main/resources/orignalPrimjeri/svaki_drugi_a2.in");
+        System.out.println(file.getAbsolutePath());
+        LA la = new LA(file);
+
+        assertEquals(readFileAsStringFromResources("src/main/resources/orignalPrimjeri/svaki_drugi_a2.out"), la.getOutput());
     }
 
     @Test
@@ -254,7 +343,6 @@ public class LATest {
         assertEquals(readFileAsStringFromResources("src/main/resources/ispitniTestovi/29_veliki3/test.out"), la.getOutput());
     }
 
-
     private String readFileAsStringFromResources(String pathName) throws IOException {
         InputStream is = new FileInputStream(pathName);
         byte[] data = is.readAllBytes();
@@ -262,16 +350,4 @@ public class LATest {
         return new String(data, StandardCharsets.UTF_8);
     }
 
-    @Test
-    public void testLAExample2() throws IOException, ClassNotFoundException {
-        LA lexer;
-        try {
-            lexer = new LA(new File("src/main/resources/lab1_program1[1].c"));
-            int i = 0;
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
-        }
-    }
 }
