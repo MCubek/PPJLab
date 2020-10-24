@@ -1,32 +1,31 @@
 package ppj.lab.analizator;
 
-import static org.junit.jupiter.api.Assertions.*;
-
 import org.junit.jupiter.api.Test;
 import ppj.lab.GLA;
 
-import java.io.*;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class LATest {
 
     @Test
     private void testLAExample1() throws IOException, ClassNotFoundException {
-        String result;
-
-        File file = new File("Lab/src/main/resources/lab1_ppjLang[1].txt");
+        File file = new File("src/main/resources/lab1_ppjLang[1].txt");
         System.out.println(file.getAbsolutePath());
         GLA gla = new GLA(file);
         gla.serializeOutput();
 
 
-        file = new File("Lab/src/main/resources/lab1_program1[1].c");
+        file = new File("src/main/resources/lab1_program1[1].c");
         System.out.println(file.getAbsolutePath());
         LA la = new LA(file);
 
-        result = la.getOutput();
-
-        assertEquals(result, la.getOutput());
+        assertEquals(readFileAsStringFromResources("src/main/resources/lab1_izlaz[1].txt"), la.getOutput());
     }
 
     private String readFileAsStringFromResources(String pathName) throws IOException {
