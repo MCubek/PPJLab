@@ -14,7 +14,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 public class LATest {
 
     @Test
-    private void testLAExample1() throws IOException, ClassNotFoundException {
+    public void testLAExample1() throws IOException, ClassNotFoundException {
         File file = new File("src/main/resources/lab1_ppjLang[1].txt");
         System.out.println(file.getAbsolutePath());
         GLA gla = new GLA(file);
@@ -28,10 +28,23 @@ public class LATest {
         assertEquals(readFileAsStringFromResources("src/main/resources/lab1_izlaz[1].txt"), la.getOutput());
     }
 
-    private String readFileAsStringFromResources(String pathName) throws IOException {
+    public String readFileAsStringFromResources(String pathName) throws IOException {
         InputStream is = new FileInputStream(pathName);
         byte[] data = is.readAllBytes();
         is.close();
         return new String(data, StandardCharsets.UTF_8);
+    }
+
+    @Test
+    public void testLAExample2() throws IOException, ClassNotFoundException {
+        LA lexer;
+        try {
+            lexer = new LA(new File("src/main/resources/lab1_program1[1].c"));
+            int i = 0;
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        }
     }
 }

@@ -35,7 +35,7 @@ public class GLA {
      */
     public GLA(Scanner scanner) {
         if (scanner == null) throw new IllegalArgumentException("Scanner is null");
-        Map<String, String> regex1 = new HashMap<>();
+        Map<String, String> regex1 = new LinkedHashMap<>();
 
         String line;
         //Populirati regex
@@ -75,13 +75,25 @@ public class GLA {
 
         //Pravila
         //TODO stvarati automate
-        rules = new HashMap<>();
+        rules = new LinkedHashMap<>();
         //Dok ima pravila
         while (scanner.hasNextLine() && (line = scanner.nextLine()).matches("<.*>.*")) {
             //Parsiraj ime i regex
             int index = line.indexOf('>');
             String state = line.substring(1, index);
             String regex = line.substring(index + 1);
+
+            for (int indexOfRegDef = regex.indexOf('{'); indexOfRegDef >= 0; indexOfRegDef = regex.indexOf('{', indexOfRegDef + 1)) {
+                if(regex.indexOf('}', indexOfRegDef) != -1)  {
+                    String regRefDef = regex.substring(indexOfRegDef + 1, regex.indexOf('}', indexOfRegDef));
+                    String replaceRegex = regex1.get(regRefDef);
+                    //Zamjeni regularne definicije regularnim izrazima
+                    if (replaceRegex != null) {
+                        regex = regex.replace(regex.substring(indexOfRegDef, regex.indexOf('}') + 1), "(" + replaceRegex + ")");
+                    }
+                }
+            }
+
 
 
             RuleRegex ruleRegex = new RuleRegex(state, regex);

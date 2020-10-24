@@ -74,21 +74,6 @@ public class Automaton implements Serializable {
         this.transitions = transitions;
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Automaton automaton = (Automaton) o;
-        return stateCount == automaton.stateCount &&
-                startState == automaton.startState &&
-                acceptableState == automaton.acceptableState;
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(stateCount, startState, acceptableState);
-    }
-
     /**
      * Provjerava prihvatljivost izraza u zadanom automatu
      *
@@ -141,5 +126,21 @@ public class Automaton implements Serializable {
         }
         //ako u zadnjoj iteraciji lista trenutnih stanja sadržava prihvatljivo stanje, vraća se true, inače false
         return currentStates.contains(acceptableState);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Automaton automaton = (Automaton) o;
+        return stateCount == automaton.stateCount &&
+                startState == automaton.startState &&
+                acceptableState == automaton.acceptableState &&
+                transitions.equals(automaton.transitions);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(stateCount, startState, acceptableState, transitions);
     }
 }
