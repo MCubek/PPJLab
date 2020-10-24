@@ -73,7 +73,7 @@ public class LA {
 
     @SuppressWarnings("unchecked")
     private void readSerialization() throws IOException, ClassNotFoundException {
-        FileInputStream fileInputStream = new FileInputStream("states.ser");
+        FileInputStream fileInputStream = new FileInputStream("src/main/java/ppj/lab/analizator/states.ser");
         BufferedInputStream bufferedInputStream = new BufferedInputStream(fileInputStream);
         ObjectInputStream objectInputStream = new ObjectInputStream(bufferedInputStream);
 
@@ -82,7 +82,7 @@ public class LA {
         bufferedInputStream.close();
         objectInputStream.close();
 
-        fileInputStream = new FileInputStream("symbols.ser");
+        fileInputStream = new FileInputStream("src/main/java/ppj/lab/analizator/symbols.ser");
         bufferedInputStream = new BufferedInputStream(fileInputStream);
         objectInputStream = new ObjectInputStream(bufferedInputStream);
 
@@ -91,7 +91,7 @@ public class LA {
         bufferedInputStream.close();
         objectInputStream.close();
 
-        fileInputStream = new FileInputStream("rules.ser");
+        fileInputStream = new FileInputStream("src/main/java/ppj/lab/analizator/rules.ser");
         bufferedInputStream = new BufferedInputStream(fileInputStream);
         objectInputStream = new ObjectInputStream(bufferedInputStream);
 

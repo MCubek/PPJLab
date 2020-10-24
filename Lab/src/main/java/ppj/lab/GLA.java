@@ -113,19 +113,25 @@ public class GLA {
      * @throws IOException ako datoteke gdje se zapisuje ne postoje
      */
     public void serializeOutput() throws IOException {
-        FileOutputStream fileOutputStream = new FileOutputStream("analizator/states.ser");
+        File file = new File("src/main/java/ppj/lab/analizator/states.ser");
+        file.createNewFile();
+        FileOutputStream fileOutputStream = new FileOutputStream(file, false);
         ObjectOutputStream objectOutputStream = new ObjectOutputStream(fileOutputStream);
         objectOutputStream.writeObject(states);
         fileOutputStream.close();
         objectOutputStream.close();
 
-        fileOutputStream = new FileOutputStream("analizator/symbols.ser");
+        file = new File("src/main/java/ppj/lab/analizator/symbols.ser");
+        file.createNewFile();
+        fileOutputStream = new FileOutputStream(file, false);
         objectOutputStream = new ObjectOutputStream(fileOutputStream);
         objectOutputStream.writeObject(uniformSymbols);
         fileOutputStream.close();
         objectOutputStream.close();
 
-        fileOutputStream = new FileOutputStream("analizator/rules.ser");
+        file = new File("src/main/java/ppj/lab/analizator/rules.ser");
+        file.createNewFile();
+        fileOutputStream = new FileOutputStream(file, false);
         objectOutputStream = new ObjectOutputStream(fileOutputStream);
         objectOutputStream.writeObject(automatonRules);
         fileOutputStream.close();
