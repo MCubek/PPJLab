@@ -26,10 +26,6 @@ public class AutomatonGenerator {
         generateAutomatons();
     }
 
-    public Map<RuleRegex, List<String>> getInitialRules() {
-        return initialRules;
-    }
-
     public Map<Pair<String, Automaton>, List<String>> getAutomatonRules() {
         return automatonRules;
     }
@@ -220,7 +216,6 @@ public class AutomatonGenerator {
                                 break;
                             }
                         }
-                        parenthCounter = 0;
                         //rekurzivno se poziva funkcija za izraz unutar zagrade
                         Pair<Integer, Integer> temporary = transformRegex(regex.substring(i + 1, j), automaton);
                         a = temporary.getLeft();

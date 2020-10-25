@@ -8,10 +8,10 @@ import java.util.Objects;
  *
  * @author MatejC FraneB
  */
-public class Pair<T,V> implements Serializable {
+public class Pair<T, V> implements Serializable {
 
-    T left;
-    V right;
+    private final T left;
+    private final V right;
 
     public Pair(T left, V right) {
         this.left = left;

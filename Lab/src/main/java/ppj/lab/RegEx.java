@@ -21,10 +21,6 @@ public class RegEx implements Serializable {
         return expression;
     }
 
-    public void setExpression(String expression) {
-        this.expression = expression;
-    }
-
     /**
      * Zamijeni referencu sa definicijom drugog regularnog izraza u kojoj je ta definicija napisana
      *
