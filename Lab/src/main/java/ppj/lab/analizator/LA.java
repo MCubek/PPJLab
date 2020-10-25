@@ -127,13 +127,47 @@ public class LA {
                 if (! inputLine.isEmpty()) {
                     symbol = "";
                     //izbaceni znak se ispisuje na stderr
-                    char errChar = inputLine.charAt(0);
-                    //System.err.println(errChar);
+/*                    char errChar = inputLine.charAt(0);
+                    System.err.println(errChar);*/
                     inputLine = inputLine.substring(1);
                     inputLinesList.set(i, inputLine);
                     i--;
                 }
             }
+        }
+    }
+
+    private void parseProgramMatej(List<String> inputLines) {
+        //Inicijalizacija varijabli
+        int lineCounter = 1;
+        String currentState = states.get(0);
+
+        for (String programLine : inputLines) {
+            if (programLine.isEmpty()) continue;
+            StringBuilder symbol = new StringBuilder();
+            Pair<String, Automaton> stateAutomata;
+            boolean foundAutomaton = false;
+            String symbols;
+
+            for (int i = 0; i < programLine.length(); i++) {
+                char character = programLine.charAt(i);
+                symbol.append(character);
+
+
+                for (var stateAutomataPair : automatonRules.keySet()) {
+                    if (stateAutomataPair.getLeft().equals(currentState) && stateAutomataPair.getRight().computeInput(symbol.toString())) {
+                        stateAutomata = stateAutomataPair;
+                        foundAutomaton = true;
+                        symbols = symbol.toString();
+                        break;
+                    }
+                }
+            }
+
+            if (! foundAutomaton) throw new LAException();
+
+            //TODO
+
         }
     }
 
@@ -217,4 +251,14 @@ public class LA {
         }
 
     }
+
+    public class LAException extends RuntimeException {
+        public LAException() {
+        }
+
+        public LAException(String message) {
+            super(message);
+        }
+    }
+
 }
