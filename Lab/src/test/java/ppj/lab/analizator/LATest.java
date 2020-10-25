@@ -40,7 +40,7 @@ public class LATest {
         System.out.println(file.getAbsolutePath());
         LA la = new LA(file);
 
-        assertEquals(readFileAsStringFromResources("src/main/resources/orignalPrimjeri/minusLang.out"), la.getOutput());
+        assertEquals(readFileAsStringFromResources("src/main/resources/orignalPrimjeri/minusLang.out"), la.getOutputAsString());
     }
 
     @Test
@@ -55,7 +55,7 @@ public class LATest {
         System.out.println(file.getAbsolutePath());
         LA la = new LA(file);
 
-        assertEquals(readFileAsStringFromResources("src/main/resources/orignalPrimjeri/nadji_a1.out"), la.getOutput());
+        assertEquals(readFileAsStringFromResources("src/main/resources/orignalPrimjeri/nadji_a1.out"), la.getOutputAsString());
     }
 
     @Test
@@ -70,7 +70,7 @@ public class LATest {
         System.out.println(file.getAbsolutePath());
         LA la = new LA(file);
 
-        assertEquals(readFileAsStringFromResources("src/main/resources/orignalPrimjeri/nadji_a2.out"), la.getOutput());
+        assertEquals(readFileAsStringFromResources("src/main/resources/orignalPrimjeri/nadji_a2.out"), la.getOutputAsString());
     }
 
     @Test
@@ -85,7 +85,7 @@ public class LATest {
         System.out.println(file.getAbsolutePath());
         LA la = new LA(file);
 
-        assertEquals(readFileAsStringFromResources("src/main/resources/orignalPrimjeri/simplePpjLang.out"), la.getOutput());
+        assertEquals(readFileAsStringFromResources("src/main/resources/orignalPrimjeri/simplePpjLang.out"), la.getOutputAsString());
     }
 
     @Test
@@ -100,7 +100,7 @@ public class LATest {
         System.out.println(file.getAbsolutePath());
         LA la = new LA(file);
 
-        assertEquals(readFileAsStringFromResources("src/main/resources/orignalPrimjeri/svaki_drugi_a1.out"), la.getOutput());
+        assertEquals(readFileAsStringFromResources("src/main/resources/orignalPrimjeri/svaki_drugi_a1.out"), la.getOutputAsString());
     }
 
     @Test
@@ -115,7 +115,7 @@ public class LATest {
         System.out.println(file.getAbsolutePath());
         LA la = new LA(file);
 
-        assertEquals(readFileAsStringFromResources("src/main/resources/orignalPrimjeri/svaki_drugi_a2.out"), la.getOutput());
+        assertEquals(readFileAsStringFromResources("src/main/resources/orignalPrimjeri/svaki_drugi_a2.out"), la.getOutputAsString());
     }
 
     @Test
@@ -130,7 +130,7 @@ public class LATest {
         System.out.println(file.getAbsolutePath());
         LA la = new LA(file);
 
-        assertEquals(readFileAsStringFromResources("src/main/resources/ispitniTestovi/01_nadji_x/test.out"), la.getOutput());
+        assertEquals(readFileAsStringFromResources("src/main/resources/ispitniTestovi/01_nadji_x/test.out"), la.getOutputAsString());
     }
 
     @Test
@@ -145,7 +145,7 @@ public class LATest {
         System.out.println(file.getAbsolutePath());
         LA la = new LA(file);
 
-        assertEquals(readFileAsStringFromResources("src/main/resources/ispitniTestovi/03_nadji_x_oporavak/test.out"), la.getOutput());
+        assertEquals(readFileAsStringFromResources("src/main/resources/ispitniTestovi/03_nadji_x_oporavak/test.out"), la.getOutputAsString());
     }
 
     @Test
@@ -160,7 +160,7 @@ public class LATest {
         System.out.println(file.getAbsolutePath());
         LA la = new LA(file);
 
-        assertEquals(readFileAsStringFromResources("src/main/resources/ispitniTestovi/05_regex_tezi/test.out"), la.getOutput());
+        assertEquals(readFileAsStringFromResources("src/main/resources/ispitniTestovi/05_regex_tezi/test.out"), la.getOutputAsString());
     }
 
     @Test
@@ -175,7 +175,7 @@ public class LATest {
         System.out.println(file.getAbsolutePath());
         LA la = new LA(file);
 
-        assertEquals(readFileAsStringFromResources("src/main/resources/ispitniTestovi/07_regex_regdefs/test.out"), la.getOutput());
+        assertEquals(readFileAsStringFromResources("src/main/resources/ispitniTestovi/07_regex_regdefs/test.out"), la.getOutputAsString());
     }
 
     @Test
@@ -190,7 +190,7 @@ public class LATest {
         System.out.println(file.getAbsolutePath());
         LA la = new LA(file);
 
-        assertEquals(readFileAsStringFromResources("src/main/resources/ispitniTestovi/09_poredak/test.out"), la.getOutput());
+        assertEquals(readFileAsStringFromResources("src/main/resources/ispitniTestovi/09_poredak/test.out"), la.getOutputAsString());
     }
 
     @Test
@@ -205,7 +205,7 @@ public class LATest {
         System.out.println(file.getAbsolutePath());
         LA la = new LA(file);
 
-        assertEquals(readFileAsStringFromResources("src/main/resources/ispitniTestovi/11_state_hopper/test.out"), la.getOutput());
+        assertEquals(readFileAsStringFromResources("src/main/resources/ispitniTestovi/11_state_hopper/test.out"), la.getOutputAsString());
     }
 
     @Test
@@ -220,7 +220,7 @@ public class LATest {
         System.out.println(file.getAbsolutePath());
         LA la = new LA(file);
 
-        assertEquals(readFileAsStringFromResources("src/main/resources/ispitniTestovi/13_vrati_se/test.out"), la.getOutput());
+        assertEquals(readFileAsStringFromResources("src/main/resources/ispitniTestovi/13_vrati_se/test.out"), la.getOutputAsString());
     }
 
     @Test
@@ -235,7 +235,7 @@ public class LATest {
         System.out.println(file.getAbsolutePath());
         LA la = new LA(file);
 
-        assertEquals(readFileAsStringFromResources("src/main/resources/ispitniTestovi/15_minusLang_laksi/test.out"), la.getOutput());
+        assertEquals(readFileAsStringFromResources("src/main/resources/ispitniTestovi/15_minusLang_laksi/test.out"), la.getOutputAsString());
     }
 
     @Test
@@ -250,7 +250,7 @@ public class LATest {
         System.out.println(file.getAbsolutePath());
         LA la = new LA(file);
 
-        assertEquals(readFileAsStringFromResources("src/main/resources/ispitniTestovi/17_simplePpjLang_laksi/test.out"), la.getOutput());
+        assertEquals(readFileAsStringFromResources("src/main/resources/ispitniTestovi/17_simplePpjLang_laksi/test.out"), la.getOutputAsString());
     }
 
     @Test
@@ -265,7 +265,7 @@ public class LATest {
         System.out.println(file.getAbsolutePath());
         LA la = new LA(file);
 
-        assertEquals(readFileAsStringFromResources("src/main/resources/ispitniTestovi/19_ppjLang_laksi/test.out"), la.getOutput());
+        assertEquals(readFileAsStringFromResources("src/main/resources/ispitniTestovi/19_ppjLang_laksi/test.out"), la.getOutputAsString());
     }
 
     @Test
@@ -280,7 +280,7 @@ public class LATest {
         System.out.println(file.getAbsolutePath());
         LA la = new LA(file);
 
-        assertEquals(readFileAsStringFromResources("src/main/resources/ispitniTestovi/21_kom4/test.out"), la.getOutput());
+        assertEquals(readFileAsStringFromResources("src/main/resources/ispitniTestovi/21_kom4/test.out"), la.getOutputAsString());
     }
 
     @Test
@@ -295,7 +295,7 @@ public class LATest {
         System.out.println(file.getAbsolutePath());
         LA la = new LA(file);
 
-        assertEquals(readFileAsStringFromResources("src/main/resources/ispitniTestovi/23_op4/test.out"), la.getOutput());
+        assertEquals(readFileAsStringFromResources("src/main/resources/ispitniTestovi/23_op4/test.out"), la.getOutputAsString());
     }
 
     @Test
@@ -310,7 +310,7 @@ public class LATest {
         System.out.println(file.getAbsolutePath());
         LA la = new LA(file);
 
-        assertEquals(readFileAsStringFromResources("src/main/resources/ispitniTestovi/25_prog3/test.out"), la.getOutput());
+        assertEquals(readFileAsStringFromResources("src/main/resources/ispitniTestovi/25_prog3/test.out"), la.getOutputAsString());
     }
 
     @Test
@@ -325,7 +325,7 @@ public class LATest {
         System.out.println(file.getAbsolutePath());
         LA la = new LA(file);
 
-        assertEquals(readFileAsStringFromResources("src/main/resources/ispitniTestovi/27_prog5/test.out"), la.getOutput());
+        assertEquals(readFileAsStringFromResources("src/main/resources/ispitniTestovi/27_prog5/test.out"), la.getOutputAsString());
     }
 
     @Test
@@ -340,7 +340,7 @@ public class LATest {
         System.out.println(file.getAbsolutePath());
         LA la = new LA(file);
 
-        assertEquals(readFileAsStringFromResources("src/main/resources/ispitniTestovi/29_veliki3/test.out"), la.getOutput());
+        assertEquals(readFileAsStringFromResources("src/main/resources/ispitniTestovi/29_veliki3/test.out"), la.getOutputAsString());
     }
 
     private String readFileAsStringFromResources(String pathName) throws IOException {

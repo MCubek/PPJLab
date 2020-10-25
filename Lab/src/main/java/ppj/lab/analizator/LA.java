@@ -16,7 +16,10 @@ public class LA {
 
     public LA(Scanner scanner) throws IOException, ClassNotFoundException {
         readSerialization();
-        parseProgram(scanner);
+
+        parseProgram(getInputLinesList(scanner));
+
+        scanner.close();
     }
 
     public LA(File file) throws IOException, ClassNotFoundException {
@@ -24,9 +27,8 @@ public class LA {
     }
 
     //parsira niz i razdvaja leksicke jedinke
-    private void parseProgram(Scanner scanner) {
-        //lista svih linija koje ce se parsirati
-        List<String> characterList = getCharacterList(scanner);
+    private void parseProgram(List<String> inputLinesList) {
+
         //brojac redova
         int counter = 1;
         //pocetno stanje
@@ -35,12 +37,13 @@ public class LA {
         String symbol = "";
         String tempSymbol = "";
         //par stanja i automata za pretragu akcija
-        Pair<String,Automaton> symbolPair = null;
+        Pair<String, Automaton> symbolPair = null;
         //provjera je li pronađen automat za niz. Ako je, poduzimaju se zapisane akcije, a ako nije, radimo kontrolu pogreške
         boolean foundAutomaton;
+
         //u jednom loopu se provjeravaju sve procitanje linije
-        for(int i = 0; i < characterList.size(); i++) {
-            String inputLine = characterList.get(i);
+        for (int i = 0; i < inputLinesList.size(); i++) {
+            String inputLine = inputLinesList.get(i);
             foundAutomaton = false;
             //za svaku liniju se zasebno citaju znakovi
             for (int j = 0; j < inputLine.length(); j++) {
@@ -75,11 +78,11 @@ public class LA {
                         inputLine = inputLine.replaceFirst(Pattern.quote(tempSymbol), Matcher.quoteReplacement(""));
                         //ovaj dio koda provjerava na koje se mjesto sprema niz i je li ijedna druga akcija vec prepravila indeks i kako bi se niz ponovo zaobisao
                         if(!reverted) {
-                            characterList.set(i,inputLine);
+                            inputLinesList.set(i, inputLine);
                             reverted = true;
                             i--;
                         } else {
-                            characterList.set(i + 1,inputLine);
+                            inputLinesList.set(i + 1, inputLine);
                         }
                         //za oznaku novog reda samo se povecava brojac
                     } else if (rule.equals("NOVI_REDAK")) {
@@ -98,11 +101,11 @@ public class LA {
                             inputLine = inputLine.substring(subIndex);
                         }
                         if(!reverted) {
-                            characterList.set(i,inputLine);
+                            inputLinesList.set(i, inputLine);
                             reverted = true;
                             i--;
                         } else {
-                            characterList.set(i + 1,inputLine);
+                            inputLinesList.set(i + 1, inputLine);
                         }
                         //za znak minus odbacuje se trenutni znak, ali stari niz cuvamo radi drugih akcija
                     } else if (rule.equals("-")) {
@@ -111,11 +114,11 @@ public class LA {
                         inputLine = inputLine.substring(tempSymbol.length());
                         symbol = "";
                         if(!reverted) {
-                            characterList.set(i,inputLine);
+                            inputLinesList.set(i, inputLine);
                             reverted = true;
                             i--;
                         } else {
-                            characterList.set(i + 1,inputLine);
+                            inputLinesList.set(i + 1, inputLine);
                         }
                     }
                 }
@@ -127,19 +130,15 @@ public class LA {
                     char errChar = inputLine.charAt(0);
                     System.err.println(errChar);
                     inputLine = inputLine.substring(1);
-                    characterList.set(i, inputLine);
+                    inputLinesList.set(i, inputLine);
                     i--;
                 }
             }
         }
-        scanner.close();
-        for(String res : result) {
-            System.out.println(res + "\n");
-        }
     }
 
 
-    private List<String> getCharacterList(Scanner scanner) {
+    private List<String> getInputLinesList(Scanner scanner) {
         if (scanner == null) throw new NullPointerException();
 
         List<String> characterList = new ArrayList<>();
@@ -189,16 +188,8 @@ public class LA {
         return states;
     }
 
-    public Set<String> getUniformSymbols() {
-        return uniformSymbols;
-    }
-
     public Map<Pair<String, Automaton>, List<String>> getAutomatonRules() {
         return automatonRules;
-    }
-
-    public List<String> getResult() {
-        return result;
     }
 
     /**
@@ -207,7 +198,7 @@ public class LA {
      *
      * @return izlaz kao string
      */
-    public String getOutput() {
+    public String getOutputAsString() {
         StringBuilder stringBuilder = new StringBuilder();
         //TODO
 
@@ -218,7 +209,7 @@ public class LA {
         try {
             LA lexer = new LA(new Scanner(System.in));
 
-            System.out.println(lexer.getOutput());
+            System.out.println(lexer.getOutputAsString());
 
         } catch (IOException | ClassNotFoundException exception) {
             exception.printStackTrace();
