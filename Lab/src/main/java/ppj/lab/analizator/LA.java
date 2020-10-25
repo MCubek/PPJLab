@@ -12,7 +12,7 @@ public class LA {
     private List<String> states;
     private Set<String> uniformSymbols;
     private Map<Pair<String, Automaton>, List<String>> automatonRules;
-    private List<String> resultStringsList;
+    private LinkedList<String> resultStringsList;
 
     public LA(Scanner scanner) throws IOException, ClassNotFoundException {
         readSerialization();
@@ -60,6 +60,7 @@ public class LA {
                 }
             }
             if (foundAutomaton) {
+                boolean addedLine = false;
                 //reverted je true ako je određena akcija vec smanjila i kako bi se prepravljeni niz ponovo zaobisao, false ako nije
                 boolean reverted = false;
                 //ako je niz promijenjen, a naknadno se pozove akcija VRATI_SE, akcija se provodi nad starim nizom koji se ne sprema(malo glupo ako se mene pita)
@@ -69,6 +70,7 @@ public class LA {
                 for (String rule : this.automatonRules.get(symbolPair)) {
                     //ako je pravilo ime leksicke jedinke, onda se ona pridodjeljuje nizu i zapisuje u rezultat
                     if (uniformSymbols.contains(rule)) {
+                        addedLine = true;
                         resultStringsList.add(rule + " " + counter + " " + tempSymbol);
                         symbol = "";
                         //spremanje starog niza, opisano je u nastavku
@@ -95,6 +97,13 @@ public class LA {
                         int subIndex = Integer.parseInt(rule.replace("VRATI_SE ", ""));
                         //ako je niz vec promjenjen, uzima se spremljeni stari niz
                         if (returnHelp) {
+                            var tempNewValue = tempSymbol.substring(0, subIndex);
+
+                            if (addedLine) {
+                                String operand = resultStringsList.removeLast().split(" ")[0];
+                                resultStringsList.addLast(operand + " " + counter + " " + tempNewValue);
+                            }
+
                             inputLine = returnLine.substring(subIndex);
                             returnHelp = false;
                         } else {
@@ -134,56 +143,6 @@ public class LA {
                     i--;
                 }
             }
-        }
-    }
-
-    private void parseProgramMatej(List<String> inputLines) {
-        //Inicijalizacija varijabli
-        int lineCounter = 1;
-        String currentState = states.get(0);
-        LinkedList<String> resultLines = new LinkedList<>();
-
-        for (String programLine : inputLines) {
-            if (programLine.isEmpty()) continue;
-            StringBuilder symbol = new StringBuilder();
-            Pair<String, Automaton> stateAutomata = null;
-            boolean foundAutomaton = false;
-            String symbols = null;
-
-            for (int i = 0; i < programLine.length(); i++) {
-                char character = programLine.charAt(i);
-                symbol.append(character);
-
-
-                for (var stateAutomataPair : automatonRules.keySet()) {
-                    if (stateAutomataPair.getLeft().equals(currentState) && stateAutomataPair.getRight().computeInput(symbol.toString())) {
-                        stateAutomata = stateAutomataPair;
-                        foundAutomaton = true;
-                        symbols = symbol.toString();
-                        break;
-                    }
-                }
-            }
-
-            if (! foundAutomaton) throw new LAException();
-
-            for (String rule : automatonRules.get(stateAutomata)) {
-                if (rule.equals("NOVI_REDAK")) {
-                    lineCounter++;
-                } else if (rule.contains("UDJI_U_STANJE")) {
-                    currentState = rule.replace("UDJI_U_STANJE ", "");
-                } else if (rule.contains("VRATI_SE")) {
-                    //TODO
-                } else if (rule.equals("-")) {
-                    //TODO
-                } else if (uniformSymbols.contains(rule)) {
-                    resultStringsList.add(rule + " " + lineCounter + " " + symbols);
-                    //TODO
-                } else {
-                    throw new LAException();
-                }
-            }
-
         }
     }
 

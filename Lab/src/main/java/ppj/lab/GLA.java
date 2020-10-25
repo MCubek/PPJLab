@@ -12,7 +12,7 @@ import java.util.stream.Collectors;
 public class GLA {
     private final List<String> states;
     private final Set<String> uniformSymbols;
-    private final Map<RuleRegex, List<String>> rules;
+    private final LinkedHashMap<RuleRegex, List<String>> rules;
 
     private Map<Pair<String, Automaton>, List<String>> automatonRules;
 
@@ -93,13 +93,18 @@ public class GLA {
                 }
             }
 
+            boolean duplicate = false;
 
             RuleRegex ruleRegex = new RuleRegex(state, regex);
-            rules.put(ruleRegex, new ArrayList<>());
+            if (rules.containsKey(ruleRegex))
+                duplicate = true;
+
+            if (! duplicate)
+                rules.put(ruleRegex, new ArrayList<>());
 
             //Parsiraj naredbe
             while (! (line = scanner.nextLine()).matches("}")) {
-                if (! line.equals("{") && ! line.equals("}")) {
+                if (! line.equals("{") && ! line.equals("}") && ! duplicate) {
 
                     List<String> ruleList = rules.get(ruleRegex);
                     ruleList.add(line);
