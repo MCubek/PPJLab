@@ -12,7 +12,7 @@ public class LA {
     private List<String> states;
     private Set<String> uniformSymbols;
     private Map<Pair<String, Automaton>, List<String>> automatonRules;
-    private List<String> result;
+    private List<String> resultStringsList;
 
     public LA(Scanner scanner) throws IOException, ClassNotFoundException {
         readSerialization();
@@ -69,7 +69,7 @@ public class LA {
                 for (String rule : this.automatonRules.get(symbolPair)) {
                     //ako je pravilo ime leksicke jedinke, onda se ona pridodjeljuje nizu i zapisuje u rezultat
                     if (uniformSymbols.contains(rule)) {
-                        result.add(rule + " " + counter + " " + tempSymbol);
+                        resultStringsList.add(rule + " " + counter + " " + tempSymbol);
                         symbol = "";
                         //spremanje starog niza, opisano je u nastavku
                         returnHelp = true;
@@ -77,7 +77,7 @@ public class LA {
                         //iz niza se izbacuje obradena jedinka i prepravljeni niz se vraca u listu
                         inputLine = inputLine.replaceFirst(Pattern.quote(tempSymbol), Matcher.quoteReplacement(""));
                         //ovaj dio koda provjerava na koje se mjesto sprema niz i je li ijedna druga akcija vec prepravila indeks i kako bi se niz ponovo zaobisao
-                        if(!reverted) {
+                        if (! reverted) {
                             inputLinesList.set(i, inputLine);
                             reverted = true;
                             i--;
@@ -94,13 +94,13 @@ public class LA {
                     } else if (rule.contains("VRATI_SE")) {
                         int subIndex = Integer.parseInt(rule.replace("VRATI_SE ", ""));
                         //ako je niz vec promjenjen, uzima se spremljeni stari niz
-                        if(returnHelp) {
+                        if (returnHelp) {
                             inputLine = returnLine.substring(subIndex);
                             returnHelp = false;
                         } else {
                             inputLine = inputLine.substring(subIndex);
                         }
-                        if(!reverted) {
+                        if (! reverted) {
                             inputLinesList.set(i, inputLine);
                             reverted = true;
                             i--;
@@ -113,7 +113,7 @@ public class LA {
                         returnLine = inputLine;
                         inputLine = inputLine.substring(tempSymbol.length());
                         symbol = "";
-                        if(!reverted) {
+                        if (! reverted) {
                             inputLinesList.set(i, inputLine);
                             reverted = true;
                             i--;
@@ -124,18 +124,17 @@ public class LA {
                 }
                 //ako nije pronaden automat, ponavlja se postupak za niz kojem smo izbacili pocetni znak
             } else {
-                if(!inputLine.isEmpty()) {
+                if (! inputLine.isEmpty()) {
                     symbol = "";
                     //izbaceni znak se ispisuje na stderr
                     char errChar = inputLine.charAt(0);
-                    System.err.println(errChar);
+                    //System.err.println(errChar);
                     inputLine = inputLine.substring(1);
                     inputLinesList.set(i, inputLine);
                     i--;
                 }
             }
         }
-        System.out.println("DONE");
     }
 
 
@@ -181,7 +180,7 @@ public class LA {
         bufferedInputStream.close();
         objectInputStream.close();
 
-        this.result = new LinkedList<>();
+        this.resultStringsList = new LinkedList<>();
 
     }
 
@@ -201,7 +200,8 @@ public class LA {
      */
     public String getOutputAsString() {
         StringBuilder stringBuilder = new StringBuilder();
-        //TODO
+
+        resultStringsList.forEach((v) -> stringBuilder.append(v).append("\r\n"));
 
         return stringBuilder.toString();
     }
