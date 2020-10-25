@@ -141,13 +141,14 @@ public class LA {
         //Inicijalizacija varijabli
         int lineCounter = 1;
         String currentState = states.get(0);
+        LinkedList<String> resultLines = new LinkedList<>();
 
         for (String programLine : inputLines) {
             if (programLine.isEmpty()) continue;
             StringBuilder symbol = new StringBuilder();
-            Pair<String, Automaton> stateAutomata;
+            Pair<String, Automaton> stateAutomata = null;
             boolean foundAutomaton = false;
-            String symbols;
+            String symbols = null;
 
             for (int i = 0; i < programLine.length(); i++) {
                 char character = programLine.charAt(i);
@@ -166,7 +167,22 @@ public class LA {
 
             if (! foundAutomaton) throw new LAException();
 
-            //TODO
+            for (String rule : automatonRules.get(stateAutomata)) {
+                if (rule.equals("NOVI_REDAK")) {
+                    lineCounter++;
+                } else if (rule.contains("UDJI_U_STANJE")) {
+                    currentState = rule.replace("UDJI_U_STANJE ", "");
+                } else if (rule.contains("VRATI_SE")) {
+                    //TODO
+                } else if (rule.equals("-")) {
+                    //TODO
+                } else if (uniformSymbols.contains(rule)) {
+                    resultStringsList.add(rule + " " + lineCounter + " " + symbols);
+                    //TODO
+                } else {
+                    throw new LAException();
+                }
+            }
 
         }
     }
