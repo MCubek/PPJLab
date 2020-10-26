@@ -1,4 +1,4 @@
-package ppj.lab;
+package ppj.lab.utility;
 
 import java.io.Serializable;
 import java.util.*;

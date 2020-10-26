@@ -1,5 +1,8 @@
 package ppj.lab;
 
+import ppj.lab.utility.Automaton;
+import ppj.lab.utility.Pair;
+
 import java.util.*;
 
 /**

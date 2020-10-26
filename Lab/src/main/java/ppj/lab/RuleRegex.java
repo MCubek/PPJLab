@@ -3,7 +3,7 @@ package ppj.lab;
 /**
  * Klasa koja sadrzi stanje i regularni izraz
  */
-class RuleRegex {
+public class RuleRegex {
     private final String state;
     private final String regex;
 
