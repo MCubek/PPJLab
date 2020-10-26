@@ -17,7 +17,8 @@ public class LA {
     public LA(Scanner scanner) throws IOException, ClassNotFoundException {
         readSerialization();
 
-        parseProgram(getInputLinesList(scanner));
+        parseProgramAsString(getInputString(scanner));
+        //parseProgram(getInputLinesList(scanner));
 
         scanner.close();
     }
@@ -146,6 +147,70 @@ public class LA {
         }
     }
 
+    private void parseProgramAsString(String program) {
+        int lineCount = 1;
+        String currentState = states.get(0);
+        String symbol = "";
+        String foundSymbol = "";
+        Pair<String, Automaton> symbolAutom = null;
+
+
+        int currentPosition = 0;
+        while (currentPosition < program.length()) {
+            boolean foundAutom = false;
+
+            for (int i = currentPosition; i < program.length(); i++) {
+                symbol += program.charAt(i);
+
+                boolean foundAtLeastOneAutom = false;
+                for (var symbolAutomTestPair : automatonRules.keySet()) {
+                    if (symbolAutomTestPair.getLeft().equals(currentState) && symbolAutomTestPair.getRight().computeInput(symbol)) {
+                        foundSymbol = symbol;
+                        symbolAutom = symbolAutomTestPair;
+                        foundAutom = true;
+                        foundAtLeastOneAutom = true;
+                        break;
+                    }
+                }
+                if (! foundAtLeastOneAutom) break;
+            }
+
+            if (foundAutom) {
+                boolean uniformSymbolAdded = false;
+
+                for (var rule : automatonRules.get(symbolAutom)) {
+                    if (uniformSymbols.contains(rule)) {
+                        uniformSymbolAdded = true;
+
+                        currentPosition += foundSymbol.length();
+                        resultStringsList.add(rule + " " + lineCount + " " + foundSymbol);
+                    } else if (rule.equals("NOVI_REDAK")) {
+                        lineCount++;
+                    } else if (rule.contains("UDJI_U_STANJE")) {
+                        currentState = rule.split(" ")[1];
+                    } else if (rule.contains("VRATI_SE")) {
+                        int backIndex = Integer.parseInt(rule.split(" ")[1]);
+                        int backPos = foundSymbol.length() - backIndex;
+
+                        if (uniformSymbolAdded) {
+                            String operand = resultStringsList.removeLast().split(" ")[0];
+                            resultStringsList.addLast(operand + " " + lineCount + " " + foundSymbol.substring(0, backIndex));
+                        }
+
+                        currentPosition -= backPos;
+                    } else if (rule.equals("-")) {
+                        currentPosition += foundSymbol.length();
+                    }
+
+                    symbol = "";
+
+                }
+            } else {
+                currentPosition++;
+            }
+        }
+    }
+
 
     private List<String> getInputLinesList(Scanner scanner) {
         if (scanner == null) throw new NullPointerException();
@@ -158,6 +223,14 @@ public class LA {
             characterList.add(stringLine);
         }
         return characterList;
+    }
+
+    private String getInputString(Scanner scanner) {
+        StringBuilder stringBuilder = new StringBuilder();
+        while (scanner.hasNextLine()) {
+            stringBuilder.append(scanner.nextLine()).append("\n");
+        }
+        return stringBuilder.toString();
     }
 
     @SuppressWarnings("unchecked")
