@@ -8,6 +8,12 @@ import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+/**
+ * Metoda koja predstavlja leksicki analizator
+ * Stvara leksicke jedinke
+ *
+ * @author FraneB, MatejC
+ */
 public class LA {
     private static final int MAX_SINGLE_SYMBOL_LENGTH = 20;
     private List<String> states;
@@ -28,14 +34,18 @@ public class LA {
         this(new Scanner(file));
     }
 
-    //Prvi nacin
-    //parsira niz i razdvaja leksicke jedinke
+    /**
+     * Metoda koja na prvi nacin parisra ulazni niz i stvara leksicke jedinke
+     *
+     * @param inputLinesList ulazni program u linijama
+     * @author Frane
+     */
     private void parseProgram(List<String> inputLinesList) {
 
         //brojac redova
         int counter = 1;
         //pocetno stanje
-        String state = this.getStates().get(0);
+        String state = states.get(0);
         //symbol predstavlja niz na koji se dodava znak po znak prilikom parsiranja, tempSymbol je niz za kojeg je pronadena jedinka
         String symbol = "";
         String tempSymbol = "";
@@ -52,7 +62,7 @@ public class LA {
             for (int j = 0; j < inputLine.length(); j++) {
                 symbol = symbol + inputLine.charAt(j);
                 //niz znakova provjerava se dok se ne pronađe prvi par stanja i automata koji ga prihvaca
-                for (Pair<String, Automaton> auto : this.getAutomatonRules().keySet()) {
+                for (Pair<String, Automaton> auto : automatonRules.keySet()) {
                     if (auto.getLeft().equals(state) && auto.getRight().computeInput(symbol)) {
                         //spremaju se vrijednosti potrebne za poduzimanje akcija
                         tempSymbol = symbol;
@@ -149,24 +159,39 @@ public class LA {
         }
     }
 
+    /**
+     * Meotda koja na drugi nacin parsira ulazni niz i stvara leksicke jedinke
+     *
+     * @param program kao veliki string
+     * @author Matej
+     */
     private void parseProgramAsString(String program) {
         int lineCount = 1;
+        //Pocetno stanje
         String currentState = states.get(0);
         StringBuilder symbol = new StringBuilder();
         String foundSymbol = "";
         Pair<String, Automaton> symbolAutom = null;
 
+        //Symbol je niz koji se trenutno ispituje
+        //foundSymbol je zadnji niz koji je automat prihvaio
 
         int currentPosition = 0;
+
+        //Dok ima znakova koji nisu procitani
         while (currentPosition < program.length()) {
+            //Barem jedan automat pronaden
             boolean foundAutom = false;
 
+            //Brojac koliko se puta povecao simbol nakon zadnjeg pronadenog automata
             int notFoundCounter = 0;
             for (int i = currentPosition; i < program.length(); i++) {
+                //Dodaja znaka u simbol
                 symbol.append(program.charAt(i));
 
                 boolean automatonFoundForCurrentSymbol = false;
 
+                //Ispit automata
                 for (var symbolAutomTestPair : automatonRules.keySet()) {
                     if (symbolAutomTestPair.getLeft().equals(currentState) && symbolAutomTestPair.getRight().computeInput(symbol.toString())) {
                         foundSymbol = symbol.toString();
@@ -178,9 +203,12 @@ public class LA {
                         break;
                     }
                 }
+                //Nije pronaden automat za trenutni simbol
                 if (! automatonFoundForCurrentSymbol)
                     notFoundCounter++;
 
+                //Isprobano je const iteracije simbola bez pronalaska automata
+                //Izadi iz petlje
                 if (notFoundCounter >= MAX_SINGLE_SYMBOL_LENGTH) break;
             }
 
@@ -201,6 +229,7 @@ public class LA {
                         int backIndex = Integer.parseInt(rule.split(" ")[1]);
                         int backPos = foundSymbol.length() - backIndex;
 
+                        //Zamijeni zadnji element ako je VRATI_SE, a on je za isti znak dodan
                         if (uniformSymbolAdded) {
                             String operand = resultStringsList.removeLast().split(" ")[0];
                             resultStringsList.addLast(operand + " " + lineCount + " " + foundSymbol.substring(0, backIndex));
@@ -212,16 +241,21 @@ public class LA {
                     }
 
                     symbol = new StringBuilder();
-
                 }
             } else {
+                //Odbaci znak ako nije pronaden automat
                 currentPosition++;
                 symbol = new StringBuilder();
             }
         }
     }
 
-
+    /**
+     * Metoda koja iz scannera cita ulaz i stavlja ga u listu redak po redak
+     *
+     * @param scanner scanner s ulaznim podacima
+     * @return lista redaka ulazane datoteke
+     */
     private List<String> getInputLinesList(Scanner scanner) {
         if (scanner == null) throw new NullPointerException();
 
@@ -235,6 +269,12 @@ public class LA {
         return characterList;
     }
 
+    /**
+     * Metoda koja iz scannera cita ulaz i zapisuje ga u veliki string
+     *
+     * @param scanner scanner s ulaznim podacima
+     * @return cijeli program kao string
+     */
     private String getInputString(Scanner scanner) {
         StringBuilder stringBuilder = new StringBuilder();
         while (scanner.hasNextLine()) {
@@ -243,6 +283,12 @@ public class LA {
         return stringBuilder.toString();
     }
 
+    /**
+     * Metoda čita datoteke generirane od generatora i sprema ih
+     *
+     * @throws IOException            ako je problem s datotekom
+     * @throws ClassNotFoundException ako je problem s klasom
+     */
     @SuppressWarnings("unchecked")
     private void readSerialization() throws IOException, ClassNotFoundException {
         FileInputStream fileInputStream = new FileInputStream("src/main/java/ppj/lab/analizator/states.ser");
@@ -276,12 +322,8 @@ public class LA {
 
     }
 
-    public List<String> getStates() {
-        return states;
-    }
-
-    public Map<Pair<String, Automaton>, List<String>> getAutomatonRules() {
-        return automatonRules;
+    public LinkedList<String> getResultStringsList() {
+        return resultStringsList;
     }
 
     /**

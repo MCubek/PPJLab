@@ -114,12 +114,7 @@ public class GLA {
         }
 
         scanner.close();
-        createGenerator();
-    }
-
-    private void createGenerator() {
-        AutomatonGenerator generator = new AutomatonGenerator(rules);
-        this.automatonRules = generator.getAutomatonRules();
+        automatonRules = new AutomatonGenerator(rules).getAutomatonRules();
     }
 
     /**
