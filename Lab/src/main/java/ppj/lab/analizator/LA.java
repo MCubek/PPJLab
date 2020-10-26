@@ -137,7 +137,7 @@ public class LA {
     }
 
     /**
-     * Metoda čita datoteke generirane od generatora i sprema ih
+     * Metoda cita datoteke generirane od generatora i sprema ih
      *
      * @throws IOException            ako je problem s datotekom
      * @throws ClassNotFoundException ako je problem s klasom
@@ -180,7 +180,7 @@ public class LA {
     }
 
     /**
-     * Metoda vraća očekivani izlaz:
+     * Metoda vraca ocekivani izlaz:
      * Tablica znakova i niz uniformih znakova
      *
      * @return izlaz kao string

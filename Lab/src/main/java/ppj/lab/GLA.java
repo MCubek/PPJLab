@@ -51,7 +51,7 @@ public class GLA {
         //Pripremi regularne izraze za generiranje konacnog automata
         for (String reg : regex1.keySet()) {
             String regEx = regex1.get(reg);
-            //Za svaku regularnu definiciju pronađi u regularnom izrazu druge regularne definicije ako postoje
+            //Za svaku regularnu definiciju pronadi u regularnom izrazu druge regularne definicije ako postoje
             for (int indexOfRegDef = regEx.indexOf('{'); indexOfRegDef >= 0; indexOfRegDef = regEx.indexOf('{', indexOfRegDef + 1)) {
                 String regRefDef = regEx.substring(indexOfRegDef + 1, regEx.indexOf('}', indexOfRegDef));
                 String replaceRegex = regex1.get(regRefDef);
@@ -121,7 +121,7 @@ public class GLA {
     }
 
     /**
-     * Metoda serializira podatke generatora kako bi ih leksički analziator mogao korisiti
+     * Metoda serializira podatke generatora kako bi ih leksicki analziator mogao korisiti
      *
      * @throws IOException ako datoteke gdje se zapisuje ne postoje
      */

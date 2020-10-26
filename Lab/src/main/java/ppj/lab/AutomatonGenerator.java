@@ -6,8 +6,8 @@ import ppj.lab.utility.Pair;
 import java.util.*;
 
 /**
- * Klasa koja iz zadanih regularnih izraza stvara odgovarajuće automate i pridružuje ih
- * odgovarajućem stanju i akciji
+ * Klasa koja iz zadanih regularnih izraza stvara odgovarajuce automate i pridruzuje ih
+ * odgovarajucem stanju i akciji
  *
  * @author MatejC FraneB
  */
@@ -20,7 +20,7 @@ public class AutomatonGenerator {
     /**
      * Konstuktor generatora automata koji prima listu pripadnih stanja, regularnih izraza i pravila
      *
-     * @param initialRules je mapa parova stanja i regularnih izraza te pripadajućih akcija
+     * @param initialRules je mapa parova stanja i regularnih izraza te pripadajucih akcija
      * @throws IllegalArgumentException ako je predana nevalidna konfiguracija
      */
     public AutomatonGenerator(LinkedHashMap<RuleRegex, List<String>> initialRules) {
@@ -47,7 +47,7 @@ public class AutomatonGenerator {
 
     /**
      * Provjerava je li znak u regularnom izrazu operator,
-     * tj. sadrži li paran ili neparan broj znakova \ ispred sebe
+     * tj. sadrzi li paran ili neparan broj znakova \ ispred sebe
      *
      * @return vrijednost true ako je znak operator, false ako nije
      * @throws IllegalArgumentException ako nisu zadani valjani parametri
@@ -67,14 +67,14 @@ public class AutomatonGenerator {
      * Dodaje funkciju prijelaza iz stanja fromState i znaka transChar u stanje trueState
      *
      * @param automaton automat kojem se dodaje prijelaz
-     * @param fromState početno stanje
-     * @param toState   konačno stanje
+     * @param fromState pocetno stanje
+     * @param toState   konacno stanje
      * @param transChar ulazni znak
      */
     void addTransition(Automaton automaton, int fromState, int toState, char transChar) {
-        //dohvaća se mapa prijelaznih funkcija
+        //dohvaca se mapa prijelaznih funkcija
         Map<Pair<Integer, String>, List<Integer>> newTransitions = automaton.getTransitions();
-        //Par stanja i ulaznog znaka kojim se provjerava postoje li već neke funkcije prijelaza
+        //Par stanja i ulaznog znaka kojim se provjerava postoje li vec neke funkcije prijelaza
         Pair<Integer, String> checkTransition = new Pair<>(fromState, String.valueOf(transChar));
 
         //ako ne postoji funkcija prijelaza, stvara se nova lista
@@ -86,14 +86,14 @@ public class AutomatonGenerator {
     }
 
     /**
-     * Dodaje automatu epsilon prijelaz za određena stanja
+     * Dodaje automatu epsilon prijelaz za odredena stanja
      *
      * @param automaton automat kojem se dodaju stanja
      * @param fromState stanje iz kojeg se prelazi
      * @param toState   stanje u koje se prelazi
      */
     void addEpsilonTransition(Automaton automaton, int fromState, int toState) {
-        //funkcionira na identičan način kao i funkcija addTransition, epsilon se označava praznih Stringom
+        //funkcionira na identican nacin kao i funkcija addTransition, epsilon se oznacava praznih Stringom
         Map<Pair<Integer, String>, List<Integer>> newTransitions = automaton.getTransitions();
         Pair<Integer, String> checkTransition = new Pair<>(fromState, "");
 
@@ -112,7 +112,7 @@ public class AutomatonGenerator {
             Automaton generatedAutomaton = new Automaton();
             //poziva se funkcija transformRegex za regularni izraz
             Pair<Integer, Integer> result = transformRegex(rulReg.getRegex(), generatedAutomaton);
-            //postavljaju se početno i prihvatljivo stanje
+            //postavljaju se pocetno i prihvatljivo stanje
             generatedAutomaton.setStartState(result.getLeft());
             generatedAutomaton.setAcceptableState(result.getRight());
             Pair<String, Automaton> stateAutomaton = new Pair<>(rulReg.getState(), generatedAutomaton);
@@ -125,20 +125,20 @@ public class AutomatonGenerator {
      * Transformira regularni izraz u ENKA automat
      *
      * @param regex     regularni izraz nad kojim se provodi transformacija
-     * @param automaton prazan automat koji će se popuniti pripadnim stanjima
-     * @return Par koji predstavlja početno i prihvatljivo stanje
+     * @param automaton prazan automat koji ce se popuniti pripadnim stanjima
+     * @return Par koji predstavlja pocetno i prihvatljivo stanje
      * @throws IllegalArgumentException ako nisu zadani valjani parametri
      */
     Pair<Integer, Integer> transformRegex(String regex, Automaton automaton) {
         //lista podnizova odvojenih operatorom izbora |
         List<String> choices = new ArrayList<>();
-        //brojač zagrada
+        //brojac zagrada
         int parenthCounter = 0;
-        //marker početka podniza
+        //marker pocetka podniza
         int groupMarker = 0;
-        //brojač operatora izbora
+        //brojac operatora izbora
         int orCounter = 0;
-        //za svaki se znak traži operator izbora, ignoriraju se operatori unutar zagrada i znakovi koji su uistinu operatori
+        //za svaki se znak trazi operator izbora, ignoriraju se operatori unutar zagrada i znakovi koji su uistinu operatori
         //Je li znak operator provjerava se funkcijom isOperator
         for (int i = 0; i < regex.length(); i++) {
             if (regex.charAt(i) == '(' && isOperator(regex, i)) {
@@ -156,7 +156,7 @@ public class AutomatonGenerator {
             choices.add(regex.substring(groupMarker));
         }
 
-        //stvaranje početnog i završnog stanja niza(ili podniza)
+        //stvaranje pocetnog i zavrsnog stanja niza(ili podniza)
         int leftState = newState(automaton);
         int rightState = newState(automaton);
         //za svaki se podniz rekurzivno poziva funkcija transformRegex
@@ -168,7 +168,7 @@ public class AutomatonGenerator {
                 addEpsilonTransition(automaton, temporary.getRight(), rightState);
             }
         } else {
-            //varijabla prefixed predstavlja postojanje znaka \ ispred traženog znaka
+            //varijabla prefixed predstavlja postojanje znaka \ ispred trazenog znaka
             boolean prefixed = false;
             int lastState = leftState;
             for (int i = 0; i < regex.length(); i++) {
@@ -206,7 +206,7 @@ public class AutomatonGenerator {
                         else
                             addTransition(automaton, a, b, regex.charAt(i));
                     } else {
-                        //ako je izraz unutar zagrade, traži se znak zatvaranja zagrade
+                        //ako je izraz unutar zagrade, trazi se znak zatvaranja zagrade
                         int j = - 1;
                         parenthCounter = 0;
                         for (int k = i; k < regex.length(); k++) {
@@ -228,7 +228,7 @@ public class AutomatonGenerator {
                     }
                 }
 
-                //provjerava se prisutnost Kleenovog operatora i dodaju se odgovarajući prijelazi
+                //provjerava se prisutnost Kleenovog operatora i dodaju se odgovarajuci prijelazi
                 if (i + 1 < regex.length() && regex.charAt(i + 1) == '*') {
                     int x = a;
                     int y = b;

@@ -29,7 +29,7 @@ public class Automaton implements Serializable {
     }
 
     /**
-     * Konstuktor automata pomoću drugog automata
+     * Konstuktor automata pomocu drugog automata
      *
      * @param automaton preko kojeg se stvara novi automat
      * @throws IllegalArgumentException ako je predana nevalidna konfiguracija
@@ -88,7 +88,7 @@ public class Automaton implements Serializable {
         Set<Integer> nextStates = new HashSet<>();
         currentStates.add(this.startState);
         for (int i = 0; i <= input.toCharArray().length; i++) {
-            //svako stanje stavlja se u red stateQueue, već pređena stanja nalaze se u setu removed
+            //svako stanje stavlja se u red stateQueue, vec predena stanja nalaze se u setu removed
             Set<Integer> removed = new HashSet<>();
             Queue<Integer> stateQueue = new LinkedList<>(currentStates);
             //prolazak svakog stanja i gledanje potencijalnih epsilon funkcija
@@ -118,13 +118,13 @@ public class Automaton implements Serializable {
                         nextStates.addAll(temporary);
                     }
                 }
-                //čisti se lista trenutnih stanja; lista sljedećih stanja postaje lista trenutnih
+                //cisti se lista trenutnih stanja; lista sljedecih stanja postaje lista trenutnih
                 currentStates.clear();
                 currentStates.addAll(nextStates);
                 nextStates.clear();
             }
         }
-        //ako u zadnjoj iteraciji lista trenutnih stanja sadržava prihvatljivo stanje, vraća se true, inače false
+        //ako u zadnjoj iteraciji lista trenutnih stanja sadrzava prihvatljivo stanje, vraca se true, inace false
         return currentStates.contains(acceptableState);
     }
 
