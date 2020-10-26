@@ -1,7 +1,7 @@
 package ppj.lab.analizator;
 
-import ppj.lab.utility.Automaton;
-import ppj.lab.utility.Pair;
+import ppj.lab.Automaton;
+import ppj.lab.Pair;
 
 import java.io.*;
 import java.util.*;
