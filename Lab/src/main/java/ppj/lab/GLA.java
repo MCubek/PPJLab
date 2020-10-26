@@ -12,7 +12,7 @@ import java.util.stream.Collectors;
 public class GLA {
     private final List<String> states;
     private final Set<String> uniformSymbols;
-    private final Map<RuleRegex, List<String>> rules;
+    private final LinkedHashMap<RuleRegex, List<String>> rules;
 
     private Map<Pair<String, Automaton>, List<String>> automatonRules;
 
@@ -93,13 +93,18 @@ public class GLA {
                 }
             }
 
+            boolean duplicate = false;
 
             RuleRegex ruleRegex = new RuleRegex(state, regex);
-            rules.put(ruleRegex, new ArrayList<>());
+            if (rules.containsKey(ruleRegex))
+                duplicate = true;
+
+            if (! duplicate)
+                rules.put(ruleRegex, new ArrayList<>());
 
             //Parsiraj naredbe
             while (! (line = scanner.nextLine()).matches("}")) {
-                if (! line.equals("{") && ! line.equals("}")) {
+                if (! line.equals("{") && ! line.equals("}") && ! duplicate) {
 
                     List<String> ruleList = rules.get(ruleRegex);
                     ruleList.add(line);
@@ -109,12 +114,7 @@ public class GLA {
         }
 
         scanner.close();
-        createGenerator();
-    }
-
-    private void createGenerator() {
-        AutomatonGenerator generator = new AutomatonGenerator(rules);
-        this.automatonRules = generator.getAutomatonRules();
+        automatonRules = new AutomatonGenerator(rules).getAutomatonRules();
     }
 
     /**
@@ -124,6 +124,7 @@ public class GLA {
      */
     public void serializeOutput() throws IOException {
         File file = new File("src/main/java/ppj/lab/analizator/states.ser");
+        //noinspection ResultOfMethodCallIgnored
         file.createNewFile();
         FileOutputStream fileOutputStream = new FileOutputStream(file, false);
         ObjectOutputStream objectOutputStream = new ObjectOutputStream(fileOutputStream);
@@ -132,6 +133,7 @@ public class GLA {
         objectOutputStream.close();
 
         file = new File("src/main/java/ppj/lab/analizator/symbols.ser");
+        //noinspection ResultOfMethodCallIgnored
         file.createNewFile();
         fileOutputStream = new FileOutputStream(file, false);
         objectOutputStream = new ObjectOutputStream(fileOutputStream);
@@ -140,6 +142,7 @@ public class GLA {
         objectOutputStream.close();
 
         file = new File("src/main/java/ppj/lab/analizator/rules.ser");
+        //noinspection ResultOfMethodCallIgnored
         file.createNewFile();
         fileOutputStream = new FileOutputStream(file, false);
         objectOutputStream = new ObjectOutputStream(fileOutputStream);

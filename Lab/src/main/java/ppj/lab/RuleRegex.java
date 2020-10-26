@@ -4,8 +4,8 @@ package ppj.lab;
  * Klasa koja sadrzi stanje i regularni izraz
  */
 class RuleRegex {
-    String state;
-    String regex;
+    private final String state;
+    private final String regex;
 
     RuleRegex(String state, String regex) {
         this.regex = regex;
@@ -16,16 +16,8 @@ class RuleRegex {
         return state;
     }
 
-    public void setState(String state) {
-        this.state = state;
-    }
-
     public String getRegex() {
         return regex;
-    }
-
-    public void setRegex(String regex) {
-        this.regex = regex;
     }
 
     @Override

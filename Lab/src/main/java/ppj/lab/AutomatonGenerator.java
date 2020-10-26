@@ -10,7 +10,7 @@ import java.util.*;
  */
 public class AutomatonGenerator {
 
-    private final Map<RuleRegex, List<String>> initialRules;
+    private final LinkedHashMap<RuleRegex, List<String>> initialRules;
     private final Map<Pair<String, Automaton>, List<String>> automatonRules;
 
 
@@ -20,7 +20,7 @@ public class AutomatonGenerator {
      * @param initialRules je mapa parova stanja i regularnih izraza te pripadajućih akcija
      * @throws IllegalArgumentException ako je predana nevalidna konfiguracija
      */
-    public AutomatonGenerator(Map<RuleRegex, List<String>> initialRules) {
+    public AutomatonGenerator(LinkedHashMap<RuleRegex, List<String>> initialRules) {
         this.initialRules = Objects.requireNonNull(initialRules);
         this.automatonRules = new LinkedHashMap<>();
         generateAutomatons();
@@ -113,7 +113,8 @@ public class AutomatonGenerator {
             generatedAutomaton.setStartState(result.getLeft());
             generatedAutomaton.setAcceptableState(result.getRight());
             Pair<String, Automaton> stateAutomaton = new Pair<>(rulReg.getState(), generatedAutomaton);
-            automatonRules.put(stateAutomaton, initialRules.get(rulReg));
+            if (! automatonRules.containsKey(stateAutomaton))
+                automatonRules.put(stateAutomaton, initialRules.get(rulReg));
         }
     }
 
@@ -211,7 +212,7 @@ public class AutomatonGenerator {
                             } else if (regex.charAt(k) == ')' && isOperator(regex, k)) {
                                 parenthCounter--;
                             }
-                            if(parenthCounter == 0) {
+                            if (parenthCounter == 0) {
                                 j = k;
                                 break;
                             }
