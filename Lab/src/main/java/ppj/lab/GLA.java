@@ -1,8 +1,5 @@
 package ppj.lab;
 
-import ppj.lab.utility.Automaton;
-import ppj.lab.utility.Pair;
-
 import java.io.*;
 import java.util.*;
 import java.util.stream.Collectors;
