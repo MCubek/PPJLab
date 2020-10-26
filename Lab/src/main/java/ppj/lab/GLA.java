@@ -129,6 +129,7 @@ public class GLA {
      */
     public void serializeOutput() throws IOException {
         File file = new File("src/main/java/ppj/lab/analizator/states.ser");
+        //noinspection ResultOfMethodCallIgnored
         file.createNewFile();
         FileOutputStream fileOutputStream = new FileOutputStream(file, false);
         ObjectOutputStream objectOutputStream = new ObjectOutputStream(fileOutputStream);
@@ -137,6 +138,7 @@ public class GLA {
         objectOutputStream.close();
 
         file = new File("src/main/java/ppj/lab/analizator/symbols.ser");
+        //noinspection ResultOfMethodCallIgnored
         file.createNewFile();
         fileOutputStream = new FileOutputStream(file, false);
         objectOutputStream = new ObjectOutputStream(fileOutputStream);
@@ -145,6 +147,7 @@ public class GLA {
         objectOutputStream.close();
 
         file = new File("src/main/java/ppj/lab/analizator/rules.ser");
+        //noinspection ResultOfMethodCallIgnored
         file.createNewFile();
         fileOutputStream = new FileOutputStream(file, false);
         objectOutputStream = new ObjectOutputStream(fileOutputStream);

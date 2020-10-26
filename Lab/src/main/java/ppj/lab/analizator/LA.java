@@ -9,6 +9,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class LA {
+    private static final int MAX_SINGLE_SYMBOL_LENGTH = 20;
     private List<String> states;
     private Set<String> uniformSymbols;
     private Map<Pair<String, Automaton>, List<String>> automatonRules;
@@ -27,6 +28,7 @@ public class LA {
         this(new Scanner(file));
     }
 
+    //Prvi nacin
     //parsira niz i razdvaja leksicke jedinke
     private void parseProgram(List<String> inputLinesList) {
 
@@ -150,7 +152,7 @@ public class LA {
     private void parseProgramAsString(String program) {
         int lineCount = 1;
         String currentState = states.get(0);
-        String symbol = "";
+        StringBuilder symbol = new StringBuilder();
         String foundSymbol = "";
         Pair<String, Automaton> symbolAutom = null;
 
@@ -161,13 +163,13 @@ public class LA {
 
             int notFoundCounter = 0;
             for (int i = currentPosition; i < program.length(); i++) {
-                symbol += program.charAt(i);
+                symbol.append(program.charAt(i));
 
                 boolean automatonFoundForCurrentSymbol = false;
 
                 for (var symbolAutomTestPair : automatonRules.keySet()) {
-                    if (symbolAutomTestPair.getLeft().equals(currentState) && symbolAutomTestPair.getRight().computeInput(symbol)) {
-                        foundSymbol = symbol;
+                    if (symbolAutomTestPair.getLeft().equals(currentState) && symbolAutomTestPair.getRight().computeInput(symbol.toString())) {
+                        foundSymbol = symbol.toString();
                         symbolAutom = symbolAutomTestPair;
 
                         foundAutom = true;
@@ -179,7 +181,7 @@ public class LA {
                 if (! automatonFoundForCurrentSymbol)
                     notFoundCounter++;
 
-                if (notFoundCounter >= 10) break;
+                if (notFoundCounter >= MAX_SINGLE_SYMBOL_LENGTH) break;
             }
 
             if (foundAutom) {
@@ -209,12 +211,12 @@ public class LA {
                         currentPosition += foundSymbol.length();
                     }
 
-                    symbol = "";
+                    symbol = new StringBuilder();
 
                 }
             } else {
                 currentPosition++;
-                symbol = "";
+                symbol = new StringBuilder();
             }
         }
     }
@@ -307,14 +309,4 @@ public class LA {
         }
 
     }
-
-    public class LAException extends RuntimeException {
-        public LAException() {
-        }
-
-        public LAException(String message) {
-            super(message);
-        }
-    }
-
 }
