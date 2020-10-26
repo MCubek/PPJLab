@@ -159,20 +159,27 @@ public class LA {
         while (currentPosition < program.length()) {
             boolean foundAutom = false;
 
+            int notFoundCounter = 0;
             for (int i = currentPosition; i < program.length(); i++) {
                 symbol += program.charAt(i);
 
-                int foundCounter = 0;
+                boolean automatonFoundForCurrentSymbol = false;
+
                 for (var symbolAutomTestPair : automatonRules.keySet()) {
                     if (symbolAutomTestPair.getLeft().equals(currentState) && symbolAutomTestPair.getRight().computeInput(symbol)) {
                         foundSymbol = symbol;
                         symbolAutom = symbolAutomTestPair;
+
                         foundAutom = true;
-                        foundCounter++;
+                        automatonFoundForCurrentSymbol = true;
+                        notFoundCounter = 0;
                         break;
                     }
                 }
-                if (foundCounter >= 5) break;
+                if (! automatonFoundForCurrentSymbol)
+                    notFoundCounter++;
+
+                if (notFoundCounter >= 10) break;
             }
 
             if (foundAutom) {
@@ -207,6 +214,7 @@ public class LA {
                 }
             } else {
                 currentPosition++;
+                symbol = "";
             }
         }
     }
