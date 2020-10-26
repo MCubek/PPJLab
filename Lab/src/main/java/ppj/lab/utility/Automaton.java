@@ -9,6 +9,7 @@ import java.util.*;
  * @author MatejC FraneB
  */
 public class Automaton implements Serializable {
+    private static final long serialVersionUID = 7442898039424384643L;
     private int stateCount;
     private int startState;
     private int acceptableState;

@@ -10,6 +10,7 @@ import java.util.Objects;
  */
 public class Pair<T, V> implements Serializable {
 
+    private static final long serialVersionUID = 2883016241548931491L;
     private final T left;
     private final V right;
 

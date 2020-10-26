@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class RegEx implements Serializable {
+    private static final long serialVersionUID = - 7659733003374818780L;
     private final String name;
     private String expression;
 
