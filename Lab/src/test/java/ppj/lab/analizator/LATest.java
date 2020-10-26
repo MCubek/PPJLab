@@ -282,6 +282,246 @@ public class LATest {
         assertEquals(readFileAsStringFromResources("src/test/resources/ispitniTestovi/29_veliki3/test.out"), la.getOutputAsString());
     }
 
+    @Test
+    public void testGitProblem1() throws IOException, ClassNotFoundException {
+        File file = new File("src/test/resources/gitTestovi/duljina/test.lan");
+        GLA gla = new GLA(file);
+        gla.serializeOutput();
+
+        file = new File("src/test/resources/gitTestovi/duljina/test.in");
+        LA la = new LA(file);
+
+        assertEquals(readFileAsStringFromResources("src/test/resources/gitTestovi/duljina/test.out"), la.getOutputAsString());
+    }
+
+    @Test
+    public void testGitProblem2() throws IOException, ClassNotFoundException {
+        File file = new File("src/test/resources/gitTestovi/greske_u_stanju/test.lan");
+        GLA gla = new GLA(file);
+        gla.serializeOutput();
+
+        file = new File("src/test/resources/gitTestovi/greske_u_stanju/test.in");
+        LA la = new LA(file);
+
+        assertEquals(readFileAsStringFromResources("src/test/resources/gitTestovi/greske_u_stanju/test.out"), la.getOutputAsString());
+    }
+
+    @Test
+    public void testGitProblem3() throws IOException, ClassNotFoundException {
+        File file = new File("src/test/resources/gitTestovi/minusLang_laksi/test.lan");
+        GLA gla = new GLA(file);
+        gla.serializeOutput();
+
+        file = new File("src/test/resources/gitTestovi/minusLang_laksi/test.in");
+        LA la = new LA(file);
+
+        assertEquals(readFileAsStringFromResources("src/test/resources/gitTestovi/minusLang_laksi/test.out"), la.getOutputAsString());
+    }
+
+    @Test
+    public void testGitProblem4() throws IOException, ClassNotFoundException {
+        File file = new File("src/test/resources/gitTestovi/minusLang_tezi/test.lan");
+        GLA gla = new GLA(file);
+        gla.serializeOutput();
+
+        file = new File("src/test/resources/gitTestovi/minusLang_tezi/test.in");
+        LA la = new LA(file);
+
+        assertEquals(readFileAsStringFromResources("src/test/resources/gitTestovi/minusLang_tezi/test.out"), la.getOutputAsString());
+    }
+
+    @Test
+    public void testGitProblem5() throws IOException, ClassNotFoundException {
+        File file = new File("src/test/resources/gitTestovi/nadji_x/test.lan");
+        GLA gla = new GLA(file);
+        gla.serializeOutput();
+
+        file = new File("src/test/resources/gitTestovi/nadji_x/test.in");
+        LA la = new LA(file);
+
+        assertEquals(readFileAsStringFromResources("src/test/resources/gitTestovi/nadji_x/test.out"), la.getOutputAsString());
+    }
+
+    @Test
+    public void testGitProblem6() throws IOException, ClassNotFoundException {
+        File file = new File("src/test/resources/gitTestovi/nadji_x_oporavak/test.lan");
+        GLA gla = new GLA(file);
+        gla.serializeOutput();
+
+        file = new File("src/test/resources/gitTestovi/nadji_x_oporavak/test.in");
+        LA la = new LA(file);
+
+        assertEquals(readFileAsStringFromResources("src/test/resources/gitTestovi/nadji_x_oporavak/test.out"), la.getOutputAsString());
+    }
+
+    @Test
+    public void testGitProblem7() throws IOException, ClassNotFoundException {
+        File file = new File("src/test/resources/gitTestovi/nadji_x_retci/test.lan");
+        GLA gla = new GLA(file);
+        gla.serializeOutput();
+
+        file = new File("src/test/resources/gitTestovi/nadji_x_retci/test.in");
+        LA la = new LA(file);
+
+        assertEquals(readFileAsStringFromResources("src/test/resources/gitTestovi/nadji_x_retci/test.out"), la.getOutputAsString());
+    }
+
+    @Test
+    public void testGitProblem8() throws IOException, ClassNotFoundException {
+        File file = new File("src/test/resources/gitTestovi/poredak/test.lan");
+        GLA gla = new GLA(file);
+        gla.serializeOutput();
+
+        file = new File("src/test/resources/gitTestovi/poredak/test.in");
+        LA la = new LA(file);
+
+        assertEquals(readFileAsStringFromResources("src/test/resources/gitTestovi/poredak/test.out"), la.getOutputAsString());
+    }
+
+    @Test
+    public void testGitProblem9() throws IOException, ClassNotFoundException {
+        File file = new File("src/test/resources/gitTestovi/ppjLang_laksi/test.lan");
+        GLA gla = new GLA(file);
+        gla.serializeOutput();
+
+        file = new File("src/test/resources/gitTestovi/ppjLang_laksi/test.in");
+        LA la = new LA(file);
+
+        assertEquals(readFileAsStringFromResources("src/test/resources/gitTestovi/ppjLang_laksi/test.out"), la.getOutputAsString());
+    }
+
+    @Test
+    public void testGitProblem10() throws IOException, ClassNotFoundException {
+        File file = new File("src/test/resources/gitTestovi/ppjLang_tezi/test.lan");
+        GLA gla = new GLA(file);
+        gla.serializeOutput();
+
+        file = new File("src/test/resources/gitTestovi/ppjLang_tezi/test.in");
+        LA la = new LA(file);
+
+        assertEquals(readFileAsStringFromResources("src/test/resources/gitTestovi/ppjLang_tezi/test.out"), la.getOutputAsString());
+    }
+
+    @Test
+    public void testGitProblem11() throws IOException, ClassNotFoundException {
+        File file = new File("src/test/resources/gitTestovi/regex_escapes/test.lan");
+        GLA gla = new GLA(file);
+        gla.serializeOutput();
+
+        file = new File("src/test/resources/gitTestovi/regex_escapes/test.in");
+        LA la = new LA(file);
+
+        assertEquals(readFileAsStringFromResources("src/test/resources/gitTestovi/regex_escapes/test.out"), la.getOutputAsString());
+    }
+
+    @Test
+    public void testGitProblem12() throws IOException, ClassNotFoundException {
+        File file = new File("src/test/resources/gitTestovi/regex_laksi/test.lan");
+        GLA gla = new GLA(file);
+        gla.serializeOutput();
+
+        file = new File("src/test/resources/gitTestovi/regex_laksi/test.in");
+        LA la = new LA(file);
+
+        assertEquals(readFileAsStringFromResources("src/test/resources/gitTestovi/regex_laksi/test.out"), la.getOutputAsString());
+    }
+
+    @Test
+    public void testGitProblem13() throws IOException, ClassNotFoundException {
+        File file = new File("src/test/resources/gitTestovi/regex_regdefs/test.lan");
+        GLA gla = new GLA(file);
+        gla.serializeOutput();
+
+        file = new File("src/test/resources/gitTestovi/regex_regdefs/test.in");
+        LA la = new LA(file);
+
+        assertEquals(readFileAsStringFromResources("src/test/resources/gitTestovi/regex_regdefs/test.out"), la.getOutputAsString());
+    }
+
+    @Test
+    public void testGitProblem14() throws IOException, ClassNotFoundException {
+        File file = new File("src/test/resources/gitTestovi/regex_tezi/test.lan");
+        GLA gla = new GLA(file);
+        gla.serializeOutput();
+
+        file = new File("src/test/resources/gitTestovi/regex_tezi/test.in");
+        LA la = new LA(file);
+
+        assertEquals(readFileAsStringFromResources("src/test/resources/gitTestovi/regex_tezi/test.out"), la.getOutputAsString());
+    }
+
+    @Test
+    public void testGitProblem15() throws IOException, ClassNotFoundException {
+        File file = new File("src/test/resources/gitTestovi/simplePpjLang_laksi/test.lan");
+        GLA gla = new GLA(file);
+        gla.serializeOutput();
+
+        file = new File("src/test/resources/gitTestovi/simplePpjLang_laksi/test.in");
+        LA la = new LA(file);
+
+        assertEquals(readFileAsStringFromResources("src/test/resources/gitTestovi/simplePpjLang_laksi/test.out"), la.getOutputAsString());
+    }
+
+    @Test
+    public void testGitProblem16() throws IOException, ClassNotFoundException {
+        File file = new File("src/test/resources/gitTestovi/simplePpjLang_tezi/test.lan");
+        GLA gla = new GLA(file);
+        gla.serializeOutput();
+
+        file = new File("src/test/resources/gitTestovi/simplePpjLang_tezi/test.in");
+        LA la = new LA(file);
+
+        assertEquals(readFileAsStringFromResources("src/test/resources/gitTestovi/simplePpjLang_tezi/test.out"), la.getOutputAsString());
+    }
+
+    @Test
+    public void testGitProblem17() throws IOException, ClassNotFoundException {
+        File file = new File("src/test/resources/gitTestovi/state_hopper/test.lan");
+        GLA gla = new GLA(file);
+        gla.serializeOutput();
+
+        file = new File("src/test/resources/gitTestovi/state_hopper/test.in");
+        LA la = new LA(file);
+
+        assertEquals(readFileAsStringFromResources("src/test/resources/gitTestovi/state_hopper/test.out"), la.getOutputAsString());
+    }
+
+    @Test
+    public void testGitProblem18() throws IOException, ClassNotFoundException {
+        File file = new File("src/test/resources/gitTestovi/svaki_treci_x/test.lan");
+        GLA gla = new GLA(file);
+        gla.serializeOutput();
+
+        file = new File("src/test/resources/gitTestovi/svaki_treci_x/test.in");
+        LA la = new LA(file);
+
+        assertEquals(readFileAsStringFromResources("src/test/resources/gitTestovi/svaki_treci_x/test.out"), la.getOutputAsString());
+    }
+
+    @Test
+    public void testGitProblem19() throws IOException, ClassNotFoundException {
+        File file = new File("src/test/resources/gitTestovi/vrati_se/test.lan");
+        GLA gla = new GLA(file);
+        gla.serializeOutput();
+
+        file = new File("src/test/resources/gitTestovi/vrati_se/test.in");
+        LA la = new LA(file);
+
+        assertEquals(readFileAsStringFromResources("src/test/resources/gitTestovi/vrati_se/test.out"), la.getOutputAsString());
+    }
+
+    @Test
+    public void testGitProblem20() throws IOException, ClassNotFoundException {
+        File file = new File("src/test/resources/gitTestovi/vrati_se_prioritet/test.lan");
+        GLA gla = new GLA(file);
+        gla.serializeOutput();
+
+        file = new File("src/test/resources/gitTestovi/vrati_se_prioritet/test.in");
+        LA la = new LA(file);
+
+        assertEquals(readFileAsStringFromResources("src/test/resources/gitTestovi/vrati_se_prioritet/test.out"), la.getOutputAsString());
+    }
+
     private String readFileAsStringFromResources(String pathName) throws IOException {
         InputStream is = new FileInputStream(pathName);
         byte[] data = is.readAllBytes();
