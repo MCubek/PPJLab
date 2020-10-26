@@ -162,17 +162,17 @@ public class LA {
             for (int i = currentPosition; i < program.length(); i++) {
                 symbol += program.charAt(i);
 
-                boolean foundAtLeastOneAutom = false;
+                int foundCounter = 0;
                 for (var symbolAutomTestPair : automatonRules.keySet()) {
                     if (symbolAutomTestPair.getLeft().equals(currentState) && symbolAutomTestPair.getRight().computeInput(symbol)) {
                         foundSymbol = symbol;
                         symbolAutom = symbolAutomTestPair;
                         foundAutom = true;
-                        foundAtLeastOneAutom = true;
+                        foundCounter++;
                         break;
                     }
                 }
-                if (! foundAtLeastOneAutom) break;
+                if (foundCounter >= 5) break;
             }
 
             if (foundAutom) {
