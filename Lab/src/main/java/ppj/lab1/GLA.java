@@ -1,4 +1,9 @@
-package ppj.lab;
+package ppj.lab1;
+
+import ppj.utilities.Automaton;
+import ppj.utilities.AutomatonGenerator;
+import ppj.utilities.Pair;
+import ppj.utilities.RuleRegex;
 
 import java.io.*;
 import java.util.*;
@@ -123,27 +128,21 @@ public class GLA {
      * @throws IOException ako datoteke gdje se zapisuje ne postoje
      */
     public void serializeOutput() throws IOException {
-        File file = new File("src/main/java/ppj/lab/analizator/states.ser");
-        //noinspection ResultOfMethodCallIgnored
-        file.createNewFile();
+        File file = new File("src/main/java/ppj/lab1/analizator/states.ser");
         FileOutputStream fileOutputStream = new FileOutputStream(file, false);
         ObjectOutputStream objectOutputStream = new ObjectOutputStream(fileOutputStream);
         objectOutputStream.writeObject(states);
         fileOutputStream.close();
         objectOutputStream.close();
 
-        file = new File("src/main/java/ppj/lab/analizator/symbols.ser");
-        //noinspection ResultOfMethodCallIgnored
-        file.createNewFile();
+        file = new File("src/main/java/ppj/lab1/analizator/symbols.ser");
         fileOutputStream = new FileOutputStream(file, false);
         objectOutputStream = new ObjectOutputStream(fileOutputStream);
         objectOutputStream.writeObject(uniformSymbols);
         fileOutputStream.close();
         objectOutputStream.close();
 
-        file = new File("src/main/java/ppj/lab/analizator/rules.ser");
-        //noinspection ResultOfMethodCallIgnored
-        file.createNewFile();
+        file = new File("src/main/java/ppj/lab1/analizator/rules.ser");
         fileOutputStream = new FileOutputStream(file, false);
         objectOutputStream = new ObjectOutputStream(fileOutputStream);
         objectOutputStream.writeObject(automatonRules);

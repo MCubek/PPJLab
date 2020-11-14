@@ -1,4 +1,4 @@
-package ppj.lab;
+package ppj.utilities;
 
 /**
  * Klasa koja sadrzi stanje i regularni izraz
@@ -7,7 +7,7 @@ public class RuleRegex {
     private final String state;
     private final String regex;
 
-    RuleRegex(String state, String regex) {
+    public RuleRegex(String state, String regex) {
         this.regex = regex;
         this.state = state;
     }
