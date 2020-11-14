@@ -1,4 +1,4 @@
-package ppj.lab;
+package ppj.utilities;
 
 import java.util.*;
 

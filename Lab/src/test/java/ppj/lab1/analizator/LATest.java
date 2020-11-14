@@ -1,7 +1,7 @@
-package ppj.lab.analizator;
+package ppj.lab1.analizator;
 
 import org.junit.jupiter.api.Test;
-import ppj.lab.GLA;
+import ppj.lab1.GLA;
 
 import java.io.File;
 import java.io.FileInputStream;
