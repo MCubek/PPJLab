@@ -2,6 +2,7 @@ package ppj.lab2;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.*;
 
 /**
@@ -62,11 +63,20 @@ public class GSA {
         }
     }
 
+    public void serializeOutput() throws IOException {
+        // TODO: 15.11.2020. Serialize output
+    }
+
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
         GSA gsa = new GSA(scanner);
         scanner.close();
 
+        try {
+            gsa.serializeOutput();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
     }
 }
