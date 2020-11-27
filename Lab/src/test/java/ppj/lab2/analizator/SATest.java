@@ -1,4 +1,4 @@
-package ppj.lab2.SA;
+package ppj.lab2.analizator;
 
 import org.junit.jupiter.api.Test;
 import ppj.lab2.GSA;

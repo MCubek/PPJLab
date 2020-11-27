@@ -1,4 +1,4 @@
-package ppj.lab2.SA;
+package ppj.lab2.analizator;
 
 import java.io.File;
 import java.io.IOException;
