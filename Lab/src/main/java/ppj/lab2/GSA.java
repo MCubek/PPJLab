@@ -62,7 +62,7 @@ public class GSA {
             }
 
             if(productions.containsKey(nonTerminalSymbol))
-                symbolProductions.addAll(productions.get(nonTerminalSymbol));
+                symbolProductions.addAll(0,productions.get(nonTerminalSymbol));
             productions.put(nonTerminalSymbol, symbolProductions);
         }
         ParserGenerator generator = new ParserGenerator(productions,terminalSymbols,nonTerminalSymbols);

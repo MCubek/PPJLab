@@ -6,14 +6,16 @@ public class ParserGenerator {
 
     private Map<String, List<List<String>>> LRProductions;
     private List<String> entrySymbols;
-    private boolean[][] firstTable;
+    private List<String> emptySymbols;
+    private Map<String,List<String>> firstRelation;
 
     public ParserGenerator(Map<String, List<List<String>>> initialProductions, List<String> terminalSymbols, List<String> nonTerminalSymbols) {
         this.entrySymbols = new ArrayList<>(nonTerminalSymbols);
         this.entrySymbols.addAll(terminalSymbols);
         this.LRProductions = generateAllLRProductions(Objects.requireNonNull(initialProductions), nonTerminalSymbols.get(0));
-        this.firstTable = new boolean[entrySymbols.size()][entrySymbols.size()];
-        generateFirstTable(entrySymbols, initialProductions);
+        firstRelation = new LinkedHashMap<>();
+        generateFirstTable(entrySymbols, initialProductions,nonTerminalSymbols,terminalSymbols);
+        generateParser(nonTerminalSymbols,terminalSymbols);
     }
 
     public Map<String, List<List<String>>> getLRProductions() {
@@ -70,7 +72,9 @@ public class ParserGenerator {
         return result;
     }
 
-    public void generateFirstTable(List<String> entrySymbols, Map<String, List<List<String>>> initialProductions) {
+    public void generateFirstTable(List<String> entrySymbols, Map<String, List<List<String>>> initialProductions, List<String> nonTerminalSymbols, List<String> terminalSymbols) {
+        boolean[][] firstTable = new boolean[entrySymbols.size()][entrySymbols.size()];
+
         //kodiranje znakova za tablicu ZAPOCINJE
         Map<String,Integer> codedSymbols = new LinkedHashMap<>();
         int counter = 0;
@@ -94,6 +98,7 @@ public class ParserGenerator {
             }
         }
 
+        this.emptySymbols = emptySymbols;
         //generiranje tablice ZapocinjeIzravnoZnakom
         for (Map.Entry<String, List<List<String>>> entry : initialProductions.entrySet()) {
             for (List<String> rightSide : entry.getValue()) {
@@ -134,9 +139,9 @@ public class ParserGenerator {
             for(int j = 0; j < firstTable.length; j++) {
                 if(i == j) {
                     firstTable[i][j] = true;
-                } else if(firstTable[i][j] == true) {
+                } else if(firstTable[i][j]) {
                     for(int k = 0; k < firstTable.length; k++) {
-                        if(firstTable[j][k] == true)
+                        if(firstTable[j][k])
                             firstTable[i][k] = true;
                     }
                 }
@@ -165,6 +170,99 @@ public class ParserGenerator {
             System.out.println(line);
             line = "";
         }*/
+
+        //popunjavanje liste relacija ZAPOCINJE
+        for(int i = 0; i < firstTable.length; i++) {
+            if(nonTerminalSymbols.contains(codedSymbols.keySet().toArray()[i].toString())) {
+                for(int j = 0; j < firstTable.length; j++) {
+                    if(terminalSymbols.contains(codedSymbols.keySet().toArray()[j].toString()) && firstTable[i][j]) {
+                        if(this.firstRelation.containsKey(codedSymbols.keySet().toArray()[i].toString())) {
+                            List<String> relations = firstRelation.get(codedSymbols.keySet().toArray()[i].toString());
+                            relations.add(codedSymbols.keySet().toArray()[j].toString());
+                            firstRelation.replace(codedSymbols.keySet().toArray()[i].toString(),relations);
+                        } else {
+                            List<String> relations = new ArrayList<>();
+                            relations.add(codedSymbols.keySet().toArray()[j].toString());
+                            firstRelation.put(codedSymbols.keySet().toArray()[i].toString(),relations);
+                        }
+                    }
+                }
+            }
+        }
+        }
+
+        public void generateParser(List<String> nonTerminalSymbols, List<String> terminalSymbols) {
+            //mapa koja veze stanja uz produkcije
+            Map<Integer, Pair<Pair<String,List<String>>,String>> productionsToStates = new LinkedHashMap<>();
+            //brojac stanja
+            int stateCounter = 0;
+            //mapa svih prijelaza
+            Map<Pair<Integer,String>,List<Integer>> transitions = new LinkedHashMap<>();
+            //queue nezavrsnih znakova koji se trebaju obraditi
+            Queue<Pair<String,String>> transitionQueue = new LinkedList<>();
+            //u queue se ubacuje pocetna produkcija i izlazni znak {$}
+            Pair<String,String> initialState = new Pair<>(LRProductions.keySet().toArray()[0].toString(),"{$}");
+            transitionQueue.add(initialState);
+            //brojimo koje smo parove stanja i izlaznih znakova prosli da se izbjegne rekurzija u beskonacnost
+            Set<Pair<String,String>> removed = new HashSet<>();
+            //obraduje se dok ima nezavrsnih znakova za obraditi
+            while(!transitionQueue.isEmpty()) {
+                //izvlaci se trenutni par za obradu i oznacuje se kao da je vec proden
+                Pair<String,String> currentLeftSide = transitionQueue.remove();
+                removed.add(currentLeftSide);
+                Integer previousState = null;
+                String transitionSymbol = null;
+                //gledaju se produkcije nezavrsnog znaka
+                for(List<String> currentProductions : LRProductions.get(currentLeftSide.getLeft())) {
+                    Pair<String,List<String>> beforeProduction = new Pair<>(currentLeftSide.getLeft(),currentProductions);
+                    Pair<Pair<String,List<String>>,String> afterProduction = new Pair<>(beforeProduction,currentLeftSide.getRight());
+                    productionsToStates.put(stateCounter++,afterProduction);
+                    if(currentProductions.indexOf("*") != 0) {
+                        Pair<Integer,String> transitionPair = new Pair<>(previousState,transitionSymbol);
+                        if(transitions.containsKey(transitionPair)) {
+                            List<Integer> previousKnownStates = transitions.get(transitionPair);
+                            previousKnownStates.add(stateCounter);
+                            transitions.replace(transitionPair,previousKnownStates);
+                        } else {
+                            List<Integer> newStates = new ArrayList<>();
+                            newStates.add(stateCounter - 1);
+                            transitions.put(transitionPair, newStates);
+                        }
+                        if(transitionSymbol != null && nonTerminalSymbols.contains(transitionSymbol)) {
+                            StringBuilder followSymbolString = new StringBuilder("{");
+                            String followSymbol;
+                            if(currentProductions.indexOf("*") != currentProductions.size() - 1) {
+                                List<String> checkEmpty = currentProductions.subList(currentProductions.indexOf("*") + 1,currentProductions.size());
+                                if(this.emptySymbols.containsAll(checkEmpty)) {
+                                    followSymbolString.append("$, ");
+                                }
+                                followSymbol = currentProductions.get(currentProductions.indexOf("*") + 1);
+                                if(nonTerminalSymbols.contains(followSymbol)) {
+                                    List<String> firstRelations = firstRelation.get(followSymbol);
+                                    for (String s : firstRelations) {
+                                        if (firstRelations.indexOf(s) == firstRelations.size() - 1)
+                                            followSymbolString.append(s).append("}");
+                                        else
+                                            followSymbolString.append(s).append(", ");
+                                    }
+                                } else {
+                                    followSymbolString.append(followSymbol).append("}");
+                                }
+                            } else {
+                                followSymbolString.append("$}");
+                            }
+                            Pair<String,String> nextPair = new Pair<>(transitionSymbol, followSymbolString.toString());
+                            if(!removed.contains(nextPair))
+                                transitionQueue.add(nextPair);
+                        }
+                    }
+                    if(currentProductions.indexOf("*") != currentProductions.size() -1) {
+                        previousState = stateCounter - 1;
+                        transitionSymbol = currentProductions.get(currentProductions.indexOf("*") + 1);
+                    }
+                }
+            }
+            System.out.println("test");
         }
 
     public static void main(String[] args) {
