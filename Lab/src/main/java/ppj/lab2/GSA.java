@@ -65,7 +65,7 @@ public class GSA {
                 symbolProductions.addAll(productions.get(nonTerminalSymbol));
             productions.put(nonTerminalSymbol, symbolProductions);
         }
-        //ParserGenerator generator = new ParserGenerator(productions,terminalSymbols,nonTerminalSymbols);
+        ParserGenerator generator = new ParserGenerator(productions,terminalSymbols,nonTerminalSymbols);
     }
 
     public void serializeOutput() throws IOException {
