@@ -1,5 +1,7 @@
 package ppj.lab2;
 
+import ppj.utilities.ParserGenerator;
+
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -59,8 +61,11 @@ public class GSA {
                 symbolProductions.add(symbols);
             }
 
+            if(productions.containsKey(nonTerminalSymbol))
+                symbolProductions.addAll(productions.get(nonTerminalSymbol));
             productions.put(nonTerminalSymbol, symbolProductions);
         }
+        //ParserGenerator generator = new ParserGenerator(productions,terminalSymbols,nonTerminalSymbols);
     }
 
     public void serializeOutput() throws IOException {
@@ -71,7 +76,6 @@ public class GSA {
         Scanner scanner = new Scanner(System.in);
         GSA gsa = new GSA(scanner);
         scanner.close();
-
         try {
             gsa.serializeOutput();
         } catch (IOException e) {
