@@ -199,16 +199,21 @@ public class ParserGenerator {
             //mapa svih prijelaza
             Map<Pair<Integer,String>,List<Integer>> transitions = new LinkedHashMap<>();
             //queue nezavrsnih znakova koji se trebaju obraditi
-            Queue<Pair<String,String>> transitionQueue = new LinkedList<>();
+            Queue<Pair<Pair<String,String>,Integer>> transitionQueue = new LinkedList<>();
             //u queue se ubacuje pocetna produkcija i izlazni znak {$}
             Pair<String,String> initialState = new Pair<>(LRProductions.keySet().toArray()[0].toString(),"{$}");
-            transitionQueue.add(initialState);
+            Queue<Pair<String,String>> supportQueue = new LinkedList<>();
+            supportQueue.add(initialState);
+            Pair<Pair<String,String>,Integer> initialQueueElement = new Pair<>(initialState,-1);
+            transitionQueue.add(initialQueueElement);
             //brojimo koje smo parove stanja i izlaznih znakova prosli da se izbjegne rekurzija u beskonacnost
             Set<Pair<String,String>> removed = new HashSet<>();
             //obraduje se dok ima nezavrsnih znakova za obraditi
             while(!transitionQueue.isEmpty()) {
                 //izvlaci se trenutni par za obradu i oznacuje se kao da je vec proden
-                Pair<String,String> currentLeftSide = transitionQueue.remove();
+                Pair<Pair<String,String>,Integer> currentQueueElement = transitionQueue.remove();
+                Pair<String,String> currentLeftSide = currentQueueElement.getLeft();
+                supportQueue.remove();
                 removed.add(currentLeftSide);
                 Integer previousState = null;
                 String transitionSymbol = null;
@@ -219,15 +224,7 @@ public class ParserGenerator {
                     productionsToStates.put(stateCounter++,afterProduction);
                     if(currentProductions.indexOf("*") != 0) {
                         Pair<Integer,String> transitionPair = new Pair<>(previousState,transitionSymbol);
-                        if(transitions.containsKey(transitionPair)) {
-                            List<Integer> previousKnownStates = transitions.get(transitionPair);
-                            previousKnownStates.add(stateCounter);
-                            transitions.replace(transitionPair,previousKnownStates);
-                        } else {
-                            List<Integer> newStates = new ArrayList<>();
-                            newStates.add(stateCounter - 1);
-                            transitions.put(transitionPair, newStates);
-                        }
+                        addTransition(stateCounter, transitions, transitionPair);
                         if(transitionSymbol != null && nonTerminalSymbols.contains(transitionSymbol)) {
                             StringBuilder followSymbolString = new StringBuilder("{");
                             String followSymbol;
@@ -252,8 +249,16 @@ public class ParserGenerator {
                                 followSymbolString.append("$}");
                             }
                             Pair<String,String> nextPair = new Pair<>(transitionSymbol, followSymbolString.toString());
-                            if(!removed.contains(nextPair))
-                                transitionQueue.add(nextPair);
+                            Pair<Pair<String,String>,Integer> nextQueueElement = new Pair<>(nextPair,previousState);
+                            if(!removed.contains(nextPair) && !supportQueue.contains(nextPair)) {
+                                transitionQueue.add(nextQueueElement);
+                                supportQueue.add(nextPair);
+                            }
+                        }
+                    } else {
+                        if(currentQueueElement.getRight() != -1) {
+                            Pair<Integer,String> transitionPair = new Pair<>(currentQueueElement.getRight(), "$");
+                            addTransition(stateCounter, transitions, transitionPair);
                         }
                     }
                     if(currentProductions.indexOf("*") != currentProductions.size() -1) {
@@ -262,8 +267,43 @@ public class ParserGenerator {
                     }
                 }
             }
-            System.out.println("test");
+            //printEnka(productionsToStates,transitions);
         }
+
+    private void printEnka(Map<Integer, Pair<Pair<String, List<String>>, String>> productionsToStates, Map<Pair<Integer, String>, List<Integer>> transitions) {
+        for(Map.Entry<Pair<Integer,String>,List<Integer>> entry : transitions.entrySet()) {
+            Pair<Pair<String,List<String>>,String> currentState = productionsToStates.get(entry.getKey().getLeft());
+            StringBuilder currentStateString = new StringBuilder(currentState.getLeft().getLeft() + " -> ");
+            for(String s : currentState.getLeft().getRight()) {
+                currentStateString.append(s);
+            }
+            currentStateString.append(" ");
+            currentStateString.append(currentState.getRight());
+            for(Integer nextState: entry.getValue()) {
+                Pair<Pair<String,List<String>>,String> rightSideState = productionsToStates.get(nextState);
+                StringBuilder currentRightSideStateString = new StringBuilder(rightSideState.getLeft().getLeft() + " -> ");
+                for(String s : rightSideState.getLeft().getRight()) {
+                    currentRightSideStateString.append(s);
+                }
+                currentRightSideStateString.append(" ");
+                currentRightSideStateString.append(rightSideState.getRight());
+                System.out.println(currentStateString + "  +  " + entry.getKey().getRight() + " ===> " + currentRightSideStateString);
+            }
+        }
+
+    }
+
+    private void addTransition(int stateCounter, Map<Pair<Integer, String>, List<Integer>> transitions, Pair<Integer, String> transitionPair) {
+        if(transitions.containsKey(transitionPair)) {
+            List<Integer> previousKnownStates = transitions.get(transitionPair);
+            previousKnownStates.add(stateCounter-1);
+            transitions.replace(transitionPair,previousKnownStates);
+        } else {
+            List<Integer> newStates = new ArrayList<>();
+            newStates.add(stateCounter - 1);
+            transitions.put(transitionPair, newStates);
+        }
+    }
 
     public static void main(String[] args) {
 
