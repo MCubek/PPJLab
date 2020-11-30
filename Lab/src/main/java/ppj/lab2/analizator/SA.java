@@ -80,10 +80,12 @@ public class SA {
 
     private void generateTree() {
         rootNode = null;
+        //Oznaka kraja niza
+        lexicalUnits.add("EOL 0 EOL");
 
-        Queue<Integer> stateQueue = new LinkedList<>();
-        Queue<Node<String>> symbolsQueue = new LinkedList<>();
-        stateQueue.add(STARTING_STATE);
+        Deque<Integer> stateQueue = new LinkedList<>();
+        Deque<Node<String>> symbolsQueue = new LinkedList<>();
+        stateQueue.push(STARTING_STATE);
 
         for (int position = 0; position < lexicalUnits.size() && ! stateQueue.isEmpty(); ) {
             String lexicalUnit = lexicalUnits.get(position);
@@ -95,13 +97,24 @@ public class SA {
             Node<String> node = new Node<>(lexicalUnit);
 
             if (action instanceof AcceptAction) {
+                AcceptAction acceptAction = (AcceptAction) action;
+                Production startProduction = acceptAction.getStartProduction();
+
+                if (startProduction != null) {
+                    Node<String> newParentNode = new Node<>(startProduction.getLeftState());
+
+                    removeFromStackAndAddToParent(newParentNode, startProduction.getRightStates().size(), stateQueue, symbolsQueue);
+
+                    symbolsQueue.push(newParentNode);
+                }
+
                 rootNode = symbolsQueue.peek();
                 break;
             } else if (action instanceof MoveAction) {
                 MoveAction moveAction = (MoveAction) action;
 
-                symbolsQueue.add(node);
-                stateQueue.add(moveAction.getState());
+                symbolsQueue.push(node);
+                stateQueue.push(moveAction.getState());
                 position++;
             } else if (action instanceof ReduceAction) {
                 ReduceAction reduceAction = (ReduceAction) action;
@@ -114,22 +127,15 @@ public class SA {
                     newParentNode.addChild(new Node<>("$"));
                 } else {
                     //Nije epsilon produkcija
-                    //Skini sa stoga i spremi u listu djece
-                    LinkedList<Node<String>> linkedList = new LinkedList<>();
-                    for (int i = 0; i < reduceProduction.getRightStates().size(); i++) {
-                        stateQueue.poll();
-                        linkedList.addFirst(symbolsQueue.poll());
-                    }
-                    //Postavi djecu
-                    newParentNode.setChildren(linkedList);
+                    removeFromStackAndAddToParent(newParentNode, reduceProduction.getRightStates().size(), stateQueue, symbolsQueue);
                 }
 
                 //Procitaj novo stanje iz tablice novo stanje
                 PutAction putAction = newStateTable.get(new Pair<>(stateQueue.peek(), reduceProduction.getLeftState()));
 
                 //Stavi na stog
-                stateQueue.add(putAction.getState());
-                symbolsQueue.add(newParentNode);
+                stateQueue.push(putAction.getState());
+                symbolsQueue.push(newParentNode);
 
             } else if (action == null || action instanceof RejectAction) {
                 System.err.println("ERROR on line " + lineIndex);
@@ -152,8 +158,8 @@ public class SA {
                             if (testAction != null && ! (testAction instanceof RejectAction)) {
                                 break Recover;
                             } else {
-                                stateQueue.remove();
-                                symbolsQueue.remove();
+                                stateQueue.pop();
+                                symbolsQueue.pop();
                             }
                         }
                     }
@@ -162,6 +168,24 @@ public class SA {
             } else throw new RuntimeException("Action not defined");
         }
         if (stateQueue.isEmpty()) throw new RuntimeException("State stack shouldn't be empty.");
+    }
+
+    /**
+     * Metoda koja mice sa stoga stanja i roditelju ih upisuje kao djecu kod akcije redukcije
+     *
+     * @param parent         roditelj ili lijeva strana produkcije
+     * @param numberOfStates broj elemenata desne strane koji se skida sa stoga
+     * @param stateQueue     stog stanja
+     * @param symbolsQueue   stog znakova
+     */
+    private static void removeFromStackAndAddToParent(Node<String> parent, int numberOfStates, Deque<Integer> stateQueue, Deque<Node<String>> symbolsQueue) {
+        LinkedList<Node<String>> linkedList = new LinkedList<>();
+        for (int i = 0; i < numberOfStates; i++) {
+            stateQueue.pop();
+            linkedList.addFirst(symbolsQueue.pop());
+        }
+        //Postavi djecu
+        parent.setChildren(linkedList);
     }
 
     private void printRejectOnSystemError(Queue<Integer> stateQueue, String lexicalUnit, int lineIndex) {

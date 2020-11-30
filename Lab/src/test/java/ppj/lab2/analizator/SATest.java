@@ -2,12 +2,16 @@ package ppj.lab2.analizator;
 
 import org.junit.jupiter.api.Test;
 import ppj.lab2.GSA;
+import ppj.lab2.utilities.Production;
+import ppj.lab2.utilities.actions.*;
+import ppj.utilities.Pair;
 
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
+import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -17,6 +21,53 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
  * @created 15/11/2020
  */
 class SATest {
+
+    @Test
+    void testDemoProblem() {
+        Map<Pair<Integer, String>, Action> actionTable;
+        Map<Pair<Integer, String>, PutAction> newStateTable;
+
+        actionTable = new HashMap<>();
+        newStateTable = new HashMap<>();
+
+        actionTable.put(new Pair<>(0, "a"), new MoveAction(3));
+        actionTable.put(new Pair<>(1, "a"), new MoveAction(3));
+        actionTable.put(new Pair<>(2, "a"), new ReduceAction(new Production("S", "A")));
+        actionTable.put(new Pair<>(3, "a"), new MoveAction(3));
+        actionTable.put(new Pair<>(5, "a"), new ReduceAction(new Production("S", "S", "A")));
+        actionTable.put(new Pair<>(6, "a"), new MoveAction(3));
+        actionTable.put(new Pair<>(7, "a"), new ReduceAction(new Production("A", "a", "b")));
+        actionTable.put(new Pair<>(8, "a"), new ReduceAction(new Production("A", "a", "S", "b")));
+
+        actionTable.put(new Pair<>(2, "b"), new ReduceAction(new Production("S", "A")));
+        actionTable.put(new Pair<>(3, "b"), new MoveAction(7));
+        actionTable.put(new Pair<>(5, "b"), new ReduceAction(new Production("S", "S", "A")));
+        actionTable.put(new Pair<>(6, "b"), new MoveAction(8));
+        actionTable.put(new Pair<>(7, "b"), new ReduceAction(new Production("A", "a", "b")));
+        actionTable.put(new Pair<>(8, "b"), new ReduceAction(new Production("A", "a", "S", "b")));
+
+        actionTable.put(new Pair<>(1, "c"), new MoveAction(4));
+        actionTable.put(new Pair<>(2, "c"), new ReduceAction(new Production("S", "A")));
+        actionTable.put(new Pair<>(5, "c"), new ReduceAction(new Production("S", "S", "A")));
+        actionTable.put(new Pair<>(7, "c"), new ReduceAction(new Production("A", "a", "b")));
+        actionTable.put(new Pair<>(8, "c"), new ReduceAction(new Production("A", "a", "S", "b")));
+
+        actionTable.put(new Pair<>(4, "EOL"), new AcceptAction(new Production("S'", "S", "c")));
+
+        newStateTable.put(new Pair<>(0, "S"), new PutAction(1));
+        newStateTable.put(new Pair<>(3, "S"), new PutAction(6));
+        newStateTable.put(new Pair<>(0, "A"), new PutAction(2));
+        newStateTable.put(new Pair<>(1, "A"), new PutAction(5));
+        newStateTable.put(new Pair<>(3, "A"), new PutAction(2));
+        newStateTable.put(new Pair<>(6, "A"), new PutAction(5));
+
+        List<String> lexicalUnits = new ArrayList<>(Arrays.asList("a 1 a", "a 1 a", "b 1 b", "b 1 b", "c 1 c"));
+
+        SA sa = new SA(null, actionTable, newStateTable, lexicalUnits);
+
+        System.out.println(sa.getOutputAsString());
+    }
+
     @Test
     public void testExamProblem1() throws IOException, ClassNotFoundException {
         File input = new File("src/test/resources/lab2/ispitniPrimjeri/00aab_1/test.san");
