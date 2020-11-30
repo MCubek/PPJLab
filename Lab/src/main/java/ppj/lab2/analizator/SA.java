@@ -7,6 +7,8 @@ import ppj.utilities.NodeTreePrinter;
 import ppj.utilities.Pair;
 
 import java.io.*;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.*;
 
 /**
@@ -204,27 +206,19 @@ public class SA {
      */
     @SuppressWarnings("unchecked")
     private void readSerialization() throws IOException, ClassNotFoundException {
-        FileInputStream fileInputStream = new FileInputStream("src/main/java/ppj/lab2/analizator/synchronizationSymbols.ser");
-        BufferedInputStream bufferedInputStream = new BufferedInputStream(fileInputStream);
-        ObjectInputStream objectInputStream = new ObjectInputStream(bufferedInputStream);
+        Path path = Path.of("src/main/java/ppj/lab2/analizator");
 
-        this.synchronizationSymbols = (List<String>) objectInputStream.readObject();
+        try (ObjectInputStream ois = new ObjectInputStream(Files.newInputStream(path.resolve("synchronizationSymbols.ser")))) {
+            this.synchronizationSymbols = (List<String>) ois.readObject();
+        }
 
-        fileInputStream = new FileInputStream("src/main/java/ppj/lab2/analizator/actionTable.ser");
-        bufferedInputStream = new BufferedInputStream(fileInputStream);
-        objectInputStream = new ObjectInputStream(bufferedInputStream);
+        try (ObjectInputStream ois = new ObjectInputStream(Files.newInputStream(path.resolve("actionTable.ser")))) {
+            this.actionTable = (Map<Pair<Integer, String>, Action>) ois.readObject();
+        }
 
-        this.actionTable = (Map<Pair<Integer, String>, Action>) objectInputStream.readObject();
-
-        fileInputStream = new FileInputStream("src/main/java/ppj/lab2/analizator/newStateTable.ser");
-        bufferedInputStream = new BufferedInputStream(fileInputStream);
-        objectInputStream = new ObjectInputStream(bufferedInputStream);
-
-        this.newStateTable = (Map<Pair<Integer, String>, PutAction>) objectInputStream.readObject();
-
-        fileInputStream.close();
-        bufferedInputStream.close();
-        objectInputStream.close();
+        try (ObjectInputStream ois = new ObjectInputStream(Files.newInputStream(path.resolve("newStateTable.ser")))) {
+            this.newStateTable = (Map<Pair<Integer, String>, PutAction>) ois.readObject();
+        }
     }
 
     /**
