@@ -7,7 +7,7 @@ public class ParserGenerator {
     private Map<String, List<List<String>>> LRProductions;
     private List<String> entrySymbols;
     private List<String> emptySymbols;
-    private Map<String,List<String>> firstRelation;
+    private final Map<String,List<String>> firstRelation;
 
     public ParserGenerator(Map<String, List<List<String>>> initialProductions, List<String> terminalSymbols, List<String> nonTerminalSymbols) {
         this.entrySymbols = new ArrayList<>(nonTerminalSymbols);
@@ -193,11 +193,11 @@ public class ParserGenerator {
 
         public void generateParserTables(List<String> nonTerminalSymbols, List<String> terminalSymbols) {
         Pair<Map<Integer, Pair<Pair<String,List<String>>,String>>,Map<Pair<Integer,String>,List<Integer>>> statesAndTransitions = generateENKA(nonTerminalSymbols,terminalSymbols);
-        enkaToDka(statesAndTransitions);
+        Pair<Map<Integer,Set<Integer>>,Map<Pair<Integer,String>,Integer>> dka = enkaToDka(statesAndTransitions);
         }
 
 
-    private void enkaToDka(Pair<Map<Integer, Pair<Pair<String, List<String>>, String>>, Map<Pair<Integer, String>, List<Integer>>> statesAndTransitions) {
+    private Pair<Map<Integer,Set<Integer>>,Map<Pair<Integer,String>,Integer>> enkaToDka(Pair<Map<Integer, Pair<Pair<String, List<String>>, String>>, Map<Pair<Integer, String>, List<Integer>>> statesAndTransitions) {
        Map<Integer,Set<Integer>> dkaStates = new LinkedHashMap<>();
        Map<Pair<Integer,String>,Integer> dkaTransitions = new LinkedHashMap<>();
        List<Set<Integer>> existingGroups = new ArrayList<>();
@@ -240,6 +240,7 @@ public class ParserGenerator {
                }
            }
        }
+       return new Pair<>(dkaStates,dkaTransitions);
     }
 
     private Set<Integer> calculateEClosure(Integer currentState, Map<Pair<Integer, String>, List<Integer>> transitions) {
@@ -342,7 +343,7 @@ public class ParserGenerator {
         for(Map.Entry<Pair<Integer,String>,List<Integer>> entry : transitions.entrySet()) {
             Pair<Pair<String,List<String>>,String> currentState = productionsToStates.get(entry.getKey().getLeft());
             StringBuilder currentStateString = new StringBuilder(entry.getKey().getLeft() + ". ");
-            currentStateString.append(currentState.getLeft().getLeft() + " -> ");
+            currentStateString.append(currentState.getLeft().getLeft()).append(" -> ");
             for(String s : currentState.getLeft().getRight()) {
                 currentStateString.append(s);
             }
