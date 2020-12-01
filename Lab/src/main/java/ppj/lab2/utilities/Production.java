@@ -19,6 +19,11 @@ public class Production implements Serializable {
         this.rightStates = Arrays.asList(rightStates.clone());
     }
 
+    public Production(String leftState, List<String> rightStates) {
+        this.leftState = leftState;
+        this.rightStates = rightStates;
+    }
+
     public String getLeftState() {
         return leftState;
     }

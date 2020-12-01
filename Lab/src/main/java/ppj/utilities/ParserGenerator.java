@@ -1,5 +1,8 @@
 package ppj.utilities;
 
+import ppj.lab2.utilities.Production;
+import ppj.lab2.utilities.actions.*;
+
 import java.util.*;
 
 public class ParserGenerator {
@@ -8,14 +11,44 @@ public class ParserGenerator {
     private List<String> entrySymbols;
     private List<String> emptySymbols;
     private final Map<String,List<String>> firstRelation;
+    private Map<Integer, Pair<Pair<String,List<String>>,String>> productionsToStates;
+    private Map<Pair<Integer, String>, Action> actionTable;
+    private Map<Pair<Integer, String>, PutAction> newStateTable;
 
-    public ParserGenerator(Map<String, List<List<String>>> initialProductions, List<String> terminalSymbols, List<String> nonTerminalSymbols) {
-        this.entrySymbols = new ArrayList<>(nonTerminalSymbols);
-        this.entrySymbols.addAll(terminalSymbols);
-        this.LRProductions = generateAllLRProductions(Objects.requireNonNull(initialProductions), nonTerminalSymbols.get(0));
-        firstRelation = new LinkedHashMap<>();
-        generateFirstTable(entrySymbols, initialProductions,nonTerminalSymbols,terminalSymbols);
-        generateParserTables(nonTerminalSymbols,terminalSymbols);
+    public List<String> getEmptySymbols() {
+        return emptySymbols;
+    }
+
+    public void setEmptySymbols(List<String> emptySymbols) {
+        this.emptySymbols = emptySymbols;
+    }
+
+    public Map<String, List<String>> getFirstRelation() {
+        return firstRelation;
+    }
+
+    public Map<Integer, Pair<Pair<String, List<String>>, String>> getProductionsToStates() {
+        return productionsToStates;
+    }
+
+    public void setProductionsToStates(Map<Integer, Pair<Pair<String, List<String>>, String>> productionsToStates) {
+        this.productionsToStates = productionsToStates;
+    }
+
+    public Map<Pair<Integer, String>, Action> getActionTable() {
+        return actionTable;
+    }
+
+    public void setActionTable(Map<Pair<Integer, String>, Action> actionTable) {
+        this.actionTable = actionTable;
+    }
+
+    public Map<Pair<Integer, String>, PutAction> getNewStateTable() {
+        return newStateTable;
+    }
+
+    public void setNewStateTable(Map<Pair<Integer, String>, PutAction> newStateTable) {
+        this.newStateTable = newStateTable;
     }
 
     public Map<String, List<List<String>>> getLRProductions() {
@@ -33,6 +66,19 @@ public class ParserGenerator {
     public void setEntrySymbols(List<String> entrySymbols) {
         this.entrySymbols = entrySymbols;
     }
+
+    public ParserGenerator(Map<String, List<List<String>>> initialProductions, List<String> terminalSymbols, List<String> nonTerminalSymbols, Map<Pair<String, String>,Integer> productionPriorites) {
+        this.entrySymbols = new ArrayList<>(nonTerminalSymbols);
+        this.entrySymbols.addAll(terminalSymbols);
+        this.LRProductions = generateAllLRProductions(Objects.requireNonNull(initialProductions), nonTerminalSymbols.get(0));
+        this.newStateTable = new LinkedHashMap<>();
+        this.actionTable = new LinkedHashMap<>();
+        firstRelation = new LinkedHashMap<>();
+        generateFirstTable(entrySymbols, initialProductions,nonTerminalSymbols,terminalSymbols);
+        generateParserTables(nonTerminalSymbols,terminalSymbols,productionPriorites);
+    }
+
+
 
     private Pair<String, List<List<String>>> generateLRProduction(Pair<String,List<List<String>>> initialProduction) {
         List<List<String>> result = new ArrayList<>();
@@ -189,12 +235,107 @@ public class ParserGenerator {
                 }
             }
         }
-        }
+    }
 
-        public void generateParserTables(List<String> nonTerminalSymbols, List<String> terminalSymbols) {
+    public void generateParserTables(List<String> nonTerminalSymbols, List<String> terminalSymbols, Map<Pair<String, String>, Integer> productionPriorites) {
         Pair<Map<Integer, Pair<Pair<String,List<String>>,String>>,Map<Pair<Integer,String>,List<Integer>>> statesAndTransitions = generateENKA(nonTerminalSymbols,terminalSymbols);
         Pair<Map<Integer,Set<Integer>>,Map<Pair<Integer,String>,Integer>> dka = enkaToDka(statesAndTransitions);
+
+        Map<Integer,Set<String>> transitionSymbols = new LinkedHashMap<>();
+        for(Map.Entry<Pair<Integer,String>,Integer> dkaProduction : dka.getRight().entrySet()) {
+            if(nonTerminalSymbols.contains(dkaProduction.getKey().getRight())) {
+                this.newStateTable.put(dkaProduction.getKey(),new PutAction(dkaProduction.getValue()));
+            } else {
+                this.actionTable.put(dkaProduction.getKey(), new MoveAction(dkaProduction.getValue()));
+            }
+            if(transitionSymbols.containsKey(dkaProduction.getKey().getLeft())) {
+                Set<String> symbols = transitionSymbols.get(dkaProduction.getKey().getLeft());
+                symbols.add(dkaProduction.getKey().getRight());
+                transitionSymbols.replace(dkaProduction.getKey().getLeft(),symbols);
+            } else {
+                Set<String> symbols = new HashSet<>();
+                symbols.add(dkaProduction.getKey().getRight());
+                transitionSymbols.put(dkaProduction.getKey().getLeft(),symbols);
+            }
         }
+
+        for(Map.Entry<Integer,Set<Integer>> dkaState : dka.getLeft().entrySet()) {
+            List<Pair<Pair<String,String>,Set<String>>> reductionProductions = new ArrayList<>();
+            for(Integer state : dkaState.getValue()) {
+                Pair<Pair<String,List<String>>,String> production = this.productionsToStates.get(state);
+                if(production.getLeft().getRight().indexOf("*") == production.getLeft().getRight().size()-1) {
+                    String transitionSymbolCombined;
+                    transitionSymbolCombined = production.getRight().substring(production.getRight().indexOf("{") + 1, production.getRight().indexOf("}"));
+                    String[] transitionSymbolArray = transitionSymbolCombined.split(",");
+                    Set<String> reductionSymbols = new HashSet<>();
+                    for (String s : transitionSymbolArray) {
+                        if (transitionSymbols.containsKey(dkaState.getKey()) && !transitionSymbols.get(dkaState.getKey()).contains(s.trim()))
+                            reductionSymbols.add(s.trim());
+                        else if(!transitionSymbols.containsKey(dkaState.getKey()))
+                            reductionSymbols.add(s.trim());
+                    }
+                    String productionString = transformToString(production.getLeft().getRight());
+                    reductionProductions.add(new Pair<>(new Pair<>(production.getLeft().getLeft(),productionString),reductionSymbols));
+                }
+            }
+            Set<Pair<String,String>> contains = new HashSet<>();
+            for(int i = 0; i < reductionProductions.size(); i++) {
+                for(int j = 0; j < reductionProductions.size(); j++) {
+                    if(reductionProductions.get(i).getLeft().getRight().equals(reductionProductions.get(j).getLeft().getRight())) {
+                        if(reductionProductions.get(i).getLeft().getLeft().equals("<S*>")) {
+                            this.actionTable.put(new Pair<>(dkaState.getKey(), "$"),new AcceptAction(new Production(reductionProductions.get(i).getLeft().getLeft(),transformBackToLR(reductionProductions.get(i).getLeft().getRight()))));
+                        } else {
+                            if (productionPriorites.get(reductionProductions.get(i).getLeft()) < productionPriorites.get(reductionProductions.get(j).getLeft())) {
+                                addReduction(dkaState, reductionProductions, contains, i);
+                            } else {
+                                addReduction(dkaState, reductionProductions, contains, j);
+                            }
+                        }
+                    }
+
+                }
+            }
+        }
+    }
+
+    private void addReduction(Map.Entry<Integer, Set<Integer>> dkaState, List<Pair<Pair<String, String>, Set<String>>> reductionProductions, Set<Pair<String, String>> contains, int j) {
+        if(!contains.contains(reductionProductions.get(j).getLeft())) {
+            for (String s : reductionProductions.get(j).getRight()) {
+                this.actionTable.put(new Pair<>(dkaState.getKey(), s), new ReduceAction(new Production(reductionProductions.get(j).getLeft().getLeft(), transformBackToLR(reductionProductions.get(j).getLeft().getRight()))));
+            }
+            contains.add(reductionProductions.get(j).getLeft());
+        }
+    }
+
+    private List<String> transformBackToLR(String right) {
+        List<String> result = new ArrayList<>();
+        StringBuilder s = new StringBuilder();
+        boolean dontBreak = false;
+        for(char c : right.toCharArray()) {
+            if(c == '<') {
+                dontBreak = true;
+            }
+            s.append(c);
+            if(c == '>')
+                dontBreak = false;
+            if(!dontBreak) {
+                result.add(s.toString());
+                s = new StringBuilder();
+            }
+        }
+        return result;
+    }
+
+    private String transformToString(List<String> rightSide) {
+        StringBuilder result = new StringBuilder();
+        for(String s : rightSide) {
+            if(!s.equals("*"))
+                result.append(s);
+        }
+        if(result.toString().equals(""))
+            result.append("$");
+        return result.toString();
+    }
 
 
     private Pair<Map<Integer,Set<Integer>>,Map<Pair<Integer,String>,Integer>> enkaToDka(Pair<Map<Integer, Pair<Pair<String, List<String>>, String>>, Map<Pair<Integer, String>, List<Integer>>> statesAndTransitions) {
@@ -336,6 +477,7 @@ public class ParserGenerator {
             }
         }
         //printEnka(productionsToStates,transitions);
+        this.productionsToStates = productionsToStates;
         return new Pair<>(productionsToStates,transitions);
     }
 

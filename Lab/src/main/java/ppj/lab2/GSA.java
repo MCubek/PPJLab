@@ -1,5 +1,8 @@
 package ppj.lab2;
 
+import ppj.lab2.utilities.actions.Action;
+import ppj.lab2.utilities.actions.PutAction;
+import ppj.utilities.Pair;
 import ppj.utilities.ParserGenerator;
 
 import java.io.*;
@@ -17,6 +20,9 @@ public class GSA {
     private List<String> terminalSymbols;
     private List<String> synchronizationSymbols;
     private Map<String, List<List<String>>> productions;
+    private Map<Pair<String,String>,Integer> productionPriorites = new LinkedHashMap<>();
+    private Map<Pair<Integer, String>, Action> actionTable;
+    private Map<Pair<Integer, String>, PutAction> newStateTable;
 
     public GSA(File file) throws FileNotFoundException {
         Scanner scanner = new Scanner(file);
@@ -48,24 +54,34 @@ public class GSA {
         //Ostale linije -> produkcije gramatike
         if (! scanner.hasNextLine()) throw new IllegalArgumentException("No productions");
 
+        int counter = 0;
         productions = new HashMap<>();
         line = scanner.nextLine();
         while (scanner.hasNextLine()) {
             String nonTerminalSymbol = line;
             List<List<String>> symbolProductions = new ArrayList<>();
+            String priorityRightSide = "";
 
             while (scanner.hasNextLine()) {
                 line = scanner.nextLine();
                 if (! line.startsWith(" ")) break;
                 List<String> symbols = Arrays.asList(line.trim().split("\\s+"));
                 symbolProductions.add(symbols);
+                for(String s : symbols)
+                    priorityRightSide = priorityRightSide + s;
+                productionPriorites.put(new Pair<>(nonTerminalSymbol,priorityRightSide),counter++);
+                priorityRightSide = "";
             }
+
+
 
             if (productions.containsKey(nonTerminalSymbol))
                 symbolProductions.addAll(0, productions.get(nonTerminalSymbol));
             productions.put(nonTerminalSymbol, symbolProductions);
         }
-        ParserGenerator generator = new ParserGenerator(productions, terminalSymbols, nonTerminalSymbols);
+        ParserGenerator generator = new ParserGenerator(productions, terminalSymbols, nonTerminalSymbols, productionPriorites);
+        this.actionTable = generator.getActionTable();
+        this.newStateTable = generator.getNewStateTable();
     }
 
     public void serializeOutput() throws IOException {
@@ -78,13 +94,13 @@ public class GSA {
             ois.writeObject(synchronizationSymbols);
         }
 
-/*        try (ObjectOutputStream ois = new ObjectOutputStream(Files.newOutputStream(path.resolve("actionTable.ser")))) {
-            ois.writeObject();
+        try (ObjectOutputStream ois = new ObjectOutputStream(Files.newOutputStream(path.resolve("actionTable.ser")))) {
+            ois.writeObject(actionTable);
         }
 
         try (ObjectOutputStream ois = new ObjectOutputStream(Files.newOutputStream(path.resolve("newStateTable.ser")))) {
-            ois.writeObject();
-        }*/
+            ois.writeObject(newStateTable);
+        }
     }
 
     public static void main(String[] args) {
