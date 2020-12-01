@@ -2,9 +2,9 @@ package ppj.lab2;
 
 import ppj.utilities.ParserGenerator;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.IOException;
+import java.io.*;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.*;
 
 /**
@@ -61,15 +61,30 @@ public class GSA {
                 symbolProductions.add(symbols);
             }
 
-            if(productions.containsKey(nonTerminalSymbol))
-                symbolProductions.addAll(0,productions.get(nonTerminalSymbol));
+            if (productions.containsKey(nonTerminalSymbol))
+                symbolProductions.addAll(0, productions.get(nonTerminalSymbol));
             productions.put(nonTerminalSymbol, symbolProductions);
         }
-        ParserGenerator generator = new ParserGenerator(productions,terminalSymbols,nonTerminalSymbols);
+        ParserGenerator generator = new ParserGenerator(productions, terminalSymbols, nonTerminalSymbols);
     }
 
     public void serializeOutput() throws IOException {
         // TODO: 15.11.2020. Serialize output
+
+        Path path = Path.of("src/main/java/ppj/lab2/analizator");
+
+        OutputStream out;
+        try (ObjectOutputStream ois = new ObjectOutputStream(Files.newOutputStream(path.resolve("synchronizationSymbols.ser")))) {
+            ois.writeObject(synchronizationSymbols);
+        }
+
+/*        try (ObjectOutputStream ois = new ObjectOutputStream(Files.newOutputStream(path.resolve("actionTable.ser")))) {
+            ois.writeObject();
+        }
+
+        try (ObjectOutputStream ois = new ObjectOutputStream(Files.newOutputStream(path.resolve("newStateTable.ser")))) {
+            ois.writeObject();
+        }*/
     }
 
     public static void main(String[] args) {
