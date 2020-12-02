@@ -78,6 +78,9 @@ public class SA {
         generateTree();
     }
 
+    /**
+     * Metoda generiranja stabla
+     */
     private void generateTree() {
         rootNode = null;
         //Oznaka kraja niza

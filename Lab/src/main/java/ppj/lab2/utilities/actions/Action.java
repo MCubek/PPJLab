@@ -10,5 +10,5 @@ import java.io.Serializable;
  * @created 30/11/2020
  */
 public interface Action extends Serializable {
-
+    String getName();
 }

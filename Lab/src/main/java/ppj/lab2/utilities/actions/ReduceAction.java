@@ -20,4 +20,9 @@ public class ReduceAction implements Action {
     public Production getProduction() {
         return production;
     }
+
+    @Override
+    public String getName() {
+        return "Reduce";
+    }
 }

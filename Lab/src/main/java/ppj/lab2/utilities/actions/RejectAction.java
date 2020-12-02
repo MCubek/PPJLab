@@ -19,4 +19,9 @@ public class RejectAction implements Action {
 
     public RejectAction() {
     }
+
+    @Override
+    public String getName() {
+        return "Reject";
+    }
 }
