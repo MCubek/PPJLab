@@ -83,8 +83,8 @@ public class SA {
      */
     private void generateTree() {
         rootNode = null;
-        //Oznaka kraja niza
-        lexicalUnits.add("EOL 0 EOL");
+        //Oznaka kraja niza dodaj
+        lexicalUnits.add("$ 0 $");
 
         Deque<Integer> stateQueue = new LinkedList<>();
         Deque<Node<String>> symbolsQueue = new LinkedList<>();

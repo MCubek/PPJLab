@@ -52,7 +52,7 @@ class SATest {
         actionTable.put(new Pair<>(7, "c"), new ReduceAction(new Production("A", "a", "b")));
         actionTable.put(new Pair<>(8, "c"), new ReduceAction(new Production("A", "a", "S", "b")));
 
-        actionTable.put(new Pair<>(4, "EOL"), new AcceptAction(new Production("S'", "S", "c")));
+        actionTable.put(new Pair<>(4, "$"), new AcceptAction(new Production("S'", "S", "c")));
 
         newStateTable.put(new Pair<>(0, "S"), new PutAction(1));
         newStateTable.put(new Pair<>(3, "S"), new PutAction(6));
