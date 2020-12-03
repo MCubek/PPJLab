@@ -524,12 +524,16 @@ public class ParserGenerator {
                         followSymbolString.append("$, ");
                     }
 
-                    List<String> firstRelations = firstRelation.get(nextSymbol);
-                    for (String s : firstRelations) {
-                        if (firstRelations.indexOf(s) == firstRelations.size() - 1)
-                            followSymbolString.append(s).append("}");
-                        else
-                            followSymbolString.append(s).append(", ");
+                    if(nonTerminalSymbols.contains(nextSymbol)) {
+                        List<String> firstRelations = firstRelation.get(nextSymbol);
+                        for (String s : firstRelations) {
+                            if (firstRelations.indexOf(s) == firstRelations.size() - 1)
+                                followSymbolString.append(s).append("}");
+                            else
+                                followSymbolString.append(s).append(", ");
+                        }
+                    } else {
+                        followSymbolString.append(nextSymbol).append("}");
                     }
                 }
 
