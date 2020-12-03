@@ -100,7 +100,7 @@ public class SA {
             Node<String> node = new Node<>(lexicalUnit);
 
             if (action instanceof AcceptAction) {
-                AcceptAction acceptAction = (AcceptAction) action;
+/*                AcceptAction acceptAction = (AcceptAction) action;
                 Production startProduction = acceptAction.getStartProduction();
 
                 if (startProduction != null) {
@@ -109,7 +109,7 @@ public class SA {
                     removeFromStackAndAddToParent(newParentNode, startProduction.getRightStates().size(), stateQueue, symbolsQueue);
 
                     symbolsQueue.push(newParentNode);
-                }
+                }*/
 
                 rootNode = symbolsQueue.peek();
                 break;
