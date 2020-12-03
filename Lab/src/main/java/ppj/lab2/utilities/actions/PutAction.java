@@ -16,4 +16,9 @@ public class PutAction implements Action {
     public int getState() {
         return state;
     }
+
+    @Override
+    public String getName() {
+        return "Put";
+    }
 }

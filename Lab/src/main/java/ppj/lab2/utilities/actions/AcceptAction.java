@@ -21,4 +21,9 @@ public class AcceptAction implements Action {
     public Production getStartProduction() {
         return startProduction;
     }
+
+    @Override
+    public String getName() {
+        return "Accept";
+    }
 }

@@ -20,7 +20,7 @@ public class GSA {
     private List<String> terminalSymbols;
     private List<String> synchronizationSymbols;
     private Map<String, List<List<String>>> productions;
-    private Map<Pair<String,String>,Integer> productionPriorites = new LinkedHashMap<>();
+    private Map<Pair<String, String>, Integer> productionPriorites = new LinkedHashMap<>();
     private Map<Pair<Integer, String>, Action> actionTable;
     private Map<Pair<Integer, String>, PutAction> newStateTable;
 
@@ -28,11 +28,19 @@ public class GSA {
         Scanner scanner = new Scanner(file);
         parseInput(scanner);
         scanner.close();
+        generateTables();
+    }
+
+    private void generateTables() {
+        ParserGenerator generator = new ParserGenerator(productions, terminalSymbols, nonTerminalSymbols, productionPriorites);
+        this.actionTable = generator.getActionTable();
+        this.newStateTable = generator.getNewStateTable();
     }
 
     public GSA(Scanner scanner) {
         Objects.requireNonNull(scanner);
         parseInput(scanner);
+        generateTables();
     }
 
     private void parseInput(Scanner scanner) {
@@ -79,13 +87,9 @@ public class GSA {
                 symbolProductions.addAll(0, productions.get(nonTerminalSymbol));
             productions.put(nonTerminalSymbol, symbolProductions);
         }
-        ParserGenerator generator = new ParserGenerator(productions, terminalSymbols, nonTerminalSymbols, productionPriorites);
-        this.actionTable = generator.getActionTable();
-        this.newStateTable = generator.getNewStateTable();
     }
 
     public void serializeOutput() throws IOException {
-        // TODO: 15.11.2020. Serialize output
 
         Path path = Path.of("src/main/java/ppj/lab2/analizator");
 

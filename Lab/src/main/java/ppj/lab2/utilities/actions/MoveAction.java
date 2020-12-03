@@ -16,4 +16,9 @@ public class MoveAction implements Action {
     public int getState() {
         return state;
     }
+
+    @Override
+    public String getName() {
+        return "Move";
+    }
 }
