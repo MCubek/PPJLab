@@ -76,7 +76,6 @@ public class ParserGenerator {
         firstRelation = new LinkedHashMap<>();
         generateFirstTable(entrySymbols, initialProductions,nonTerminalSymbols,terminalSymbols);
         generateParserTables(nonTerminalSymbols,terminalSymbols,productionPriorites);
-        System.out.println("test");
     }
 
 
