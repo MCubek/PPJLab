@@ -158,7 +158,8 @@ public class ParserGenerator {
             }
         }
 
-        /*String line = "    ";
+        /*
+        String line = "    ";
         for(String symbol: entrySymbols)
             if(symbol.length() > 1)
                 line = line + symbol + " ";
@@ -181,20 +182,23 @@ public class ParserGenerator {
         }*/
 
         //generiranje tablice ZapočinjeZnakom
-        for(int i = 0; i < firstTable.length; i++) {
-            for(int j = 0; j < firstTable.length; j++) {
-                if(i == j) {
-                    firstTable[i][j] = true;
-                } else if(firstTable[i][j]) {
-                    for(int k = 0; k < firstTable.length; k++) {
-                        if(firstTable[j][k])
-                            firstTable[i][k] = true;
+        for(int n = 0; n < firstTable.length; n++) {
+            for (int i = 0; i < firstTable.length; i++) {
+                for (int j = 0; j < firstTable.length; j++) {
+                    if (i == j) {
+                        firstTable[i][j] = true;
+                    } else if (firstTable[i][j]) {
+                        for (int k = 0; k < firstTable.length; k++) {
+                            if (firstTable[j][k])
+                                firstTable[i][k] = true;
+                        }
                     }
                 }
             }
         }
 
-        /*System.out.println("---------------------------------------------------------------------------");
+        /*
+        System.out.println("---------------------------------------------------------------------------");
         line = "    ";
         for(String symbol: entrySymbols)
             if(symbol.length() > 1)
@@ -233,6 +237,7 @@ public class ParserGenerator {
                         }
                     }
                 }
+
             }
         }
     }
@@ -368,7 +373,6 @@ public class ParserGenerator {
                    break;
                }
            }
-
            if(checkifExists && !afterEClosure.isEmpty()) {
                dkaStates.put(stateCounter++, afterEClosure);
                existingGroups.add(afterEClosure);
@@ -399,6 +403,7 @@ public class ParserGenerator {
                }
            }
        }
+
        //printDKA(dkaStates);
        return new Pair<>(dkaStates,dkaTransitions);
     }
@@ -425,14 +430,20 @@ public class ParserGenerator {
     private Set<Integer> calculateEClosure(Integer currentState, Map<Pair<Integer, String>, List<Integer>> transitions) {
         Set<Integer> groupedStates = new HashSet<>();
         Queue<Integer> findEClosure = new LinkedList<>();
+        Queue<Integer> removed = new LinkedList<>();
         findEClosure.add(currentState);
         groupedStates.add(currentState);
         while(!findEClosure.isEmpty()) {
             Integer eClosureState = findEClosure.remove();
+            removed.add(eClosureState);
             Pair<Integer, String> eTransition = new Pair<>(eClosureState, "$");
             if(transitions.containsKey(eTransition)) {
-                groupedStates.addAll(transitions.get(eTransition));
-                findEClosure.addAll(transitions.get(eTransition));
+                for(Integer transitionState : transitions.get(eTransition)) {
+                    if(!removed.contains(transitionState)) {
+                        groupedStates.add(transitionState);
+                        findEClosure.add(transitionState);
+                    }
+                }
             }
         }
         return groupedStates;
@@ -477,22 +488,12 @@ public class ParserGenerator {
                                 followSymbolString.append("$, ");
                             }
                             followSymbol = currentProductions.get(currentProductions.indexOf("*") + 1);
-                            if(nonTerminalSymbols.contains(followSymbol)) {
-                                List<String> firstRelations = firstRelation.get(followSymbol);
-                                for (String s : firstRelations) {
-                                    if (firstRelations.indexOf(s) == firstRelations.size() - 1)
-                                        followSymbolString.append(s).append("}");
-                                    else
-                                        followSymbolString.append(s).append(", ");
-                                }
-                            } else {
-                                followSymbolString.append(followSymbol).append("}");
-                            }
+                            generateFollowSymbols(nonTerminalSymbols, followSymbolString, followSymbol);
                         } else {
                             followSymbolString.append("$}");
                         }
                         Pair<String,String> nextPair = new Pair<>(transitionSymbol, followSymbolString.toString());
-                        if(!removed.contains(nextPair) && !supportQueue.contains(nextPair)) {
+                        if(!removed.contains(nextPair) && !supportQueue.contains(nextPair) && !transitionQueue.contains(nextPair)) {
                             transitionQueue.add(nextPair);
                             supportQueue.add(nextPair);
                         }
@@ -524,23 +525,13 @@ public class ParserGenerator {
                         followSymbolString.append("$, ");
                     }
 
-                    if(nonTerminalSymbols.contains(nextSymbol)) {
-                        List<String> firstRelations = firstRelation.get(nextSymbol);
-                        for (String s : firstRelations) {
-                            if (firstRelations.indexOf(s) == firstRelations.size() - 1)
-                                followSymbolString.append(s).append("}");
-                            else
-                                followSymbolString.append(s).append(", ");
-                        }
-                    } else {
-                        followSymbolString.append(nextSymbol).append("}");
-                    }
+                    generateFollowSymbols(nonTerminalSymbols, followSymbolString, nextSymbol);
                 }
 
                 for(Map.Entry<Integer, Pair<Pair<String,List<String>>,String>> nextEntry : productionsToStates.entrySet()) {
                     Integer nextState = nextEntry.getKey();
                     Pair<Pair<String,List<String>>,String> nextProduction = nextEntry.getValue();
-                    if(nextState != fromState) {
+                    if(!nextState.equals(fromState)) {
                         if (followSymbol.equals(nextProduction.getLeft().getLeft())) {
                             if (nextProduction.getLeft().getRight().indexOf("*") == 0) {
                                 if (nextProduction.getRight().equals(followSymbolString.toString())) {
@@ -553,9 +544,24 @@ public class ParserGenerator {
             }
         }
 
-        //printEnka(productionsToStates,transitions);
+       // printEnka(productionsToStates,transitions);
         this.productionsToStates = productionsToStates;
         return new Pair<>(productionsToStates,transitions);
+    }
+
+    private void generateFollowSymbols(List<String> nonTerminalSymbols, StringBuilder followSymbolString, String followSymbol) {
+        if(nonTerminalSymbols.contains(followSymbol)) {
+            List<String> firstRelations = firstRelation.get(followSymbol);
+            for (String s : firstRelations) {
+                if (firstRelations.indexOf(s) == firstRelations.size() - 1)
+                    followSymbolString.append(s).append("}");
+                else
+                    followSymbolString.append(s).append(", ");
+            }
+
+        } else {
+            followSymbolString.append(followSymbol).append("}");
+        }
     }
 
     private void printEnka(Map<Integer, Pair<Pair<String, List<String>>, String>> productionsToStates, Map<Pair<Integer, String>, List<Integer>> transitions) {
