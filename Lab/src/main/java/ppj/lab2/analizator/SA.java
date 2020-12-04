@@ -1,6 +1,7 @@
 package ppj.lab2.analizator;
 
 import ppj.lab2.utilities.Production;
+import ppj.lab2.utilities.Symbol;
 import ppj.lab2.utilities.actions.*;
 import ppj.utilities.Node;
 import ppj.utilities.NodeTreePrinter;
@@ -19,9 +20,8 @@ import java.util.*;
  * @created 14/11/2020
  */
 public class SA {
-    private final int STARTING_STATE = 0;
 
-    private List<String> synchronizationSymbols;
+    private List<Symbol> synchronizationSymbols;
     //Map<<Par<Stanje,Znak>, akcija>
     private Map<Pair<Integer, String>, Action> actionTable;
     private Map<Pair<Integer, String>, PutAction> newStateTable;
@@ -39,7 +39,7 @@ public class SA {
      * @param newStateTable          tablica novo stanje
      * @param lexicalUnits           lista leksicnih jedinki
      */
-    public SA(List<String> synchronizationSymbols, Map<Pair<Integer, String>, Action> actionTable, Map<Pair<Integer, String>, PutAction> newStateTable, List<String> lexicalUnits) {
+    public SA(List<Symbol> synchronizationSymbols, Map<Pair<Integer, String>, Action> actionTable, Map<Pair<Integer, String>, PutAction> newStateTable, List<String> lexicalUnits) {
         this.synchronizationSymbols = synchronizationSymbols;
         this.actionTable = actionTable;
         this.newStateTable = newStateTable;
@@ -82,13 +82,14 @@ public class SA {
      * Metoda generiranja stabla
      */
     private void generateTree() {
+        boolean error = false;
         rootNode = null;
         //Oznaka kraja niza dodaj
         lexicalUnits.add("$ 0 $");
 
         Deque<Integer> stateQueue = new LinkedList<>();
         Deque<Node<String>> symbolsQueue = new LinkedList<>();
-        stateQueue.push(STARTING_STATE);
+        stateQueue.push(0);
 
         for (int position = 0; position < lexicalUnits.size() && ! stateQueue.isEmpty(); ) {
             String lexicalUnit = lexicalUnits.get(position);
@@ -100,19 +101,9 @@ public class SA {
             Node<String> node = new Node<>(lexicalUnit);
 
             if (action instanceof AcceptAction) {
-/*                AcceptAction acceptAction = (AcceptAction) action;
-                Production startProduction = acceptAction.getStartProduction();
-
-                if (startProduction != null) {
-                    Node<String> newParentNode = new Node<>(startProduction.getLeftState());
-
-                    removeFromStackAndAddToParent(newParentNode, startProduction.getRightStates().size(), stateQueue, symbolsQueue);
-
-                    symbolsQueue.push(newParentNode);
-                }*/
-
                 rootNode = symbolsQueue.peek();
                 break;
+
             } else if (action instanceof MoveAction) {
                 MoveAction moveAction = (MoveAction) action;
 
@@ -123,24 +114,25 @@ public class SA {
                 ReduceAction reduceAction = (ReduceAction) action;
                 Production reduceProduction = reduceAction.getProduction();
 
-                Node<String> newParentNode = new Node<>(reduceProduction.getLeftState());
+                Node<String> newParentNode = new Node<>(reduceProduction.getLeftState().getValue());
 
-                if (reduceProduction.getRightStates().contains("$")) {
+                if (reduceProduction.isEpsilon()) {
                     //Epsilon produkcija
                     newParentNode.addChild(new Node<>("$"));
                 } else {
                     //Nije epsilon produkcija
-                    removeFromStackAndAddToParent(newParentNode, reduceProduction.getRightStates().size(), stateQueue, symbolsQueue);
+                    removeFromStackAndAddToParent(newParentNode, reduceProduction.rightNumber(), stateQueue, symbolsQueue);
                 }
 
                 //Procitaj novo stanje iz tablice novo stanje
-                PutAction putAction = newStateTable.get(new Pair<>(stateQueue.peek(), reduceProduction.getLeftState()));
+                PutAction putAction = newStateTable.get(new Pair<>(stateQueue.peek(), reduceProduction.getLeftState().getValue()));
 
                 //Stavi na stog
                 stateQueue.push(putAction.getState());
                 symbolsQueue.push(newParentNode);
 
             } else if (action == null || action instanceof RejectAction) {
+                error = true;
                 System.err.println("ERROR on line " + lineIndex);
                 if (action != null && (((RejectAction) action).getMessage() != null))
                     System.err.println("Message: " + ((RejectAction) action).getMessage());
@@ -154,7 +146,7 @@ public class SA {
                     lexicalUnitElements = lexicalUnit.split(" ");
                     symbol = lexicalUnitElements[0];
 
-                    if (synchronizationSymbols.contains(symbol)) {
+                    if (synchronizationSymbols.contains(Symbol.of(symbol, true))) {
                         while (! stateQueue.isEmpty()) {
                             Pair<Integer, String> pair = new Pair<>(stateQueue.peek(), symbol);
                             Action testAction = actionTable.get(pair);
@@ -170,6 +162,8 @@ public class SA {
 
             } else throw new RuntimeException("Action not defined");
         }
+        if (error) throw new RuntimeException("Syntax error");
+
         if (stateQueue.isEmpty()) throw new RuntimeException("State stack shouldn't be empty.");
     }
 
@@ -236,7 +230,7 @@ public class SA {
         Path path = Path.of("src/main/java/ppj/lab2/analizator");
 
         try (ObjectInputStream ois = new ObjectInputStream(Files.newInputStream(path.resolve("synchronizationSymbols.ser")))) {
-            this.synchronizationSymbols = (List<String>) ois.readObject();
+            this.synchronizationSymbols = (List<Symbol>) ois.readObject();
         }
 
         try (ObjectInputStream ois = new ObjectInputStream(Files.newInputStream(path.resolve("actionTable.ser")))) {

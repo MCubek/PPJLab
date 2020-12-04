@@ -2,16 +2,12 @@ package ppj.lab2.analizator;
 
 import org.junit.jupiter.api.Test;
 import ppj.lab2.GSA;
-import ppj.lab2.utilities.Production;
-import ppj.lab2.utilities.actions.*;
-import ppj.utilities.Pair;
 
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
-import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -22,7 +18,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
  */
 class SATest {
 
-    @Test
+    /*@Test
     void testDemoProblem() {
         Map<Pair<Integer, String>, Action> actionTable;
         Map<Pair<Integer, String>, PutAction> newStateTable;
@@ -66,7 +62,7 @@ class SATest {
         SA sa = new SA(null, actionTable, newStateTable, lexicalUnits);
 
         System.out.println(sa.getOutputAsString());
-    }
+    }*/
 
     @Test
     public void testExamProblem1() throws IOException, ClassNotFoundException {
