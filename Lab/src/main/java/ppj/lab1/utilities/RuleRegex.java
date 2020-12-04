@@ -1,4 +1,4 @@
-package ppj.utilities;
+package ppj.lab1.utilities;
 
 /**
  * Klasa koja sadrzi stanje i regularni izraz

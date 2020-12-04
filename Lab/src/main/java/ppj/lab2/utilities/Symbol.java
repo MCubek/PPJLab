@@ -19,11 +19,11 @@ public class Symbol implements Serializable {
     private final boolean terminal;
 
     public static final Symbol starSymbol = new Symbol("*", true);
-    public static final Symbol emptySymbol = new Symbol("$", true);
+    public static final Symbol endSymbol = new Symbol("$", true);
 
     public static Symbol of(String value, boolean terminal) {
         if (value.equals("*")) return starSymbol;
-        if (value.equals("$")) return emptySymbol;
+        if (value.equals("$")) return endSymbol;
 
         return new Symbol(value, terminal);
     }
@@ -38,7 +38,7 @@ public class Symbol implements Serializable {
         return value;
     }
 
-    public boolean isTerminal() {
+    public boolean isTerminalProduction() {
         return terminal;
     }
 
@@ -46,13 +46,18 @@ public class Symbol implements Serializable {
         return equals(starSymbol);
     }
 
-    public boolean isEmpty() {
-        return equals(emptySymbol);
+    public boolean isEnd() {
+        return equals(endSymbol);
     }
 
-    public static LinkedList<Symbol> toListSymbols(String... symbols) {
-        return Arrays.stream(symbols)
+    public static LinkedList<Symbol> toListOfSymbols(String... symbolsAsStrings) {
+        return Arrays.stream(symbolsAsStrings)
                 .map(s -> Symbol.of(s, ! (s.startsWith("<") && s.endsWith(">"))))
+                .collect(Collectors.toCollection(LinkedList::new));
+    }
+
+    public static LinkedList<Symbol> toListOfSymbols(Symbol... symbolsAsStrings) {
+        return Arrays.stream(symbolsAsStrings)
                 .collect(Collectors.toCollection(LinkedList::new));
     }
 

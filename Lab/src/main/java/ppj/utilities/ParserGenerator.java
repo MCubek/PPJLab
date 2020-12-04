@@ -1,7 +1,8 @@
 package ppj.utilities;
 
-import ppj.lab2.utilities.Production;
-import ppj.lab2.utilities.actions.*;
+import ppj.lab2.utilities.actions.Action;
+import ppj.lab2.utilities.actions.MoveAction;
+import ppj.lab2.utilities.actions.PutAction;
 
 import java.util.*;
 
@@ -286,7 +287,7 @@ public class ParserGenerator {
             Set<Pair<Pair<String,String>,String>> contains = new HashSet<>();
             if(reductionProductions.size() == 1) {
                 if(reductionProductions.get(0).getLeft().getLeft().equals("<S*>")) {
-                    this.actionTable.put(new Pair<>(dkaState.getKey(), "$"), new AcceptAction(new Production(reductionProductions.get(0).getLeft().getLeft(), transformBackToLR(reductionProductions.get(0).getLeft().getRight(), terminalSymbols))));
+                    //this.actionTable.put(new Pair<>(dkaState.getKey(), "$"), new AcceptAction(new Production(reductionProductions.get(0).getLeft().getLeft(), transformBackToLR(reductionProductions.get(0).getLeft().getRight(), terminalSymbols))));
                 } else {
                     addReduction(dkaState, reductionProductions, contains, 0,reductionProductions.get(0).getRight(),terminalSymbols);
                 }
@@ -343,7 +344,7 @@ public class ParserGenerator {
     private void addReduction(Map.Entry<Integer, Set<Integer>> dkaState, List<Pair<Pair<String, String>, Set<String>>> reductionProductions, Set<Pair<Pair<String, String>, String>> contains, int j, Set<String> prioritySet, List<String> terminalSymbols) {
             for (String s : prioritySet) {
                 if(!contains.contains(new Pair<>(reductionProductions.get(j).getLeft(),s))) {
-                    this.actionTable.put(new Pair<>(dkaState.getKey(), s), new ReduceAction(new Production(reductionProductions.get(j).getLeft().getLeft(), transformBackToLR(reductionProductions.get(j).getLeft().getRight(),terminalSymbols))));
+                    //this.actionTable.put(new Pair<>(dkaState.getKey(), s), new ReduceAction(new Production(reductionProductions.get(j).getLeft().getLeft(), transformBackToLR(reductionProductions.get(j).getLeft().getRight(),terminalSymbols))));
                     contains.add(new Pair<>(reductionProductions.get(j).getLeft(),s));
             }
         }

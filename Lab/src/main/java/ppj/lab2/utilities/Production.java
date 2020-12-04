@@ -1,8 +1,7 @@
 package ppj.lab2.utilities;
 
 import java.io.Serializable;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -14,18 +13,18 @@ public class Production implements Serializable, Comparable<Production> {
     private static final long serialVersionUID = - 162859005435295656L;
     private final Symbol leftState;
     private final LinkedList<Symbol> rightStates;
-    private final Integer id;
+    private final Integer index;
 
     public Production(Symbol leftState, LinkedList<Symbol> rightStates) {
         this(leftState, rightStates, - 1);
     }
 
-    public Production(Symbol leftState, LinkedList<Symbol> rightStates, Integer id) {
+    public Production(Symbol leftState, LinkedList<Symbol> rightStates, Integer index) {
         if (rightStates.isEmpty())
             throw new IllegalArgumentException("Production must have at least one right element");
         this.leftState = leftState;
         this.rightStates = rightStates;
-        this.id = id;
+        this.index = index;
     }
 
     public Symbol getLeftState() {
@@ -37,7 +36,7 @@ public class Production implements Serializable, Comparable<Production> {
     }
 
     public boolean starAtEnd() {
-        return rightStates.getLast().equals(Symbol.starSymbol);
+        return rightStates.getLast().equals(Symbol.starSymbol) || isEpsilon();
     }
 
     public int indexOfStar() {
@@ -45,24 +44,37 @@ public class Production implements Serializable, Comparable<Production> {
     }
 
     public boolean isEpsilon() {
-        return rightStates.size() == 1 && rightStates.getFirst().equals(Symbol.emptySymbol);
+        return rightStates.size() == 1 && rightStates.getFirst().equals(Symbol.endSymbol);
     }
 
-    public int rightNumber() {
+    public int numberOfRightStates() {
         return rightStates.size();
     }
 
-    public int getId() {
-        return id;
+    public int getIndex() {
+        return index;
     }
 
     @Override
     public int compareTo(Production o) {
-        return id.compareTo(o.id);
+        return index.compareTo(o.index);
     }
 
     @Override
     public String toString() {
         return leftState + " -> " + rightStates.stream().map(Symbol::getValue).collect(Collectors.joining(" "));
+    }
+
+    public static Set<Symbol> findFirstSymbolsUpToEmptyIncluding(Production production, Set<Symbol> emptySymbols) {
+        Set<Symbol> symbols = new HashSet<>();
+
+        if (production.isEpsilon()) return null;
+
+        for (Symbol symbol : production.getRightStates()) {
+            symbols.add(symbol);
+            if (symbol.isTerminalProduction()) return symbols;
+            if (! emptySymbols.contains(symbol)) return symbols;
+        }
+        return null;
     }
 }

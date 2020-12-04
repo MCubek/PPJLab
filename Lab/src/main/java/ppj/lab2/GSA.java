@@ -82,7 +82,7 @@ public class GSA {
                 line = scanner.nextLine();
                 if (! line.startsWith(" ")) break;
 
-                Production production = new Production(nonTerminalSymbol, Symbol.toListSymbols(line.trim().split("\\s+")), counter);
+                Production production = new Production(nonTerminalSymbol, Symbol.toListOfSymbols(line.trim().split("\\s+")), counter);
 
                 productions.add(production);
             }

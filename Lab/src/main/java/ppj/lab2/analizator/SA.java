@@ -121,7 +121,7 @@ public class SA {
                     newParentNode.addChild(new Node<>("$"));
                 } else {
                     //Nije epsilon produkcija
-                    removeFromStackAndAddToParent(newParentNode, reduceProduction.rightNumber(), stateQueue, symbolsQueue);
+                    removeFromStackAndAddToParent(newParentNode, reduceProduction.numberOfRightStates(), stateQueue, symbolsQueue);
                 }
 
                 //Procitaj novo stanje iz tablice novo stanje
