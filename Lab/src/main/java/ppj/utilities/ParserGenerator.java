@@ -284,44 +284,81 @@ public class ParserGenerator {
                 }
             }
             Set<Pair<Pair<String,String>,String>> contains = new HashSet<>();
-            for(int i = 0; i < reductionProductions.size(); i++) {
-                for(int j = 0; j < reductionProductions.size(); j++) {
-                    if(reductionProductions.get(i).getLeft().getRight().equals(reductionProductions.get(j).getLeft().getRight())) {
-                        if(reductionProductions.get(i).getLeft().getLeft().equals("<S*>")) {
-                            this.actionTable.put(new Pair<>(dkaState.getKey(), "$"),new AcceptAction(new Production(reductionProductions.get(i).getLeft().getLeft(),transformBackToLR(reductionProductions.get(i).getLeft().getRight()))));
+            if(reductionProductions.size() == 1) {
+                if(reductionProductions.get(0).getLeft().getLeft().equals("<S*>")) {
+                    this.actionTable.put(new Pair<>(dkaState.getKey(), "$"), new AcceptAction(new Production(reductionProductions.get(0).getLeft().getLeft(), transformBackToLR(reductionProductions.get(0).getLeft().getRight(), terminalSymbols))));
+                } else {
+                    addReduction(dkaState, reductionProductions, contains, 0,reductionProductions.get(0).getRight(),terminalSymbols);
+                }
+            } else {
+                for (int i = 0; i < reductionProductions.size()-1; i++) {
+                    for (int j = i + 1; j < reductionProductions.size(); j++) {
+                        if (productionPriorites.get(reductionProductions.get(i).getLeft()) < productionPriorites.get(reductionProductions.get(j).getLeft())) {
+                            addReduction(dkaState, reductionProductions, contains, i, reductionProductions.get(i).getRight(), terminalSymbols);
+                            Set<String> remainingSymbols = findRemainingTransitionSymbols(reductionProductions.get(i).getRight(), reductionProductions.get(j).getRight());
+                            if (!remainingSymbols.isEmpty())
+                                addReduction(dkaState, reductionProductions, contains, j, remainingSymbols, terminalSymbols);
                         } else {
-                            if (productionPriorites.get(reductionProductions.get(i).getLeft()) < productionPriorites.get(reductionProductions.get(j).getLeft())) {
-                                addReduction(dkaState, reductionProductions, contains, i);
-                            } else {
-                                addReduction(dkaState, reductionProductions, contains, j);
-                            }
+                            addReduction(dkaState, reductionProductions, contains, j, reductionProductions.get(j).getRight(), terminalSymbols);
+                            Set<String> remainingSymbols = findRemainingTransitionSymbols(reductionProductions.get(j).getRight(), reductionProductions.get(i).getRight());
+                            if (!remainingSymbols.isEmpty())
+                                addReduction(dkaState, reductionProductions, contains, i, remainingSymbols, terminalSymbols);
                         }
                     }
-
                 }
             }
         }
     }
+    /*
+                        if(reductionProductions.get(i).getLeft().getRight().equals(reductionProductions.get(j).getLeft().getRight())) {
+                        if(reductionProductions.get(i).getLeft().getLeft().equals("<S*>")) {
+                            this.actionTable.put(new Pair<>(dkaState.getKey(), "$"),new AcceptAction(new Production(reductionProductions.get(i).getLeft().getLeft(),transformBackToLR(reductionProductions.get(i).getLeft().getRight()))));
+                        } else {
+                            if(reductionProductions.size() > 1) {
+                                if(i != j) {
+                                    if (productionPriorites.get(reductionProductions.get(i).getLeft()) < productionPriorites.get(reductionProductions.get(j).getLeft())) {
+                                        Set<String> unionOfTransitions = findEqualTransitionSymbols(reductionProductions.get(i).getRight(),reductionProductions.get(j).getRight());
+                                        addReduction(dkaState, reductionProductions, contains, i,unionOfTransitions);
+                                    } else {
+                                        Set<String> unionOfTransitions = findEqualTransitionSymbols(reductionProductions.get(j).getRight(),reductionProductions.get(i).getRight());
+                                        addReduction(dkaState, reductionProductions, contains, j,unionOfTransitions);
+                                    }
+                                }
+                            } else {
+                                addReduction(dkaState, reductionProductions, contains, i,reductionProductions.get(i).getRight());
+                            }
+                        }
+                    }
+     */
 
-    private void addReduction(Map.Entry<Integer, Set<Integer>> dkaState, List<Pair<Pair<String, String>, Set<String>>> reductionProductions, Set<Pair<Pair<String, String>, String>> contains, int j) {
-            for (String s : reductionProductions.get(j).getRight()) {
+    private Set<String> findRemainingTransitionSymbols(Set<String> higherPriority, Set<String> lowerPriority) {
+        Set<String> result = new HashSet<>();
+        for(String s : lowerPriority) {
+            if(!higherPriority.contains(s))
+                result.add(s);
+        }
+        return result;
+    }
+
+    private void addReduction(Map.Entry<Integer, Set<Integer>> dkaState, List<Pair<Pair<String, String>, Set<String>>> reductionProductions, Set<Pair<Pair<String, String>, String>> contains, int j, Set<String> prioritySet, List<String> terminalSymbols) {
+            for (String s : prioritySet) {
                 if(!contains.contains(new Pair<>(reductionProductions.get(j).getLeft(),s))) {
-                    this.actionTable.put(new Pair<>(dkaState.getKey(), s), new ReduceAction(new Production(reductionProductions.get(j).getLeft().getLeft(), transformBackToLR(reductionProductions.get(j).getLeft().getRight()))));
+                    this.actionTable.put(new Pair<>(dkaState.getKey(), s), new ReduceAction(new Production(reductionProductions.get(j).getLeft().getLeft(), transformBackToLR(reductionProductions.get(j).getLeft().getRight(),terminalSymbols))));
                     contains.add(new Pair<>(reductionProductions.get(j).getLeft(),s));
             }
         }
     }
 
-    private List<String> transformBackToLR(String right) {
+    private List<String> transformBackToLR(String right, List<String> terminalSymbols) {
         List<String> result = new ArrayList<>();
         StringBuilder s = new StringBuilder();
         boolean dontBreak = false;
         for(char c : right.toCharArray()) {
-            if(c == '<') {
+            if(c == '<' || !terminalSymbols.contains(s.toString()) || c == '$') {
                 dontBreak = true;
             }
             s.append(c);
-            if(c == '>')
+            if(c == '>' || terminalSymbols.contains(s.toString()) || c == '$')
                 dontBreak = false;
             if(!dontBreak) {
                 result.add(s.toString());
@@ -490,7 +527,8 @@ public class ParserGenerator {
                             followSymbol = currentProductions.get(currentProductions.indexOf("*") + 1);
                             generateFollowSymbols(nonTerminalSymbols, followSymbolString, followSymbol);
                         } else {
-                            followSymbolString.append("$}");
+                            String getSymbolsFromPreviousState = productionsToStates.get(previousState).getRight();
+                            followSymbolString.replace(0,followSymbolString.length(),getSymbolsFromPreviousState);
                         }
                         Pair<String,String> nextPair = new Pair<>(transitionSymbol, followSymbolString.toString());
                         if(!removed.contains(nextPair) && !supportQueue.contains(nextPair) && !transitionQueue.contains(nextPair)) {
@@ -517,7 +555,7 @@ public class ParserGenerator {
                 StringBuilder followSymbolString = new StringBuilder("{");
                 String followSymbol = rightSide.get(rightSide.indexOf("*") + 1);
                 if(rightSide.indexOf("*") + 1 == rightSide.size()-1) {
-                    followSymbolString.append("$}");
+                    followSymbolString.replace(0,followSymbolString.length(),curlySymbols);
                 } else {
                     String nextSymbol = rightSide.get(rightSide.indexOf("*") + 2);
                     List<String> checkEmpty = rightSide.subList(rightSide.indexOf("*") + 2, rightSide.size());
@@ -544,7 +582,7 @@ public class ParserGenerator {
             }
         }
 
-       // printEnka(productionsToStates,transitions);
+        //printEnka(productionsToStates,transitions);
         this.productionsToStates = productionsToStates;
         return new Pair<>(productionsToStates,transitions);
     }
@@ -600,7 +638,4 @@ public class ParserGenerator {
         }
     }
 
-    public static void main(String[] args) {
-
-    }
 }
