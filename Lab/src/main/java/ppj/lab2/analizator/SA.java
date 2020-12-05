@@ -162,7 +162,7 @@ public class SA {
 
             } else throw new RuntimeException("Action not defined");
         }
-        if (error) throw new RuntimeException("Syntax error");
+        //if (error) throw new RuntimeException("Syntax error");
 
         if (stateQueue.isEmpty()) throw new RuntimeException("State stack shouldn't be empty.");
     }
