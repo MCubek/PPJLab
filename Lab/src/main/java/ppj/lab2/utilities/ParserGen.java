@@ -12,7 +12,7 @@ import java.util.stream.Collectors;
  * @project PPJLab
  * @created 04/12/2020
  */
-public class ParserGen2 {
+public class ParserGen {
     private final List<Symbol> nonTerminalSymbols;
     private final List<Symbol> terminalSymbols;
     private final List<Production> productions;
@@ -20,7 +20,7 @@ public class ParserGen2 {
     private Map<Pair<Integer, String>, Action> actionTable;
     private Map<Pair<Integer, String>, PutAction> newStateTable;
 
-    public ParserGen2(List<Symbol> nonTerminalSymbols, List<Symbol> terminalSymbols, List<Production> productions) {
+    public ParserGen(List<Symbol> nonTerminalSymbols, List<Symbol> terminalSymbols, List<Production> productions) {
         this.nonTerminalSymbols = Objects.requireNonNull(nonTerminalSymbols);
         this.terminalSymbols = Objects.requireNonNull(terminalSymbols);
         this.productions = Objects.requireNonNull(productions);
@@ -39,12 +39,19 @@ public class ParserGen2 {
      * Metoda generiranja tablica
      */
     private void generateTables() {
-        List<Production> lrProductions = generateLrProductions(productions, nonTerminalSymbols.get(0));
+        Set<Production> lrProductions = generateLrProductions(productions, nonTerminalSymbols.get(0));
         Map<Production, Set<Symbol>> startingWithMap = calculateStartingWith(productions, terminalSymbols);
     }
 
-    private static List<Production> generateLrProductions(List<Production> productions, Symbol initialSymbol) {
-        List<Production> lrProductionsList = new ArrayList<>();
+    /**
+     * Metoda koja generira LR stavke
+     *
+     * @param productions   ulazne produkcije
+     * @param initialSymbol prvo stanje
+     * @return lista LR stavaka
+     */
+    private static Set<Production> generateLrProductions(List<Production> productions, Symbol initialSymbol) {
+        Set<Production> lrProductionsList = new HashSet<>();
 
         Production startProduction = new Production(Symbol.of("<*S*>", false),
                 Symbol.toListOfSymbols(initialSymbol));
@@ -57,12 +64,12 @@ public class ParserGen2 {
     }
 
     /**
-     * Stvaranje produkcija s zvjezdicama
+     * Stvaranje lr stavci za jednu produkciju
      *
      * @param lrProductionsListFinal lista koju metoda mijenja i gdje stavlja finalne produkcije
      * @param productionOriginal     lista s procitanim produkcijama/originalnim
      */
-    private static void addLrProductionsWithStar(List<Production> lrProductionsListFinal, Production productionOriginal) {
+    private static void addLrProductionsWithStar(Set<Production> lrProductionsListFinal, Production productionOriginal) {
         if (productionOriginal.isEpsilon()) {
             lrProductionsListFinal.add(productionOriginal);
             return;
@@ -76,6 +83,13 @@ public class ParserGen2 {
         }
     }
 
+    /**
+     * Metoda kooja racuna skup zapocinje
+     *
+     * @param productions     ulazne produkcije
+     * @param terminalSymbols zavrsni znakovi
+     * @return mapa sa produkcijom kao kljucem i setom znakova iz skupa zapocinje kao vrijednosti
+     */
     private static Map<Production, Set<Symbol>> calculateStartingWith(List<Production> productions, List<Symbol> terminalSymbols) {
         //Prazni znakovi
         Set<Symbol> isEmpty = productions.stream()
@@ -99,13 +113,17 @@ public class ParserGen2 {
         //Refleksivna
         startsWith.forEach((key, value) -> value.add(key));
         terminalSymbols.forEach(val -> startsWith.put(val, Set.of(val)));
+
         boolean hasChanged = true;
         while (hasChanged) {
             hasChanged = false;
+
             for (Map.Entry<Symbol, Set<Symbol>> entry : startsWith.entrySet()) {
-                for (Symbol symbol : entry.getValue()) {
+
+                var symbols = new HashSet<>(entry.getValue());
+                for (Symbol symbol : symbols) {
                     //Samo za nezavrsne
-                    if (! symbol.isTerminalProduction()) {
+                    if (! symbol.isTerminalProduction() && ! symbol.equals(entry.getKey())) {
                         //Uspjesno dodana nova produkcija/je
                         if (entry.getValue().addAll(startsWith.get(symbol)))
                             hasChanged = true;
@@ -123,11 +141,13 @@ public class ParserGen2 {
             for (Symbol symbol : prod.getRightStates()) {
                 if (symbol.isEnd()) break;
 
-                startsSymbols.addAll(startsWith.get(symbol));
+                startsSymbols.addAll(startsWith.get(symbol).stream()
+                        .filter(Symbol::isTerminalProduction)
+                        .collect(Collectors.toSet()));
 
-                if (symbol.isTerminalProduction()) break;
+                if (symbol.isTerminalProduction() || ! isEmpty.contains(symbol)) break;
             }
-
+            //Ukoliko nema stavi null
             startsMap.put(prod, ! startsSymbols.isEmpty() ? startsSymbols : null);
         });
 

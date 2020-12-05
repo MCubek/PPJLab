@@ -1,6 +1,6 @@
 package ppj.lab2;
 
-import ppj.lab2.utilities.ParserGen2;
+import ppj.lab2.utilities.ParserGen;
 import ppj.lab2.utilities.Production;
 import ppj.lab2.utilities.Symbol;
 import ppj.lab2.utilities.actions.Action;
@@ -34,7 +34,7 @@ public class GSA {
     }
 
     private void generateTables() {
-        ParserGen2 generator = new ParserGen2(nonTerminalSymbols, terminalSymbols, productions);
+        ParserGen generator = new ParserGen(nonTerminalSymbols, terminalSymbols, productions);
 
         this.actionTable = generator.getActionTable();
         this.newStateTable = generator.getNewStateTable();
