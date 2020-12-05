@@ -22,22 +22,45 @@ public class DkaAutomata {
 
     private static TreeMap<DkaState, Transition<DkaState>> generateFromEnka(EnkaAutomata enkaAutomata) {
         var enkaTransitions = enkaAutomata.getTransitions();
+        int counter = 0;
 
-        Deque<Production> statesToVisit = new ArrayDeque<>();
-        statesToVisit.push(enkaAutomata.getStartingProduction());
+        Deque<Production> stateToVisit = new ArrayDeque<>();
+        stateToVisit.push(enkaAutomata.getStartingProduction());
+        Deque<Production> epsilonStateToVisit = new ArrayDeque<>();
+        epsilonStateToVisit.push(enkaAutomata.getStartingProduction());
+
+        do {
+            Production headProduction = stateToVisit.pop();
+
+            Set<Production> combinedStates = new HashSet<>();
+
+            for (Transition<Production> currentTransition : enkaTransitions.get(headProduction)) {
+                //Sljedece stanje
+                if (! currentTransition.isEpsilonTransition()) stateToVisit.add(currentTransition.getNextState());
+
+                //Epsilon ork
+
+            }
+
+
+        } while (! stateToVisit.isEmpty());
+
+
         Set<Production> combinedStates = new HashSet<>();
 
-        while (! statesToVisit.isEmpty()) {
-            Production current = statesToVisit.pop();
+        while (! epsilonStateToVisit.isEmpty()) {
+            Production current = epsilonStateToVisit.pop();
             combinedStates.add(current);
             enkaTransitions.get(current).stream()
                     .filter(Transition::isEpsilonTransition)
                     .map(Transition::getNextState)
                     .forEach(v -> {
                         if (combinedStates.add(v))
-                            statesToVisit.push(v);
+                            epsilonStateToVisit.push(v);
                     });
         }
+        DkaState state = new DkaState(counter++, combinedStates);
+
 
         return null;
     }

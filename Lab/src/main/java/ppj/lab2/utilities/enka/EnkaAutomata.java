@@ -13,11 +13,9 @@ import java.util.*;
  */
 public class EnkaAutomata {
     private final Map<Production, List<Transition<Production>>> transitions;
-    private final Map<Production, Set<Symbol>> startingWithMap;
     private final Production startingProduction;
 
-    public EnkaAutomata(List<Production> lrProductions, Map<Production, Set<Symbol>> startingWithMap, Map<Symbol, List<Production>> startingStatesMap) {
-        this.startingWithMap = startingWithMap;
+    public EnkaAutomata(List<Production> lrProductions, Map<Symbol, List<Production>> startingStatesMap) {
         this.startingProduction = lrProductions.get(0);
         this.transitions = generateEnkaTransitions(lrProductions, startingStatesMap);
     }
@@ -40,11 +38,11 @@ public class EnkaAutomata {
 
                 if (! nextSymbol.isTerminalProduction()) {
                     startingStatesMap.get(nextSymbol).stream()
-                            .map(nextProd -> new Transition<Production>(production, Symbol.epsilonSymbol, nextProd))
+                            .map(nextProd -> new Transition<>(production, Symbol.epsilonSymbol, nextProd))
                             .forEach(list::add);
                 }
 
-                list.add(new Transition<Production>(production, nextSymbol, production.getNextInLine(lrProductions)));
+                list.add(new Transition<>(production, nextSymbol, production.getNextInLine(lrProductions)));
 
             }
 
@@ -55,10 +53,6 @@ public class EnkaAutomata {
 
     public Map<Production, List<Transition<Production>>> getTransitions() {
         return transitions;
-    }
-
-    public Map<Production, Set<Symbol>> getStartingWithMap() {
-        return startingWithMap;
     }
 
     public Production getStartingProduction() {

@@ -71,7 +71,7 @@ public class GSA {
         //Ostale linije -> produkcije gramatike
         if (! scanner.hasNextLine()) throw new IllegalArgumentException("No productions");
 
-        int counter = 0;
+        int counter = 1;
         productions = new ArrayList<>();
 
         line = scanner.nextLine();
@@ -82,7 +82,7 @@ public class GSA {
                 line = scanner.nextLine();
                 if (! line.startsWith(" ")) break;
 
-                Production production = new Production(nonTerminalSymbol, Symbol.toListOfSymbols(line.trim().split("\\s+")), counter);
+                Production production = new Production(nonTerminalSymbol, Symbol.toListOfSymbols(line.trim().split("\\s+")), counter++);
 
                 productions.add(production);
             }

@@ -21,11 +21,23 @@ public class ParserGen {
     private Map<Pair<Integer, String>, Action> actionTable;
     private Map<Pair<Integer, String>, PutAction> newStateTable;
 
+    private Set<Symbol> emptySymbols;
+    private Map<Symbol, Set<Symbol>> startingWith;
+
     public ParserGen(List<Symbol> nonTerminalSymbols, List<Symbol> terminalSymbols, List<Production> productions) {
         this.nonTerminalSymbols = Objects.requireNonNull(nonTerminalSymbols);
         this.terminalSymbols = Objects.requireNonNull(terminalSymbols);
         this.productions = Objects.requireNonNull(productions);
+
+        emptySymbols = ParserGen.calculateIsEmpty(productions);
+        startingWith = ParserGen.calculateStartingWith(productions, terminalSymbols, emptySymbols);
+
         generateTables();
+    }
+
+    private void generateEmptyAndStartingWith() {
+        emptySymbols = ParserGen.calculateIsEmpty(productions);
+        startingWith = ParserGen.calculateStartingWith(productions, terminalSymbols, emptySymbols);
     }
 
     public Map<Pair<Integer, String>, Action> getActionTable() {
@@ -40,24 +52,21 @@ public class ParserGen {
      * Metoda generiranja tablica
      */
     private void generateTables() {
-        List<Production> lrProductions = generateLrProductions(productions, nonTerminalSymbols.get(0));
+        List<Production> lrProductions = generateLrProductions(nonTerminalSymbols.get(0));
         Map<Symbol, List<Production>> startingStatesMap = generateStartingStatesMap(lrProductions);
-        Map<Production, Set<Symbol>> startingWithMap = calculateStartingWith(productions, terminalSymbols);
-        EnkaAutomata enka = new EnkaAutomata(lrProductions, startingWithMap, startingStatesMap);
+        EnkaAutomata enka = new EnkaAutomata(lrProductions, startingStatesMap);
     }
 
     /**
      * Metoda koja generira LR stavke
      *
-     * @param productions   ulazne produkcije
      * @param initialSymbol prvo stanje
      * @return lista LR stavaka
      */
-    private static List<Production> generateLrProductions(List<Production> productions, Symbol initialSymbol) {
+    private List<Production> generateLrProductions(Symbol initialSymbol) {
         List<Production> lrProductionsList = new ArrayList<>();
 
-        Production startProduction = new Production(Symbol.of("<*S*>", false),
-                Symbol.toListOfSymbols(initialSymbol));
+        Production startProduction = Production.getStartProduction(initialSymbol);
 
         addLrProductionsWithStar(lrProductionsList, startProduction);
 
@@ -72,12 +81,12 @@ public class ParserGen {
      * @param lrProductions lrProdukcije s stavkama
      * @return Mapa sa nezavrsnim znakom i prvim produkcijama
      */
-    private Map<Symbol, List<Production>> generateStartingStatesMap(List<Production> lrProductions) {
+    private static Map<Symbol, List<Production>> generateStartingStatesMap(List<Production> lrProductions) {
         Map<Symbol, List<Production>> map = new HashMap<>();
 
         lrProductions.forEach(prod -> {
             var list = map.getOrDefault(prod.getLeftState(), new ArrayList<>());
-            if (prod.isSymbolsStartProduction())
+            if (prod.isSymbolsStartProduction() || prod.isEpsilon())
                 list.add(prod);
 
             map.put(prod.getLeftState(), list);
@@ -93,7 +102,14 @@ public class ParserGen {
      * @param productionOriginal     lista s procitanim produkcijama/originalnim
      */
     private static void addLrProductionsWithStar(List<Production> lrProductionsListFinal, Production productionOriginal) {
-        if (productionOriginal.isEpsilon()) {
+        // TODO: 5.12.2020. Skup znakova !!!
+        // Koristiti Production.copyOfWithStartsList
+        // Takoder ParserGen.startsWithForProduction vraca sve znakove iz skupa zapocinje sa za dani znakove
+        // Kod ispod je star
+
+
+
+/*        if (productionOriginal.isEpsilon()) {
             lrProductionsListFinal.add(productionOriginal);
             return;
         }
@@ -103,23 +119,25 @@ public class ParserGen {
             rightSymbols.add(i, Symbol.starSymbol);
 
             lrProductionsListFinal.add(new Production(productionOriginal.getLeftState(), rightSymbols, productionOriginal.getIndex()));
-        }
+        }*/
+
     }
 
-    /**
-     * Metoda kooja racuna skup zapocinje
-     *
-     * @param productions     ulazne produkcije
-     * @param terminalSymbols zavrsni znakovi
-     * @return mapa sa produkcijom kao kljucem i setom znakova iz skupa zapocinje kao vrijednosti
-     */
-    private static Map<Production, Set<Symbol>> calculateStartingWith(List<Production> productions, List<Symbol> terminalSymbols) {
-        //Prazni znakovi
-        Set<Symbol> isEmpty = productions.stream()
+    public static Set<Symbol> calculateIsEmpty(Collection<Production> productions) {
+        return productions.stream()
                 .filter(Production::isEpsilon)
                 .map(Production::getLeftState)
                 .collect(Collectors.toSet());
+    }
 
+    /**
+     * Metoda kooja racuna skup zapocinje sa za svaki znak
+     *
+     * @param productions     ulazne produkcije
+     * @param terminalSymbols zavrsni znakovi
+     * @return mapa sa simbolom kao kljucem i setom znakova iz skupa zapocinje sa kao vrijednosti
+     */
+    public static Map<Symbol, Set<Symbol>> calculateStartingWith(List<Production> productions, List<Symbol> terminalSymbols, Set<Symbol> isEmpty) {
         //Zapocinje izravno znakom
         Map<Symbol, Set<Symbol>> startsWith = new HashMap<>();
         productions.forEach(prod -> {
@@ -155,26 +173,32 @@ public class ParserGen {
             }
         }
 
-        Map<Production, Set<Symbol>> startsMap = new HashMap<>();
-        //Racunaj za svaku produkciju
-        productions.forEach(prod -> {
-            Set<Symbol> startsSymbols = new HashSet<>();
+        return startsWith;
+    }
 
-            //Svaki simbol desne strane trazi iz pocinje sa dok ne dodes do zavrsnog
-            for (Symbol symbol : prod.getRightStates()) {
-                if (symbol.isEnd()) break;
+    public static Collection<Symbol> startsWithForProduction(Map<Symbol, Set<Symbol>> startsWith, Collection<Symbol> isEmpty, Production production) {
+        if (! production.hasStar()) throw new IllegalArgumentException("Production doesn't have star.");
+        var rightStates = production.getRightStates();
 
-                startsSymbols.addAll(startsWith.get(symbol).stream()
-                        .filter(Symbol::isTerminalProduction)
-                        .collect(Collectors.toSet()));
+        var rightStatesAfterStar = rightStates.subList(production.indexOfStar() + 1, rightStates.size() - 1);
 
-                if (symbol.isTerminalProduction() || ! isEmpty.contains(symbol)) break;
-            }
-            //Ukoliko nema stavi null
-            startsMap.put(prod, ! startsSymbols.isEmpty() ? startsSymbols : null);
-        });
+        Set<Symbol> set = new HashSet<>();
+        //Svaki simbol desne strane trazi iz pocinje sa dok ne dodes do zavrsnog
+        for (Symbol symbol : rightStatesAfterStar) {
+            if (symbol.isEnd()) break;
 
-        return startsMap;
+            set.addAll(startsWith.get(symbol).stream()
+                    .filter(Symbol::isTerminalProduction)
+                    .collect(Collectors.toSet()));
+
+            if (symbol.isTerminalProduction() || ! isEmpty.contains(symbol)) break;
+        }
+
+        return set;
+    }
+
+    public Collection<Symbol> startsWithForProduction(Production production) {
+        return startsWithForProduction(startingWith, emptySymbols, production);
     }
 
 

@@ -13,11 +13,9 @@ public class Production implements Serializable, Comparable<Production> {
     private static final long serialVersionUID = - 162859005435295656L;
     private final Symbol leftState;
     private final LinkedList<Symbol> rightStates;
+    private List<Symbol> startsWithList;
     private final Integer index;
 
-    public Production(Symbol leftState, LinkedList<Symbol> rightStates) {
-        this(leftState, rightStates, - 1);
-    }
 
     public Production(Symbol leftState, LinkedList<Symbol> rightStates, Integer index) {
         if (rightStates.isEmpty())
@@ -25,6 +23,20 @@ public class Production implements Serializable, Comparable<Production> {
         this.leftState = leftState;
         this.rightStates = rightStates;
         this.index = index;
+    }
+
+    public Production copyOfWithStartsList(Production oldProduction, List<Symbol> startsWithList) {
+        Production newProduction = new Production(oldProduction.leftState, oldProduction.rightStates, oldProduction.index);
+        newProduction.startsWithList = startsWithList;
+        return newProduction;
+    }
+
+    public static Production getStartProduction(Symbol startSymbol) {
+        return new Production(Symbol.of("*S*", false), Symbol.toListOfSymbols(startSymbol), 0);
+    }
+
+    public List<Symbol> getStartsWithList() {
+        return startsWithList;
     }
 
     public Symbol getLeftState() {
@@ -41,6 +53,10 @@ public class Production implements Serializable, Comparable<Production> {
 
     public int indexOfStar() {
         return rightStates.indexOf(Symbol.starSymbol);
+    }
+
+    public boolean hasStar() {
+        return rightStates.contains(Symbol.starSymbol);
     }
 
     public boolean isEpsilon() {
