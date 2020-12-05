@@ -2,6 +2,7 @@ package ppj.lab2.utilities;
 
 import ppj.lab2.utilities.actions.Action;
 import ppj.lab2.utilities.actions.PutAction;
+import ppj.lab2.utilities.enka.EnkaAutomata;
 import ppj.utilities.Pair;
 
 import java.util.*;

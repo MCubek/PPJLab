@@ -7,12 +7,12 @@ import java.util.Objects;
  * @project PPJLab
  * @created 05/12/2020
  */
-public class EnkaTransition {
-    private final Production state;
+public class Transition<T> {
+    private final T state;
     private final Symbol transitionSymbol;
-    private final Production nextState;
+    private final T nextState;
 
-    public Production getState() {
+    public T getState() {
         return state;
     }
 
@@ -20,11 +20,11 @@ public class EnkaTransition {
         return transitionSymbol;
     }
 
-    public Production getNextState() {
+    public T getNextState() {
         return nextState;
     }
 
-    public EnkaTransition(Production state, Symbol transitionSymbol, Production nextState) {
+    public Transition(T state, Symbol transitionSymbol, T nextState) {
         this.state = Objects.requireNonNull(state);
         this.transitionSymbol = Objects.requireNonNull(transitionSymbol);
         this.nextState = Objects.requireNonNull(nextState);
@@ -44,7 +44,7 @@ public class EnkaTransition {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 
-        EnkaTransition that = (EnkaTransition) o;
+        Transition<?> that = (Transition<?>) o;
 
         if (! state.equals(that.state)) return false;
         if (! transitionSymbol.equals(that.transitionSymbol)) return false;
