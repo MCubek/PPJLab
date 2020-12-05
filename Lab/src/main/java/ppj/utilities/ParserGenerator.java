@@ -181,7 +181,7 @@ public class ParserGenerator {
             line = "";
         }*/
 
-        //generiranje tablice ZapočinjeZnakom
+        //generiranje tablice ZapocinjeZnakom
         for(int n = 0; n < firstTable.length; n++) {
             for (int i = 0; i < firstTable.length; i++) {
                 for (int j = 0; j < firstTable.length; j++) {
@@ -433,7 +433,7 @@ public class ParserGenerator {
            }
        }
 
-       //printDKA(dkaStates);
+       printDKA(dkaStates);
        return new Pair<>(dkaStates,dkaTransitions);
     }
 
