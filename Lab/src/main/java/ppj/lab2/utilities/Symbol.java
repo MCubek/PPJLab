@@ -20,10 +20,12 @@ public class Symbol implements Serializable {
 
     public static final Symbol starSymbol = new Symbol("*", true);
     public static final Symbol endSymbol = new Symbol("$", true);
+    public static final Symbol epsilonSymbol = new Symbol("ɛ", true);
 
     public static Symbol of(String value, boolean terminal) {
         if (value.equals("*")) return starSymbol;
         if (value.equals("$")) return endSymbol;
+        if (value.equals("ɛ")) return epsilonSymbol;
 
         return new Symbol(value, terminal);
     }

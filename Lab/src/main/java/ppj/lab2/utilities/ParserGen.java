@@ -39,8 +39,10 @@ public class ParserGen {
      * Metoda generiranja tablica
      */
     private void generateTables() {
-        Set<Production> lrProductions = generateLrProductions(productions, nonTerminalSymbols.get(0));
+        List<Production> lrProductions = generateLrProductions(productions, nonTerminalSymbols.get(0));
+        Map<Symbol, List<Production>> startingStatesMap = generateStartingStatesMap(lrProductions);
         Map<Production, Set<Symbol>> startingWithMap = calculateStartingWith(productions, terminalSymbols);
+        EnkaAutomata enka = new EnkaAutomata(lrProductions, startingWithMap, startingStatesMap);
     }
 
     /**
@@ -50,8 +52,8 @@ public class ParserGen {
      * @param initialSymbol prvo stanje
      * @return lista LR stavaka
      */
-    private static Set<Production> generateLrProductions(List<Production> productions, Symbol initialSymbol) {
-        Set<Production> lrProductionsList = new HashSet<>();
+    private static List<Production> generateLrProductions(List<Production> productions, Symbol initialSymbol) {
+        List<Production> lrProductionsList = new ArrayList<>();
 
         Production startProduction = new Production(Symbol.of("<*S*>", false),
                 Symbol.toListOfSymbols(initialSymbol));
@@ -64,12 +66,32 @@ public class ParserGen {
     }
 
     /**
+     * Metoda generira mapu poocetnih LR stavki za lakse pretrazivanje
+     *
+     * @param lrProductions lrProdukcije s stavkama
+     * @return Mapa sa nezavrsnim znakom i prvim produkcijama
+     */
+    private Map<Symbol, List<Production>> generateStartingStatesMap(List<Production> lrProductions) {
+        Map<Symbol, List<Production>> map = new HashMap<>();
+
+        lrProductions.forEach(prod -> {
+            var list = map.getOrDefault(prod.getLeftState(), new ArrayList<>());
+            if (prod.isSymbolsStartProduction())
+                list.add(prod);
+
+            map.put(prod.getLeftState(), list);
+        });
+
+        return map;
+    }
+
+    /**
      * Stvaranje lr stavci za jednu produkciju
      *
      * @param lrProductionsListFinal lista koju metoda mijenja i gdje stavlja finalne produkcije
      * @param productionOriginal     lista s procitanim produkcijama/originalnim
      */
-    private static void addLrProductionsWithStar(Set<Production> lrProductionsListFinal, Production productionOriginal) {
+    private static void addLrProductionsWithStar(List<Production> lrProductionsListFinal, Production productionOriginal) {
         if (productionOriginal.isEpsilon()) {
             lrProductionsListFinal.add(productionOriginal);
             return;

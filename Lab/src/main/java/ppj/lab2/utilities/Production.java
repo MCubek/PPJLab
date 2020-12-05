@@ -77,4 +77,35 @@ public class Production implements Serializable, Comparable<Production> {
         }
         return null;
     }
+
+    public Symbol symbolAfterStar() {
+        int index = indexOfStar();
+        if (index == - 1 || starAtEnd()) {
+            return null;
+        }
+
+        return rightStates.get(index + 1);
+    }
+
+    public boolean isSymbolsStartProduction() {
+        return indexOfStar() == 0;
+    }
+
+    public static Production findInCollectionByRightStates(Collection<Production> collection, List<Symbol> rightSymbols) {
+        TreeSet<Production> foundProductions =
+                collection.stream()
+                        .filter(prod -> prod.rightStates.equals(rightSymbols))
+                        .collect(Collectors.toCollection(TreeSet::new));
+
+        return foundProductions.first();
+    }
+
+    public Production getNextInLine(Collection<Production> collection) {
+        int index = this.indexOfStar();
+        var rightStates = new LinkedList<>(this.rightStates);
+        rightStates.remove(index);
+        rightStates.add(index + 1, Symbol.starSymbol);
+
+        return findInCollectionByRightStates(collection, rightStates);
+    }
 }
