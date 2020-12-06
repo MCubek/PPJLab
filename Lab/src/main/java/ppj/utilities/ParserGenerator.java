@@ -158,7 +158,8 @@ public class ParserGenerator {
             }
         }
 
-        /*String line = "    ";
+        /*
+        String line = "    ";
         for(String symbol: entrySymbols)
             if(symbol.length() > 1)
                 line = line + symbol + " ";
@@ -180,21 +181,24 @@ public class ParserGenerator {
             line = "";
         }*/
 
-        //generiranje tablice ZapočinjeZnakom
-        for(int i = 0; i < firstTable.length; i++) {
-            for(int j = 0; j < firstTable.length; j++) {
-                if(i == j) {
-                    firstTable[i][j] = true;
-                } else if(firstTable[i][j]) {
-                    for(int k = 0; k < firstTable.length; k++) {
-                        if(firstTable[j][k])
-                            firstTable[i][k] = true;
+        //generiranje tablice ZapocinjeZnakom
+        for(int n = 0; n < firstTable.length; n++) {
+            for (int i = 0; i < firstTable.length; i++) {
+                for (int j = 0; j < firstTable.length; j++) {
+                    if (i == j) {
+                        firstTable[i][j] = true;
+                    } else if (firstTable[i][j]) {
+                        for (int k = 0; k < firstTable.length; k++) {
+                            if (firstTable[j][k])
+                                firstTable[i][k] = true;
+                        }
                     }
                 }
             }
         }
 
-        /*System.out.println("---------------------------------------------------------------------------");
+        /*
+        System.out.println("---------------------------------------------------------------------------");
         line = "    ";
         for(String symbol: entrySymbols)
             if(symbol.length() > 1)
@@ -233,6 +237,7 @@ public class ParserGenerator {
                         }
                     }
                 }
+
             }
         }
     }
@@ -279,58 +284,87 @@ public class ParserGenerator {
                 }
             }
             Set<Pair<Pair<String,String>,String>> contains = new HashSet<>();
-            for(int i = 0; i < reductionProductions.size(); i++) {
-                for(int j = 0; j < reductionProductions.size(); j++) {
-                    if(reductionProductions.get(i).getLeft().getRight().equals(reductionProductions.get(j).getLeft().getRight())) {
-                        if(reductionProductions.get(i).getLeft().getLeft().equals("<S*>")) {
-                            this.actionTable.put(new Pair<>(dkaState.getKey(), "$"),new AcceptAction(new Production(reductionProductions.get(i).getLeft().getLeft(),transformBackToLR(reductionProductions.get(i).getLeft().getRight()))));
+            if(reductionProductions.size() == 1) {
+                if(reductionProductions.get(0).getLeft().getLeft().equals("<S*>")) {
+                    this.actionTable.put(new Pair<>(dkaState.getKey(), "$"), new AcceptAction(new Production(reductionProductions.get(0).getLeft().getLeft(), transformBackToLR(reductionProductions.get(0).getLeft().getRight(), terminalSymbols,nonTerminalSymbols))));
+                } else {
+                    addReduction(dkaState, reductionProductions, contains, 0,reductionProductions.get(0).getRight(),terminalSymbols,nonTerminalSymbols);
+                }
+            } else {
+                for (int i = 0; i < reductionProductions.size()-1; i++) {
+                    for (int j = i + 1; j < reductionProductions.size(); j++) {
+                        String removedI = reductionProductions.get(i).getLeft().getRight().replace("%","");
+                        String removedJ = reductionProductions.get(j).getLeft().getRight().replace("%","");
+                        if (productionPriorites.get(new Pair<>(reductionProductions.get(i).getLeft().getLeft(),removedI)) < productionPriorites.get(new Pair<>(reductionProductions.get(j).getLeft().getLeft(),removedJ))) {
+                            addPriorityCurlySymbols(nonTerminalSymbols, terminalSymbols, dkaState, reductionProductions, contains, i, j);
                         } else {
-                            if (productionPriorites.get(reductionProductions.get(i).getLeft()) < productionPriorites.get(reductionProductions.get(j).getLeft())) {
-                                addReduction(dkaState, reductionProductions, contains, i);
-                            } else {
-                                addReduction(dkaState, reductionProductions, contains, j);
-                            }
+                            addPriorityCurlySymbols(nonTerminalSymbols, terminalSymbols, dkaState, reductionProductions, contains, j, i);
                         }
                     }
-
                 }
             }
         }
     }
 
-    private void addReduction(Map.Entry<Integer, Set<Integer>> dkaState, List<Pair<Pair<String, String>, Set<String>>> reductionProductions, Set<Pair<Pair<String, String>, String>> contains, int j) {
-            for (String s : reductionProductions.get(j).getRight()) {
+    private void addPriorityCurlySymbols(List<String> nonTerminalSymbols, List<String> terminalSymbols, Map.Entry<Integer, Set<Integer>> dkaState, List<Pair<Pair<String, String>, Set<String>>> reductionProductions, Set<Pair<Pair<String, String>, String>> contains, int i, int j) {
+        addReduction(dkaState, reductionProductions, contains, i, reductionProductions.get(i).getRight(), terminalSymbols,nonTerminalSymbols);
+        Set<String> remainingSymbols = findRemainingTransitionSymbols(reductionProductions.get(i).getRight(), reductionProductions.get(j).getRight());
+        if (!remainingSymbols.isEmpty())
+            addReduction(dkaState, reductionProductions, contains, j, remainingSymbols, terminalSymbols,nonTerminalSymbols);
+    }
+    /*
+                        if(reductionProductions.get(i).getLeft().getRight().equals(reductionProductions.get(j).getLeft().getRight())) {
+                        if(reductionProductions.get(i).getLeft().getLeft().equals("<S*>")) {
+                            this.actionTable.put(new Pair<>(dkaState.getKey(), "$"),new AcceptAction(new Production(reductionProductions.get(i).getLeft().getLeft(),transformBackToLR(reductionProductions.get(i).getLeft().getRight()))));
+                        } else {
+                            if(reductionProductions.size() > 1) {
+                                if(i != j) {
+                                    if (productionPriorites.get(reductionProductions.get(i).getLeft()) < productionPriorites.get(reductionProductions.get(j).getLeft())) {
+                                        Set<String> unionOfTransitions = findEqualTransitionSymbols(reductionProductions.get(i).getRight(),reductionProductions.get(j).getRight());
+                                        addReduction(dkaState, reductionProductions, contains, i,unionOfTransitions);
+                                    } else {
+                                        Set<String> unionOfTransitions = findEqualTransitionSymbols(reductionProductions.get(j).getRight(),reductionProductions.get(i).getRight());
+                                        addReduction(dkaState, reductionProductions, contains, j,unionOfTransitions);
+                                    }
+                                }
+                            } else {
+                                addReduction(dkaState, reductionProductions, contains, i,reductionProductions.get(i).getRight());
+                            }
+                        }
+                    }
+     */
+
+    private Set<String> findRemainingTransitionSymbols(Set<String> higherPriority, Set<String> lowerPriority) {
+        Set<String> result = new HashSet<>();
+        for(String s : lowerPriority) {
+            if(!higherPriority.contains(s))
+                result.add(s);
+        }
+        return result;
+    }
+
+    private void addReduction(Map.Entry<Integer, Set<Integer>> dkaState, List<Pair<Pair<String, String>, Set<String>>> reductionProductions, Set<Pair<Pair<String, String>, String>> contains, int j, Set<String> prioritySet, List<String> terminalSymbols, List<String> nonTerminalSymbols) {
+            for (String s : prioritySet) {
                 if(!contains.contains(new Pair<>(reductionProductions.get(j).getLeft(),s))) {
-                    this.actionTable.put(new Pair<>(dkaState.getKey(), s), new ReduceAction(new Production(reductionProductions.get(j).getLeft().getLeft(), transformBackToLR(reductionProductions.get(j).getLeft().getRight()))));
+                    this.actionTable.put(new Pair<>(dkaState.getKey(), s), new ReduceAction(new Production(reductionProductions.get(j).getLeft().getLeft(), transformBackToLR(reductionProductions.get(j).getLeft().getRight(),terminalSymbols,nonTerminalSymbols))));
                     contains.add(new Pair<>(reductionProductions.get(j).getLeft(),s));
             }
         }
     }
 
-    private List<String> transformBackToLR(String right) {
-        List<String> result = new ArrayList<>();
-        StringBuilder s = new StringBuilder();
-        boolean dontBreak = false;
-        for(char c : right.toCharArray()) {
-            if(c == '<') {
-                dontBreak = true;
-            }
-            s.append(c);
-            if(c == '>')
-                dontBreak = false;
-            if(!dontBreak) {
-                result.add(s.toString());
-                s = new StringBuilder();
-            }
-        }
-        return result;
+    private List<String> transformBackToLR(String right, List<String> terminalSymbols, List<String> nonTerminalSymbols) {
+        String[] stringArray = right.split("%");
+        return Arrays.asList(stringArray);
     }
 
     private String transformToString(List<String> rightSide) {
         StringBuilder result = new StringBuilder();
         for(String s : rightSide) {
-            if(!s.equals("*"))
+            if(!s.equals("*")) {
                 result.append(s);
+                if(rightSide.indexOf(s) != rightSide.size()-1 || (rightSide.indexOf(s) == rightSide.indexOf("*") + 1 && rightSide.indexOf("*") == rightSide.size()-1))
+                    result.append("%");
+            }
         }
         if(result.toString().equals(""))
             result.append("$");
@@ -368,7 +402,6 @@ public class ParserGenerator {
                    break;
                }
            }
-
            if(checkifExists && !afterEClosure.isEmpty()) {
                dkaStates.put(stateCounter++, afterEClosure);
                existingGroups.add(afterEClosure);
@@ -399,7 +432,8 @@ public class ParserGenerator {
                }
            }
        }
-       //printDKA(dkaStates);
+
+       printDKA(dkaStates);
        return new Pair<>(dkaStates,dkaTransitions);
     }
 
@@ -410,12 +444,12 @@ public class ParserGenerator {
             System.out.println("---------------------------------------------------------------");
             for(Integer state : entry.getValue()) {
                 Pair<Pair<String,List<String>>,String> stateToPrint = this.productionsToStates.get(state);
-                String stateString = "";
-                stateString = stateString + stateToPrint.getLeft().getLeft();
-                stateString = stateString + " --> ";
+                StringBuilder stateString = new StringBuilder();
+                stateString.append(stateToPrint.getLeft().getLeft());
+                stateString.append(" --> ");
                 for(String rightSide : stateToPrint.getLeft().getRight())
-                    stateString = stateString + rightSide;
-                stateString = stateString + " " + stateToPrint.getRight();
+                    stateString.append(rightSide);
+                stateString.append(" ").append(stateToPrint.getRight());
                 System.out.println(stateString);
             }
             System.out.println("--------------------------------------------------------------");
@@ -425,14 +459,20 @@ public class ParserGenerator {
     private Set<Integer> calculateEClosure(Integer currentState, Map<Pair<Integer, String>, List<Integer>> transitions) {
         Set<Integer> groupedStates = new HashSet<>();
         Queue<Integer> findEClosure = new LinkedList<>();
+        Queue<Integer> removed = new LinkedList<>();
         findEClosure.add(currentState);
         groupedStates.add(currentState);
         while(!findEClosure.isEmpty()) {
             Integer eClosureState = findEClosure.remove();
+            removed.add(eClosureState);
             Pair<Integer, String> eTransition = new Pair<>(eClosureState, "$");
             if(transitions.containsKey(eTransition)) {
-                groupedStates.addAll(transitions.get(eTransition));
-                findEClosure.addAll(transitions.get(eTransition));
+                for(Integer transitionState : transitions.get(eTransition)) {
+                    if(!removed.contains(transitionState)) {
+                        groupedStates.add(transitionState);
+                        findEClosure.add(transitionState);
+                    }
+                }
             }
         }
         return groupedStates;
@@ -470,29 +510,10 @@ public class ParserGenerator {
                     addTransition(stateCounter, transitions, transitionPair);
                     if(transitionSymbol != null && nonTerminalSymbols.contains(transitionSymbol)) {
                         StringBuilder followSymbolString = new StringBuilder("{");
-                        String followSymbol;
-                        if(currentProductions.indexOf("*") != currentProductions.size() - 1) {
-                            List<String> checkEmpty = currentProductions.subList(currentProductions.indexOf("*") + 1,currentProductions.size());
-                            if(this.emptySymbols.containsAll(checkEmpty)) {
-                                followSymbolString.append("$, ");
-                            }
-                            followSymbol = currentProductions.get(currentProductions.indexOf("*") + 1);
-                            if(nonTerminalSymbols.contains(followSymbol)) {
-                                List<String> firstRelations = firstRelation.get(followSymbol);
-                                for (String s : firstRelations) {
-                                    if (firstRelations.indexOf(s) == firstRelations.size() - 1)
-                                        followSymbolString.append(s).append("}");
-                                    else
-                                        followSymbolString.append(s).append(", ");
-                                }
-                            } else {
-                                followSymbolString.append(followSymbol).append("}");
-                            }
-                        } else {
-                            followSymbolString.append("$}");
-                        }
+                        String previousRightSide = productionsToStates.get(previousState).getRight();
+                        calculateCurlySymbols(nonTerminalSymbols,followSymbolString,currentProductions,previousRightSide,false);
                         Pair<String,String> nextPair = new Pair<>(transitionSymbol, followSymbolString.toString());
-                        if(!removed.contains(nextPair) && !supportQueue.contains(nextPair)) {
+                        if(!removed.contains(nextPair) && !supportQueue.contains(nextPair) && !transitionQueue.contains(nextPair)) {
                             transitionQueue.add(nextPair);
                             supportQueue.add(nextPair);
                         }
@@ -515,32 +536,11 @@ public class ParserGenerator {
             if(rightSide.indexOf("*") != rightSide.size()-1 && nonTerminalSymbols.contains(rightSide.get(rightSide.indexOf("*") + 1))) {
                 StringBuilder followSymbolString = new StringBuilder("{");
                 String followSymbol = rightSide.get(rightSide.indexOf("*") + 1);
-                if(rightSide.indexOf("*") + 1 == rightSide.size()-1) {
-                    followSymbolString.append("$}");
-                } else {
-                    String nextSymbol = rightSide.get(rightSide.indexOf("*") + 2);
-                    List<String> checkEmpty = rightSide.subList(rightSide.indexOf("*") + 2, rightSide.size());
-                    if (this.emptySymbols.containsAll(checkEmpty)) {
-                        followSymbolString.append("$, ");
-                    }
-
-                    if(nonTerminalSymbols.contains(nextSymbol)) {
-                        List<String> firstRelations = firstRelation.get(nextSymbol);
-                        for (String s : firstRelations) {
-                            if (firstRelations.indexOf(s) == firstRelations.size() - 1)
-                                followSymbolString.append(s).append("}");
-                            else
-                                followSymbolString.append(s).append(", ");
-                        }
-                    } else {
-                        followSymbolString.append(nextSymbol).append("}");
-                    }
-                }
-
+                calculateCurlySymbols(nonTerminalSymbols,followSymbolString,rightSide,curlySymbols,true);
                 for(Map.Entry<Integer, Pair<Pair<String,List<String>>,String>> nextEntry : productionsToStates.entrySet()) {
                     Integer nextState = nextEntry.getKey();
                     Pair<Pair<String,List<String>>,String> nextProduction = nextEntry.getValue();
-                    if(nextState != fromState) {
+                    if(!nextState.equals(fromState)) {
                         if (followSymbol.equals(nextProduction.getLeft().getLeft())) {
                             if (nextProduction.getLeft().getRight().indexOf("*") == 0) {
                                 if (nextProduction.getRight().equals(followSymbolString.toString())) {
@@ -556,6 +556,52 @@ public class ParserGenerator {
         //printEnka(productionsToStates,transitions);
         this.productionsToStates = productionsToStates;
         return new Pair<>(productionsToStates,transitions);
+    }
+
+    private void calculateCurlySymbols(List<String> nonTerminalSymbols, StringBuilder followSymbolString, List<String> rightSide, String previousRightSide,boolean isEpsilon) {
+        if((isEpsilon && (rightSide.indexOf("*") == rightSide.size()-1 || rightSide.indexOf("*") == rightSide.size()-2)) || (!isEpsilon && (rightSide.indexOf("*") == rightSide.size()-1))) {
+            followSymbolString.replace(0,followSymbolString.length(),previousRightSide);
+        } else {
+            List<String> nextSymbols;
+            if(isEpsilon) {
+                nextSymbols = rightSide.subList(rightSide.indexOf("*") + 2, rightSide.size());
+            } else {
+                nextSymbols = rightSide.subList(rightSide.indexOf("*") + 1, rightSide.size());
+            }
+            List<String> curlySymbolsToAdd = new LinkedList<>();
+            if(emptySymbols.containsAll(nextSymbols)) {
+                String removedPreviousRightSide = previousRightSide.substring(1,previousRightSide.length()-1);
+                String[] previousCurlySymbols = removedPreviousRightSide.split(",");
+                Collections.addAll(curlySymbolsToAdd, previousCurlySymbols);
+            }
+            for(String nextSymbol : nextSymbols) {
+                if(nonTerminalSymbols.contains(nextSymbol)) {
+                    List<String> firstRelation = this.firstRelation.get(nextSymbol);
+                    if(firstRelation != null) {
+                        for (String s : firstRelation) {
+                            if (!curlySymbolsToAdd.contains(s))
+                                curlySymbolsToAdd.add(s);
+                        }
+                    }
+                    if(!emptySymbols.contains(nextSymbol))
+                        break;
+                } else {
+                    if(!curlySymbolsToAdd.contains(nextSymbol))
+                        curlySymbolsToAdd.add(nextSymbol);
+                    break;
+                }
+            }
+            generateFollowSymbols(followSymbolString,curlySymbolsToAdd);
+        }
+    }
+
+    private void generateFollowSymbols(StringBuilder followSymbolString, List<String> generateSymbols) {
+            for (String s : generateSymbols) {
+                if (generateSymbols.indexOf(s) == generateSymbols.size() - 1)
+                    followSymbolString.append(s).append("}");
+                else
+                    followSymbolString.append(s).append(", ");
+            }
     }
 
     private void printEnka(Map<Integer, Pair<Pair<String, List<String>>, String>> productionsToStates, Map<Pair<Integer, String>, List<Integer>> transitions) {
@@ -594,7 +640,4 @@ public class ParserGenerator {
         }
     }
 
-    public static void main(String[] args) {
-
-    }
 }
