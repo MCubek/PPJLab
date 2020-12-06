@@ -1,9 +1,9 @@
 package ppj.lab1;
 
-import ppj.utilities.Automaton;
-import ppj.utilities.AutomatonGenerator;
+import ppj.lab1.utilities.Automaton;
+import ppj.lab1.utilities.AutomatonGenerator;
 import ppj.utilities.Pair;
-import ppj.utilities.RuleRegex;
+import ppj.lab1.utilities.RuleRegex;
 
 import java.io.*;
 import java.util.*;

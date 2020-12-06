@@ -3,7 +3,7 @@ package ppj.lab2;
 import ppj.lab2.utilities.actions.Action;
 import ppj.lab2.utilities.actions.PutAction;
 import ppj.utilities.Pair;
-import ppj.utilities.ParserGenerator;
+import ppj.lab2.utilities.ParserGenerator;
 
 import java.io.*;
 import java.nio.file.Files;

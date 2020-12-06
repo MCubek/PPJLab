@@ -1,7 +1,7 @@
-package ppj.utilities;
+package ppj.lab2.utilities;
 
-import ppj.lab2.utilities.Production;
 import ppj.lab2.utilities.actions.*;
+import ppj.utilities.Pair;
 
 import java.util.*;
 
@@ -433,7 +433,7 @@ public class ParserGenerator {
            }
        }
 
-       printDKA(dkaStates);
+        //printDKA(dkaStates);
        return new Pair<>(dkaStates,dkaTransitions);
     }
 

@@ -1,4 +1,4 @@
-package ppj.utilities;
+package ppj.lab2.utilities;
 
 import java.util.ArrayList;
 import java.util.List;
