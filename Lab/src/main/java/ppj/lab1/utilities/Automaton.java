@@ -1,4 +1,6 @@
-package ppj.utilities;
+package ppj.lab1.utilities;
+
+import ppj.utilities.Pair;
 
 import java.io.Serializable;
 import java.util.*;
