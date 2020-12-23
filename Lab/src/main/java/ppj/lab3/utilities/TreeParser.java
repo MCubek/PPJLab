@@ -8,6 +8,8 @@ import ppj.utilities.Node;
 import java.util.Arrays;
 
 /**
+ * Metoda parsiranja stabla pomocu rekurzija
+ *
  * @author MatejCubek
  * @project PPJLab
  * @created 23/12/2020
@@ -33,7 +35,7 @@ public class TreeParser {
             String nextLine = inputLines[++ lineNumber];
             int nextLevel = nextLine.indexOf(nextLine.trim());
 
-            //Iduci je iznad
+            //Iduci je iznad ili isti sibling
             if (nextLevel <= thisLevel)
                 break;
 

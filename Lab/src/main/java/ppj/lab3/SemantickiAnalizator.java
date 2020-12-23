@@ -41,6 +41,11 @@ public class SemantickiAnalizator {
         this(Files.newBufferedReader(filePath));
     }
 
+    public String getOutput() {
+        // TODO: 23.12.2020. Get output!
+        return "placeholder";
+    }
+
     public static void main(String[] args) {
         BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
         SemantickiAnalizator sa = new SemantickiAnalizator(reader);
