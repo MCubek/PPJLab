@@ -1,5 +1,9 @@
 package ppj.lab3;
 
+import ppj.lab3.utilities.TreeParser;
+import ppj.lab3.utilities.symbols.Symbol;
+import ppj.utilities.Node;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -14,6 +18,7 @@ import java.nio.file.Path;
  * @created 13/12/2020
  */
 public class SemantickiAnalizator {
+    private final Node<Symbol> root;
     // TODO: 13.12.2020. strukture
 
     /**
@@ -22,7 +27,8 @@ public class SemantickiAnalizator {
      * @param bufferedReader input stream
      */
     public SemantickiAnalizator(BufferedReader bufferedReader) {
-        // TODO: 13.12.2020. Parsiranje
+        this.root = TreeParser.generateNodeTree(bufferedReader.lines()
+                .toArray(String[]::new));
     }
 
     /**

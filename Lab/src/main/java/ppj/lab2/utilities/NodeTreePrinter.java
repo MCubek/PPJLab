@@ -1,5 +1,7 @@
 package ppj.lab2.utilities;
 
+import ppj.utilities.Node;
+
 /**
  * @author MatejCubek
  * @project PPJLab
