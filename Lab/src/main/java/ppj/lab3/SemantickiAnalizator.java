@@ -57,5 +57,7 @@ public class SemantickiAnalizator {
         }
 
         // TODO: 13.12.2020. Što dalje nakon parsiranja?
+
+        System.out.println(sa.getOutput());
     }
 }
