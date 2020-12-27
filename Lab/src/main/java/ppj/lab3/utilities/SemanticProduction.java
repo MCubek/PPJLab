@@ -31,6 +31,10 @@ public class SemanticProduction {
         return leftState.getValue().getSymbolName();
     }
 
+    public NonTerminalSymbol getLeftState() {
+        return (NonTerminalSymbol) leftState.getValue();
+    }
+
     public List<String> getRightStateValues() {
         return rightStates.stream()
                 .map(v -> v.getValue().getSymbolName())
