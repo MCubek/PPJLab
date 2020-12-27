@@ -43,4 +43,19 @@ public class TerminalSymbol implements Symbol {
     public String toString() {
         return String.format("%s %d ", symbolName, lineNumber) + String.join(" ", lexicalUnits);
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        TerminalSymbol that = (TerminalSymbol) o;
+
+        return symbolName.equals(that.symbolName);
+    }
+
+    @Override
+    public int hashCode() {
+        return symbolName.hashCode();
+    }
 }

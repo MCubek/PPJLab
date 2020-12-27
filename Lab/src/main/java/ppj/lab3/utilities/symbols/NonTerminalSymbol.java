@@ -1,5 +1,7 @@
 package ppj.lab3.utilities.symbols;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Objects;
 
 /**
@@ -11,9 +13,11 @@ import java.util.Objects;
  */
 public class NonTerminalSymbol implements Symbol {
     private final String symbolName;
+    private Map<String, Attribute> attributeMap;
 
     public NonTerminalSymbol(String symbolName) {
         this.symbolName = Objects.requireNonNull(symbolName);
+        this.attributeMap = new HashMap<>();
     }
 
     @Override
@@ -29,5 +33,29 @@ public class NonTerminalSymbol implements Symbol {
     @Override
     public String toString() {
         return symbolName;
+    }
+
+    public Map<String, Attribute> getAttributeMap() {
+        return attributeMap;
+    }
+
+    public void addAttribute(String key, Attribute attribute) {
+        attributeMap.put(key, attribute);
+    }
+
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        NonTerminalSymbol that = (NonTerminalSymbol) o;
+
+        return symbolName.equals(that.symbolName);
+    }
+
+    @Override
+    public int hashCode() {
+        return symbolName.hashCode();
     }
 }

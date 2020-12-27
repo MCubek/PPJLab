@@ -1,10 +1,13 @@
 package ppj.lab3.utilities;
 
+import ppj.lab3.utilities.symbols.Attribute;
 import ppj.lab3.utilities.symbols.NonTerminalSymbol;
 import ppj.lab3.utilities.symbols.Symbol;
 import ppj.utilities.Node;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 /**
@@ -52,6 +55,18 @@ public class SemanticProduction {
         return List.copyOf(leftState.getChildren());
     }
 
+    public Map<String, Attribute> getAttributesFromRightStatesWhenAllFunctionsFinished() {
+        Map<String, Attribute> map = new HashMap<>();
+
+        rightStates.stream()
+                .map(Node::getValue)
+                .filter(symbol -> symbol instanceof NonTerminalSymbol)
+                .map(symbol -> ((NonTerminalSymbol) symbol).getAttributeMap())
+                .forEach(map::putAll);
+
+        return map;
+    }
+
 
     @Override
     public boolean equals(Object o) {
@@ -69,5 +84,10 @@ public class SemanticProduction {
         int result = getLeftStateValue().hashCode();
         result = 31 * result + getRightStateValues().hashCode();
         return result;
+    }
+
+    @Override
+    public String toString() {
+        return String.format("%s -> ", getLeftStateValue()) + String.join(" ", getRightStateValues());
     }
 }
