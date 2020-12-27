@@ -1,4 +1,4 @@
-package ppj.lab3.utilities.symbols;
+package ppj.lab3.utilities.attributes;
 
 import java.util.Objects;
 

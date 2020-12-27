@@ -1,6 +1,6 @@
 package ppj.lab3.utilities;
 
-import ppj.lab3.utilities.symbols.Attribute;
+import ppj.lab3.utilities.attributes.Attribute;
 import ppj.lab3.utilities.symbols.NonTerminalSymbol;
 import ppj.lab3.utilities.symbols.Symbol;
 import ppj.utilities.Node;

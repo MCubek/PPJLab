@@ -1,5 +1,7 @@
 package ppj.lab3.utilities.symbols;
 
+import ppj.lab3.utilities.attributes.Attribute;
+
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
