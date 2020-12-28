@@ -5,6 +5,7 @@ import ppj.lab3.utilities.symbols.NonTerminalSymbol;
 import ppj.lab3.utilities.symbols.Symbol;
 import ppj.utilities.Node;
 
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -25,6 +26,11 @@ public class SemanticProduction {
 
         this.leftState = leftStateNode;
         this.rightStates = generateRightStates(leftStateNode);
+    }
+
+    private SemanticProduction(Node<Symbol> leftState, List<Node<Symbol>> rightStatesNode) {
+        this.leftState = leftState;
+        this.rightStates = rightStatesNode;
     }
 
     public String getLeftStateValue() {
@@ -69,6 +75,14 @@ public class SemanticProduction {
                 .forEach(map::putAll);
 
         return map;
+    }
+
+    public static SemanticProduction generateMapKeyProduction(Symbol leftState, Symbol... rightStates) {
+        Node<Symbol> leftStateNode = new Node<>(leftState);
+        var rightStateNodes = Arrays.stream(rightStates)
+                .map(Node::new)
+                .collect(Collectors.toList());
+        return new SemanticProduction(leftStateNode, rightStateNodes);
     }
 
 
