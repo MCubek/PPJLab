@@ -1,5 +1,7 @@
 package ppj.lab3.utilities.scope;
 
+import ppj.lab3.utilities.symbols.Symbol;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -24,6 +26,16 @@ public class Scope {
 
     public List<ScopeElement> getElements() {
         return elements;
+    }
+
+    public ScopeElement isDeclared(Symbol symbol) {
+        for(ScopeElement element : this.elements) {
+            if(element.getName().equals(symbol.getSymbolName()))
+                return element;
+        }
+        if(parent != null)
+         return parent.isDeclared(symbol);
+        return null;
     }
 
     @Override
