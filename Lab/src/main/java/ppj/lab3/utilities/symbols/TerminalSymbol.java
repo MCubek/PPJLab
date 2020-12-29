@@ -41,7 +41,7 @@ public class TerminalSymbol implements Symbol {
 
     @Override
     public String toString() {
-        return String.format("%s %d ", symbolName, lineNumber) + String.join(" ", lexicalUnits);
+        return symbolName + "(" + lineNumber + "," + String.join(" ", lexicalUnits) + ")";
     }
 
     @Override

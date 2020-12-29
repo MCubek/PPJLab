@@ -106,6 +106,8 @@ public class SemanticProduction {
 
     @Override
     public String toString() {
-        return String.format("%s -> ", getLeftStateValue()) + String.join(" ", getRightStateValues());
+        return String.format("%s ::= ", getLeftStateValue()) + getRightStates().stream()
+                .map(Symbol::toString)
+                .collect(Collectors.joining(" "));
     }
 }
