@@ -11,6 +11,7 @@ import java.util.List;
 public class Node<T> {
     private final T value;
     private List<Node<T>> children;
+    private Node<T> parent;
 
     public Node(T value) {
         this.value = value;
@@ -18,6 +19,14 @@ public class Node<T> {
 
     public T getValue() {
         return value;
+    }
+
+    public Node<T> getParent() {
+        return parent;
+    }
+
+    public void setParent(Node<T> parent) {
+        this.parent = parent;
     }
 
     public List<Node<T>> getChildren() {

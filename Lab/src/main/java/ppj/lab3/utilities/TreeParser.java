@@ -41,7 +41,9 @@ public class TreeParser {
 
             //U trenutni kao djecu spremi samo jedan nivo ispod
             if (nextLevel == thisLevel + 1) {
-                currentNode.addChild(generateNodeTreeHelper(inputLines, lineNumber));
+                var child = generateNodeTreeHelper(inputLines, lineNumber);
+                child.setParent(currentNode);
+                currentNode.addChild(child);
             }
         }
 
