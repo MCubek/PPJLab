@@ -5,7 +5,7 @@ import java.util.Objects;
 /**
  * Terminirajuci simbol na stogu.
  *
- * @author MatejCubek
+ * @author MatejCubek, FraneB
  * @project PPJLab
  * @created 23/12/2020
  */

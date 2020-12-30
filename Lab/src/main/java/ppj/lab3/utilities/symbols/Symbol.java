@@ -3,7 +3,7 @@ package ppj.lab3.utilities.symbols;
 /**
  * Sučelje objekata stabla
  *
- * @author MatejCubek
+ * @author MatejCubek, FraneB
  * @project PPJLab
  * @created 23/12/2020
  */

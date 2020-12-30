@@ -9,13 +9,13 @@ import java.util.Objects;
 /**
  * Nezavrsni simbol u stablu.
  *
- * @author MatejCubek
+ * @author MatejCubek, FraneB
  * @project PPJLab
  * @created 23/12/2020
  */
 public class NonTerminalSymbol implements Symbol {
     private final String symbolName;
-    private Map<String, Attribute> attributeMap;
+    private final Map<String, Attribute> attributeMap;
 
     public NonTerminalSymbol(String symbolName) {
         this.symbolName = Objects.requireNonNull(symbolName);

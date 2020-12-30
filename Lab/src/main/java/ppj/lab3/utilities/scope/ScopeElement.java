@@ -1,7 +1,7 @@
 package ppj.lab3.utilities.scope;
 
 /**
- * @author MatejCubek
+ * @author MatejCubek, FraneB
  * @project PPJLab
  * @created 27/12/2020
  */

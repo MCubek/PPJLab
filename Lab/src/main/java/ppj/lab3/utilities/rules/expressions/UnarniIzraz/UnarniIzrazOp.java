@@ -17,8 +17,8 @@ public class UnarniIzrazOp implements Action {
     public void checkProduction(SemanticProduction production, Scope scope) {
         //1. provjeri(<cast_izraz>)
         SemanticProduction productionToCheck = new SemanticProduction(production.getRightStateNodes().get(1));
-        RuleFactory ruleFactory= new RuleFactory();
-        Action action= (Action) ruleFactory.getRuleMap().get(productionToCheck);
+        RuleFactory ruleFactory = RuleFactory.getRuleFactory();
+        Action action = (Action) ruleFactory.getRuleMap().get(productionToCheck);
         action.checkProduction(productionToCheck,scope);
         NonTerminalSymbol expression = (NonTerminalSymbol) production.getRightStates().get(1);
 

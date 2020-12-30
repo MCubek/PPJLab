@@ -6,7 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * @author MatejCubek
+ * @author MatejCubek, FraneB
  * @project PPJLab
  * @created 27/12/2020
  */

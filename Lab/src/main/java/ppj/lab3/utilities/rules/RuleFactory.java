@@ -65,15 +65,21 @@ public class RuleFactory {
 
     private final Map<SemanticProduction, Object> ruleMap;
 
-    public RuleFactory() {
+    private static final RuleFactory singletonRuleFactory = new RuleFactory();
+
+    public static RuleFactory getRuleFactory() {
+        return singletonRuleFactory;
+    }
+
+    private RuleFactory() {
         ruleMap = new HashMap<>();
 
         //<primarni_izraz> ::= IDN
-        SemanticProduction primarniIzrazIdn= SemanticProduction.generateMapKeyProduction(new NonTerminalSymbol("<primarni_izraz>"), new TerminalSymbol("IDN",0,new String[0]));
+        SemanticProduction primarniIzrazIdn = SemanticProduction.generateMapKeyProduction(new NonTerminalSymbol("<primarni_izraz>"), new TerminalSymbol("IDN", 0, new String[0]));
         ruleMap.put(primarniIzrazIdn, new PrimarniIzrazIdn());
 
         //<primarni_izraz> ::= BROJ
-        SemanticProduction primarniIzrazNumber = SemanticProduction.generateMapKeyProduction(new NonTerminalSymbol("<primarni_izraz>"), new TerminalSymbol("BROJ",0, new String[0]));
+        SemanticProduction primarniIzrazNumber = SemanticProduction.generateMapKeyProduction(new NonTerminalSymbol("<primarni_izraz>"), new TerminalSymbol("BROJ", 0, new String[0]));
         ruleMap.put(primarniIzrazNumber, new PrimarniIzrazNumber());
 
         //<primarni_izraz> ::= ZNAK

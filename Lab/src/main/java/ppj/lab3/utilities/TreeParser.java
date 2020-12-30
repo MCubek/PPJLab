@@ -10,7 +10,7 @@ import java.util.Arrays;
 /**
  * Metoda parsiranja stabla pomocu rekurzija
  *
- * @author MatejCubek
+ * @author MatejCubek, FraneB
  * @project PPJLab
  * @created 23/12/2020
  */
@@ -60,11 +60,10 @@ public class TreeParser {
 
             String name = array[0];
             int lineNumber = Integer.parseInt(array[1]);
-            Object[] original;
-            String[] lexialUnits = Arrays.stream(array, 2, array.length)
+            String[] lexicalUnits = Arrays.stream(array, 2, array.length)
                     .toArray(String[]::new);
 
-            return new TerminalSymbol(name, lineNumber, lexialUnits);
+            return new TerminalSymbol(name, lineNumber, lexicalUnits);
         }
     }
 }

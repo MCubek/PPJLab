@@ -15,8 +15,8 @@ public class SlozenaNaredbaDek implements Action {
 
         //1. provjeri(<lista_deklaracija>)
         SemanticProduction productionToCheck = new SemanticProduction(production.getRightStateNodes().get(1));
-        RuleFactory ruleFactory= new RuleFactory();
-        Action action= (Action) ruleFactory.getRuleMap().get(productionToCheck);
+        RuleFactory ruleFactory = RuleFactory.getRuleFactory();
+        Action action = (Action) ruleFactory.getRuleMap().get(productionToCheck);
         action.checkProduction(productionToCheck,newScope);
 
         //2. provjeri(<lista_naredbi>)

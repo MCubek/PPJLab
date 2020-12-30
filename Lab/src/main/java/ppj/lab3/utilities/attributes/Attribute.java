@@ -10,7 +10,7 @@ public interface Attribute {
 
     AttributeType getType();
 
-    public enum AttributeType {
+    enum AttributeType {
         SIMPLE_ATTRIBUTE,
         LIST_ATTRIBUTE
     }
