@@ -60,4 +60,5 @@ public class NonTerminalSymbol implements Symbol {
     public int hashCode() {
         return symbolName.hashCode();
     }
+
 }

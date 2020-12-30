@@ -1,5 +1,7 @@
 package ppj.utilities;
 
+import ppj.lab3.utilities.symbols.NonTerminalSymbol;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -40,5 +42,29 @@ public class Node<T> {
 
     public void setChildren(List<Node<T>> children) {
         this.children = children;
+    }
+
+    public boolean isInLoop() {
+        NonTerminalSymbol value = (NonTerminalSymbol) this.getValue();
+        if (value.getSymbolName().equals("<naredba_petlje>")) {
+            return true;
+        } else {
+            if(this.parent != null)
+                return this.parent.isInLoop();
+            else
+                return false;
+        }
+    }
+
+    public String returnFunctionType() {
+        NonTerminalSymbol value = (NonTerminalSymbol) this.getValue();
+        if (value.getSymbolName().equals("<definicija_funkcije>")) {
+            return value.getAttributeMap().get("type").getAttribute().toString();
+        } else {
+            if(this.parent != null)
+                return this.parent.returnFunctionType();
+            else
+                return null;
+        }
     }
 }

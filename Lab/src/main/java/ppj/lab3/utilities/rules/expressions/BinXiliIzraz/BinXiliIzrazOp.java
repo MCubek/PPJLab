@@ -1,5 +1,6 @@
 package ppj.lab3.utilities.rules.expressions.BinXiliIzraz;
 
+import ppj.lab3.SemanticException;
 import ppj.lab3.utilities.SemanticProduction;
 import ppj.lab3.utilities.attributes.SimpleAttribute;
 import ppj.lab3.utilities.rules.Action;
@@ -24,8 +25,7 @@ public class BinXiliIzrazOp implements Action {
 
         //2. <bin_xili_izraz>.tip ∼ int
         if(!implicitCast(multiType,"int")) {
-            System.out.println(production);
-            System.exit(1);
+            throw new SemanticException(production.toString());
         }
 
         //3. provjeri(<bin_i_izraz>)
@@ -37,8 +37,7 @@ public class BinXiliIzrazOp implements Action {
 
         //4. <bin_i_izraz>.tip ∼ int
         if(!implicitCast(castType,"int")) {
-            System.out.println(production);
-            System.exit(1);
+            throw new SemanticException(production.toString());
         }
 
         //tip ← int

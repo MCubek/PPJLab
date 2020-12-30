@@ -1,5 +1,6 @@
 package ppj.lab3.utilities.rules.expressions.UnarniIzraz;
 
+import ppj.lab3.SemanticException;
 import ppj.lab3.utilities.SemanticProduction;
 import ppj.lab3.utilities.attributes.SimpleAttribute;
 import ppj.lab3.utilities.rules.Action;
@@ -24,8 +25,7 @@ public class UnarniIzrazOp implements Action {
         //2. <cast_izraz>.tip ∼ int
         String type = expression.getAttributeMap().get("type").getAttribute().toString();
         if(!implicitCast(type,"int")) {
-            System.out.println(production);
-            System.exit(1);
+            throw new SemanticException(production.toString());
         }
 
         //tip ← int

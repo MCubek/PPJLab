@@ -1,5 +1,6 @@
 package ppj.lab3.utilities.rules.expressions.CastIzraz;
 
+import ppj.lab3.SemanticException;
 import ppj.lab3.utilities.SemanticProduction;
 import ppj.lab3.utilities.attributes.SimpleAttribute;
 import ppj.lab3.utilities.rules.Action;
@@ -31,8 +32,7 @@ public class CastIzrazSa implements Action {
 
         //3. <cast_izraz>.tip se moˇze pretvoriti u <ime_tipa>.tip po poglavlju 4.3.1
         if(!explicitCast(castIzraz,imeTipa)) {
-            System.out.println(production);
-            System.exit(1);
+            throw new SemanticException(production.toString());
         }
 
         //tip ← <ime_tipa>.tip

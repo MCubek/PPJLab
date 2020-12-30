@@ -1,5 +1,6 @@
 package ppj.lab3.utilities.rules.expressions.PrimarniIzraz;
 
+import ppj.lab3.SemanticException;
 import ppj.lab3.utilities.SemanticProduction;
 import ppj.lab3.utilities.attributes.SimpleAttribute;
 import ppj.lab3.utilities.rules.Action;
@@ -20,8 +21,7 @@ public class PrimarniIzrazNumber implements Action {
             production.getLeftState().addAttribute("type", new SimpleAttribute("int"));
             production.getLeftState().addAttribute("lExpression",new SimpleAttribute("false"));
         } catch (NumberFormatException exception) {
-            System.out.println(production);
-            System.exit(1);
+            throw new SemanticException(production.toString());
         }
     }
 }

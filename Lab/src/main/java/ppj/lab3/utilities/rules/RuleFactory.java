@@ -1,6 +1,24 @@
 package ppj.lab3.utilities.rules;
 
 import ppj.lab3.utilities.SemanticProduction;
+import ppj.lab3.utilities.rules.commands.IzrazNaredba.IzrazNaredbaBez;
+import ppj.lab3.utilities.rules.commands.IzrazNaredba.IzrazNaredbaSa;
+import ppj.lab3.utilities.rules.commands.ListaNaredbi.ListaNaredbiJedan;
+import ppj.lab3.utilities.rules.commands.ListaNaredbi.ListaNaredbiVise;
+import ppj.lab3.utilities.rules.commands.Naredba.Naredba;
+import ppj.lab3.utilities.rules.commands.NaredbaGrananja.NaredbaGrananjaIf;
+import ppj.lab3.utilities.rules.commands.NaredbaGrananja.NaredbaGrananjaIfElse;
+import ppj.lab3.utilities.rules.commands.NaredbaPetlje.NaredbaPetljeForBez;
+import ppj.lab3.utilities.rules.commands.NaredbaPetlje.NaredbaPetljeForSa;
+import ppj.lab3.utilities.rules.commands.NaredbaPetlje.NaredbaPetljeWhile;
+import ppj.lab3.utilities.rules.commands.NaredbaSkoka.NaredbaSkokaConBreak;
+import ppj.lab3.utilities.rules.commands.NaredbaSkoka.NaredbaSkokaReturnBez;
+import ppj.lab3.utilities.rules.commands.NaredbaSkoka.NaredbaSkokaReturnSa;
+import ppj.lab3.utilities.rules.commands.PrijevodnaJedinica.PrijevodnaJedinicaJedan;
+import ppj.lab3.utilities.rules.commands.PrijevodnaJedinica.PrijevodnaJedinicaVise;
+import ppj.lab3.utilities.rules.commands.SlozenaNaredba.SlozenaNaredbaBez;
+import ppj.lab3.utilities.rules.commands.SlozenaNaredba.SlozenaNaredbaDek;
+import ppj.lab3.utilities.rules.commands.VanjskaDeklaracija.VanjskaDeklaracija;
 import ppj.lab3.utilities.rules.expressions.AditivniIzraz.AditivniIzrazBez;
 import ppj.lab3.utilities.rules.expressions.AditivniIzraz.AditivniIzrazOp;
 import ppj.lab3.utilities.rules.expressions.BinIIzraz.BinIIzrazBez;
@@ -253,6 +271,98 @@ public class RuleFactory {
         ruleMap.put(izrazVise, new IzrazVise());
 
         //---------------------------------------------------------------------------------------------
+
+        //<slozena_naredba> ::= L_VIT_ZAGRADA <lista_naredbi> D_VIT_ZAGRADA
+        SemanticProduction slozenaNaredbaBez = SemanticProduction.generateMapKeyProduction(new NonTerminalSymbol("<slozena_naredba>"), new TerminalSymbol("L_VIT_ZAGRADA",0, new String[0]), new NonTerminalSymbol("<lista_naredbi>"), new TerminalSymbol("D_VIT_ZAGRADA",0, new String[0]));
+        ruleMap.put(slozenaNaredbaBez, new SlozenaNaredbaBez());
+
+        //<slozena_naredba> ::= L_VIT_ZAGRADA <lista_deklaracija> <lista_naredbi> D_VIT_ZAGRADA
+        SemanticProduction slozenaNaredbaDek = SemanticProduction.generateMapKeyProduction(new NonTerminalSymbol("<slozena_naredba>"), new TerminalSymbol("L_VIT_ZAGRADA",0, new String[0]), new NonTerminalSymbol("<lista_deklaracija>"),
+                new NonTerminalSymbol("<lista_naredbi>"), new TerminalSymbol("D_VIT_ZAGRADA",0, new String[0]));
+        ruleMap.put(slozenaNaredbaDek, new SlozenaNaredbaDek());
+
+        //<lista_naredbi> ::= <naredba>
+        SemanticProduction listaNaredbiJedan = SemanticProduction.generateMapKeyProduction(new NonTerminalSymbol("<lista_naredbi>"), new NonTerminalSymbol("<naredba>"));
+        ruleMap.put(listaNaredbiJedan, new ListaNaredbiJedan());
+
+        //<lista_naredbi> ::= <lista_naredbi> <naredba>
+        SemanticProduction listaNaredbiVise = SemanticProduction.generateMapKeyProduction(new NonTerminalSymbol("<lista_naredbi>"),new NonTerminalSymbol("<lista_naredbi>"),new NonTerminalSymbol("<naredba>"));
+        ruleMap.put(listaNaredbiVise, new ListaNaredbiVise());
+
+        //<naredba> ::= ( <slozena_naredba> | <izraz_naredba> | <naredba_grananja> | <naredba_petlje> | <naredba_skoka> )
+        SemanticProduction naredbaSlozena = SemanticProduction.generateMapKeyProduction(new NonTerminalSymbol("<naredba>"), new NonTerminalSymbol("<slozena_naredba>"));
+        SemanticProduction naredbaIzraz = SemanticProduction.generateMapKeyProduction(new NonTerminalSymbol("<naredba>"), new NonTerminalSymbol("<izraz_naredba>"));
+        SemanticProduction naredbaGrananje = SemanticProduction.generateMapKeyProduction(new NonTerminalSymbol("<naredba>"), new NonTerminalSymbol("<naredba_grananja>"));
+        SemanticProduction naredbaPetlje = SemanticProduction.generateMapKeyProduction(new NonTerminalSymbol("<naredba>"), new NonTerminalSymbol("<naredba_petlje>"));
+        SemanticProduction naredbaSkoka = SemanticProduction.generateMapKeyProduction(new NonTerminalSymbol("<naredba>"), new NonTerminalSymbol("<naredba_skoka>"));
+        ruleMap.put(naredbaSlozena, new Naredba());
+        ruleMap.put(naredbaIzraz, new Naredba());
+        ruleMap.put(naredbaGrananje, new Naredba());
+        ruleMap.put(naredbaPetlje, new Naredba());
+        ruleMap.put(naredbaSkoka, new Naredba());
+
+        //<izraz_naredba> ::= TOCKAZAREZ
+        SemanticProduction izrazNaredbaBez = SemanticProduction.generateMapKeyProduction(new NonTerminalSymbol("<izraz_naredba>"), new TerminalSymbol("TOCKAZAREZ", 0, new String[0]));
+        ruleMap.put(izrazNaredbaBez, new IzrazNaredbaBez());
+
+        //<izraz_naredba> ::= <izraz> TOCKAZAREZ
+        SemanticProduction izrazNaredbaSa = SemanticProduction.generateMapKeyProduction(new NonTerminalSymbol("<izraz_naredba>"),new NonTerminalSymbol("<izraz>"), new TerminalSymbol("TOCKAZAREZ", 0, new String[0]));
+        ruleMap.put(izrazNaredbaSa, new IzrazNaredbaSa());
+
+        //<naredba_grananja> ::= KR_IF L_ZAGRADA <izraz> D_ZAGRADA <naredba>
+        SemanticProduction naredbaGrananjaIf = SemanticProduction.generateMapKeyProduction(new NonTerminalSymbol("<naredba_grananja>"),new TerminalSymbol("KR_IF",0, new String[0]), new TerminalSymbol("L_ZAGRADA", 0 ,new String[0]),
+                new NonTerminalSymbol("<izraz>"), new TerminalSymbol("D_ZAGRADA", 0, new String[0]), new NonTerminalSymbol("<naredba>"));
+        ruleMap.put(naredbaGrananjaIf, new NaredbaGrananjaIf());
+
+        //<naredba_grananja> ::= KR_IF L_ZAGRADA <izraz> D_ZAGRADA <naredba> KR_ELSE <naredba>
+        SemanticProduction naredbaGrananjaIfElse = SemanticProduction.generateMapKeyProduction(new NonTerminalSymbol("<naredba_grananja>"),new TerminalSymbol("KR_IF",0, new String[0]), new TerminalSymbol("L_ZAGRADA", 0 ,new String[0]),
+                new NonTerminalSymbol("<izraz>"), new TerminalSymbol("D_ZAGRADA", 0, new String[0]), new NonTerminalSymbol("<naredba>"), new TerminalSymbol("KR_ELSE", 0 , new String[0]), new NonTerminalSymbol("<naredba>"));
+        ruleMap.put(naredbaGrananjaIfElse, new NaredbaGrananjaIfElse());
+
+        //<naredba_petlje> ::= KR_WHILE L_ZAGRADA <izraz> D_ZAGRADA <naredba>
+        SemanticProduction naredbaPetljeWhile = SemanticProduction.generateMapKeyProduction(new NonTerminalSymbol("<naredba_petlje>"), new TerminalSymbol("KR_WHILE",0,new String[0]), new TerminalSymbol("L_ZAGRADA",0, new String[0]), new NonTerminalSymbol("<izraz>"),
+                new TerminalSymbol("D_ZAGRADA", 0, new String[0]), new NonTerminalSymbol("<naredba>"));
+        ruleMap.put(naredbaPetljeWhile, new NaredbaPetljeWhile());
+
+        //<naredba_petlje> ::= KR_FOR L_ZAGRADA <izraz_naredba>1 <izraz_naredba>2 D_ZAGRADA <naredba>
+        SemanticProduction naredbaPetljeForBez = SemanticProduction.generateMapKeyProduction(new NonTerminalSymbol("<naredba_petlje>"), new TerminalSymbol("KR_FOR",0,new String[0]), new TerminalSymbol("L_ZAGRADA",0, new String[0]), new NonTerminalSymbol("<izraz_naredba>"), new NonTerminalSymbol("<izraz_naredba>"),
+                new TerminalSymbol("D_ZAGRADA", 0, new String[0]), new NonTerminalSymbol("<naredba>"));
+        ruleMap.put(naredbaPetljeForBez, new NaredbaPetljeForBez());
+
+        //<naredba_petlje> ::= KR_FOR L_ZAGRADA <izraz_naredba>1 <izraz_naredba>2 <izraz> D_ZAGRADA <naredba>
+        SemanticProduction naredbaPetljeForSa = SemanticProduction.generateMapKeyProduction(new NonTerminalSymbol("<naredba_petlje>"), new TerminalSymbol("KR_FOR",0,new String[0]), new TerminalSymbol("L_ZAGRADA",0, new String[0]), new NonTerminalSymbol("<izraz_naredba>"), new NonTerminalSymbol("<izraz_naredba>"),
+                new NonTerminalSymbol("<izraz>"), new TerminalSymbol("D_ZAGRADA", 0, new String[0]), new NonTerminalSymbol("<naredba>"));
+        ruleMap.put(naredbaPetljeForSa, new NaredbaPetljeForSa());
+
+        //<naredba_skoka> ::= (KR_CONTINUE | KR_BREAK) TOCKAZAREZ
+        SemanticProduction naredbaSkokaCon = SemanticProduction.generateMapKeyProduction(new NonTerminalSymbol("<naredba_skoka>"), new TerminalSymbol("KR_CONTINUE",0, new String[0]), new TerminalSymbol("TOCKAZAREZ",0, new String[0]));
+        SemanticProduction naredbaSkokaBreak = SemanticProduction.generateMapKeyProduction(new NonTerminalSymbol("<naredba_skoka>"), new TerminalSymbol("KR_BREAK",0, new String[0]), new TerminalSymbol("TOCKAZAREZ",0, new String[0]));
+        ruleMap.put(naredbaSkokaCon, new NaredbaSkokaConBreak());
+        ruleMap.put(naredbaSkokaBreak, new NaredbaSkokaConBreak());
+
+        //<naredba_skoka> ::= KR_RETURN TOCKAZAREZ
+        SemanticProduction naredbaSkokaReturnBez = SemanticProduction.generateMapKeyProduction(new NonTerminalSymbol("<naredba_skoka>"),new TerminalSymbol("KR_RETURN",0, new String[0]), new TerminalSymbol("TOCKAZAREZ",0, new String[0]));
+        ruleMap.put(naredbaSkokaReturnBez, new NaredbaSkokaReturnBez());
+
+        //<naredba_skoka> ::= KR_RETURN <izraz> TOCKAZAREZ
+        SemanticProduction naredbaSkokaReturnSa = SemanticProduction.generateMapKeyProduction(new NonTerminalSymbol("<naredba_skoka>"),new TerminalSymbol("KR_RETURN",0, new String[0]), new NonTerminalSymbol("<izraz>") ,new TerminalSymbol("TOCKAZAREZ",0, new String[0]));
+        ruleMap.put(naredbaSkokaReturnSa, new NaredbaSkokaReturnSa());
+
+        //<prijevodna_jedinica> ::= <vanjska_deklaracija>
+        SemanticProduction prijevodnaJedinicaJedan = SemanticProduction.generateMapKeyProduction(new NonTerminalSymbol("<prijevodna_jedinica>"), new NonTerminalSymbol("<vanjska_deklaracija>"));
+        ruleMap.put(prijevodnaJedinicaJedan, new PrijevodnaJedinicaJedan());
+
+        //<prijevodna_jedinica> ::= <prijevodna_jedinica> <vanjska_deklaracija>
+        SemanticProduction prijevodnaJedinicaVise = SemanticProduction.generateMapKeyProduction(new NonTerminalSymbol("<prijevodna_jedinica>"), new NonTerminalSymbol("<prijevodna_jedinica>") ,new NonTerminalSymbol("<vanjska_deklaracija>"));
+        ruleMap.put(prijevodnaJedinicaVise, new PrijevodnaJedinicaVise());
+
+        //<vanjska_deklaracija> ::= (<definicija_funkcije> | <deklaracija>)
+        SemanticProduction vanjskaDeklaracijaDef = SemanticProduction.generateMapKeyProduction(new NonTerminalSymbol("<vanjska_deklaracija>"), new NonTerminalSymbol("<definicija_funkcije>"));
+        SemanticProduction vanjskaDeklaracijaDek = SemanticProduction.generateMapKeyProduction(new NonTerminalSymbol("<vanjska_deklaracija>"), new NonTerminalSymbol("<deklaracija>"));
+        ruleMap.put(vanjskaDeklaracijaDef, new VanjskaDeklaracija());
+        ruleMap.put(vanjskaDeklaracijaDek, new VanjskaDeklaracija());
+
+        //-----------------------------------------------------------------------------------
 
 
     }

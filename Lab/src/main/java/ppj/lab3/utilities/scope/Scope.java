@@ -63,4 +63,15 @@ public class Scope {
                 ", elements=" + elements +
                 '}';
     }
+
+    public boolean isDefined(String name) {
+        for(ScopeElement element : this.elements) {
+            if (element.getName().equals(name) && element.isDefined())
+                return true;
+        }
+        if(this.parent != null)
+            return this.parent.isDefined(name);
+        else
+            return false;
+    }
 }

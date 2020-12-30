@@ -1,5 +1,6 @@
 package ppj.lab3.utilities.rules.expressions.PostfiksIzraz;
 
+import ppj.lab3.SemanticException;
 import ppj.lab3.utilities.SemanticProduction;
 import ppj.lab3.utilities.attributes.SimpleAttribute;
 import ppj.lab3.utilities.rules.Action;
@@ -30,8 +31,7 @@ public class PostfiksIzrazNiz implements Action {
         List<String> listX = Arrays.asList(X);
         String type = expression.getAttributeMap().get("type").getAttribute().toString();
         if(!listX.contains(type)){
-            System.out.println(production);
-            System.exit(1);
+            throw new SemanticException(production.toString());
         }
 
         //3. provjeri(<izraz>)
@@ -42,15 +42,14 @@ public class PostfiksIzrazNiz implements Action {
 
         //4. <izraz>.tip ∼ int
         if(!implicitCast(expression.getAttributeMap().get("type").getAttribute().toString(),"int")) {
-            System.out.println(production);
-            System.exit(1);
+            throw new SemanticException(production.toString());
         }
 
         //tip ← X
-        //l-izraz ← X 6= const(T)
+        //l-izraz ← X != const(T)
         String typeToAd = type.substring(4,type.length()-1);
         production.getLeftState().addAttribute("type", new SimpleAttribute(typeToAd));
-        if(typeToAd.contains("const")) {
+        if(typeToAd.startsWith("const")) {
             production.getLeftState().addAttribute("lExpression", new SimpleAttribute("false"));
         } else {
             production.getLeftState().addAttribute("lExpression", new SimpleAttribute("true"));

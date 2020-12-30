@@ -1,5 +1,6 @@
 package ppj.lab3.utilities.rules.expressions.IzrazPridruzivanja;
 
+import ppj.lab3.SemanticException;
 import ppj.lab3.utilities.SemanticProduction;
 import ppj.lab3.utilities.attributes.SimpleAttribute;
 import ppj.lab3.utilities.rules.Action;
@@ -25,8 +26,7 @@ public class IzrazPridruzivanjaOp implements Action {
 
         //2. <postfiks_izraz>.l-izraz = 1
         if(!lExpression.equals("true")) {
-            System.out.println(production);
-            System.exit(1);
+            throw new SemanticException(production.toString());
         }
 
         //3. provjeri(<izraz_pridruzivanja>)
@@ -38,8 +38,7 @@ public class IzrazPridruzivanjaOp implements Action {
 
         //4. <izraz_pridruzivanja>.tip ∼ <postfiks_izraz>.tip
         if(!implicitCast(pridruzivanjeType,postfiksType)) {
-            System.out.println(production);
-            System.exit(1);
+            throw new SemanticException(production.toString());
         }
 
         //tip ← <postfiks_izraz>.tip

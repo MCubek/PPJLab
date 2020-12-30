@@ -1,5 +1,6 @@
 package ppj.lab3.utilities.rules.expressions.BinIIzraz;
 
+import ppj.lab3.SemanticException;
 import ppj.lab3.utilities.SemanticProduction;
 import ppj.lab3.utilities.attributes.SimpleAttribute;
 import ppj.lab3.utilities.rules.Action;
@@ -24,8 +25,7 @@ public class BinIIzrazOp implements Action {
 
         //2. <bin_i_izraz>.tip ∼ int
         if(!implicitCast(multiType,"int")) {
-            System.out.println(production);
-            System.exit(1);
+            throw new SemanticException(production.toString());
         }
 
         //3. provjeri(<jednakosni_izraz>)
@@ -37,8 +37,7 @@ public class BinIIzrazOp implements Action {
 
         //4. <jednakosni_izraz>.tip ∼ int
         if(!implicitCast(castType,"int")) {
-            System.out.println(production);
-            System.exit(1);
+            throw new SemanticException(production.toString());
         }
 
         //tip ← int

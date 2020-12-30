@@ -1,5 +1,6 @@
 package ppj.lab3.utilities.rules.expressions.PostfiksIzraz;
 
+import ppj.lab3.SemanticException;
 import ppj.lab3.utilities.SemanticProduction;
 import ppj.lab3.utilities.attributes.ListAttribute;
 import ppj.lab3.utilities.attributes.SimpleAttribute;
@@ -34,8 +35,7 @@ public class PostfiksIzrazArg implements Action {
         //arg-tip iz <lista_argumenata>.tipovi i param-tip iz params vrijedi arg-tip
         //∼ param-tip
         if(!typePostfix.contains("funkcija(")) {
-            System.out.println(production);
-            System.exit(1);
+            throw new SemanticException(production.toString());
         }
 
         typePostfix = typePostfix.replace("funkcija(","");
@@ -47,13 +47,11 @@ public class PostfiksIzrazArg implements Action {
         if(params.length == argTypes.length) {
             for(int i = 0; i < params.length; i++) {
                 if(!implicitCast(argTypes[i],params[i])) {
-                    System.out.println(production);
-                    System.exit(1);
+                    throw new SemanticException(production.toString());
                 }
             }
         } else {
-            System.out.println(production);
-            System.exit(1);
+            throw new SemanticException(production.toString());
         }
 
         //tip ← pov

@@ -1,5 +1,6 @@
 package ppj.lab3.utilities.rules.expressions.ImeTipa;
 
+import ppj.lab3.SemanticException;
 import ppj.lab3.utilities.SemanticProduction;
 import ppj.lab3.utilities.attributes.SimpleAttribute;
 import ppj.lab3.utilities.rules.Action;
@@ -22,8 +23,7 @@ public class ImeTipaConst implements Action {
 
         //2. <specifikator_tipa>.tip 6 != void
         if(type.equals("void")) {
-            System.out.println(production);
-            System.exit(1);
+            throw new SemanticException(production.toString());
         }
 
         //tip ← const(<specifikator_tipa>.tip)

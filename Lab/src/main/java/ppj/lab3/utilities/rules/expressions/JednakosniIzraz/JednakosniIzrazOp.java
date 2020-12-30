@@ -1,5 +1,6 @@
 package ppj.lab3.utilities.rules.expressions.JednakosniIzraz;
 
+import ppj.lab3.SemanticException;
 import ppj.lab3.utilities.SemanticProduction;
 import ppj.lab3.utilities.attributes.SimpleAttribute;
 import ppj.lab3.utilities.rules.Action;
@@ -24,8 +25,7 @@ public class JednakosniIzrazOp implements Action {
 
         //2. <jednakosni_izraz>.tip ∼ int
         if(!implicitCast(multiType,"int")) {
-            System.out.println(production);
-            System.exit(1);
+            throw new SemanticException(production.toString());
         }
 
         //3. provjeri(<odnosni_izraz>)
@@ -37,8 +37,7 @@ public class JednakosniIzrazOp implements Action {
 
         //4. <odnosni_izraz>.tip ∼ int
         if(!implicitCast(castType,"int")) {
-            System.out.println(production);
-            System.exit(1);
+            throw new SemanticException(production.toString());
         }
 
         //tip ← int
