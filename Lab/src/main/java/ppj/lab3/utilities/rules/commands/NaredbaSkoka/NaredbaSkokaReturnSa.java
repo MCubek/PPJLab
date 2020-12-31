@@ -16,8 +16,8 @@ public class NaredbaSkokaReturnSa implements Action {
     public void checkProduction(SemanticProduction production, Scope scope) {
         //1. provjeri(<izraz>)
         SemanticProduction productionToCheck = new SemanticProduction(production.getRightStateNodes().get(1));
-        RuleFactory ruleFactory = RuleFactory.getRuleFactory();
-        Action action = (Action) ruleFactory.getRuleMap().get(productionToCheck);
+        RuleFactory ruleFactory= RuleFactory.getRuleFactory();
+        Action action= ruleFactory.getRuleMap().get(productionToCheck);
         action.checkProduction(productionToCheck,scope);
         NonTerminalSymbol expression = (NonTerminalSymbol) production.getRightStates().get(0);
         String izrazType = expression.getAttributeMap().get("type").getAttribute().toString();

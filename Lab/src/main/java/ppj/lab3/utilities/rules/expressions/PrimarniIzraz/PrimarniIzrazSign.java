@@ -11,6 +11,6 @@ public class PrimarniIzrazSign implements Action {
     public void checkProduction(SemanticProduction production, Scope scope) {
         Symbol sign = production.getRightStates().get(0);
 
-        //dovrsiti provjeru
+        //TODO dovrsiti provjeru za char
     }
 }

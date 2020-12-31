@@ -2,8 +2,8 @@ package ppj.lab3.utilities.scope;
 
 import ppj.lab3.utilities.symbols.Symbol;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * @author MatejCubek, FraneB
@@ -13,28 +13,32 @@ import java.util.List;
 public class Scope {
     private final Scope parent;
 
-    private final List<ScopeElement> elements;
+    private final Set<ScopeElement> elements;
 
     public Scope(Scope parent) {
         this.parent = parent;
-        this.elements = new ArrayList<>();
+        this.elements = new HashSet<>();
     }
 
     public void addScopeElement(ScopeElement element) {
         elements.add(element);
     }
 
-    public List<ScopeElement> getElements() {
+    public Set<ScopeElement> getElements() {
         return elements;
     }
 
-    public ScopeElement isDeclared(Symbol symbol) {
+    public Scope getParent() {
+        return parent;
+    }
+
+    public ScopeElement isDeclared(String name) {
         for(ScopeElement element : this.elements) {
-            if(element.getName().equals(symbol.getSymbolName()))
+            if(element.getName().equals(name))
                 return element;
         }
         if(parent != null)
-         return parent.isDeclared(symbol);
+         return parent.isDeclared(name);
         return null;
     }
 
@@ -73,5 +77,23 @@ public class Scope {
             return this.parent.isDefined(name);
         else
             return false;
+    }
+
+    public void addDefinition(String idnName, String type, boolean lExpression) {
+        ScopeElement scopeElement = new ScopeElement(idnName,type,lExpression,true);
+        this.elements.add(scopeElement);
+    }
+
+    public ScopeElement isDeclaredLocally(String name) {
+        for(ScopeElement element : this.elements) {
+            if(element.getName().equals(name))
+                return element;
+        }
+        return null;
+    }
+
+    //TODO dovrsiti ovu funkciju
+    public boolean checkAllDefined() {
+        return true;
     }
 }

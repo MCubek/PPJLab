@@ -1,6 +1,10 @@
 package ppj.lab3;
 
+import ppj.lab3.utilities.SemanticProduction;
 import ppj.lab3.utilities.TreeParser;
+import ppj.lab3.utilities.rules.Action;
+import ppj.lab3.utilities.rules.RuleFactory;
+import ppj.lab3.utilities.scope.Scope;
 import ppj.lab3.utilities.symbols.Symbol;
 import ppj.utilities.Node;
 
@@ -57,7 +61,16 @@ public class SemantickiAnalizator {
         }
 
         // TODO: 13.12.2020. Što dalje nakon parsiranja?
+        SemanticProduction start = new SemanticProduction(sa.root);
+        RuleFactory ruleFactory= RuleFactory.getRuleFactory();
+        Action action = (Action) ruleFactory.getRuleMap().get(start);
+        try {
+            action.checkProduction(start, new Scope(null));
 
-        System.out.println(sa.getOutput());
+        } catch (SemanticException e) {
+            System.out.println(e.getMessage());
+        }
+
+        //System.out.println(sa.getOutput());
     }
 }

@@ -16,13 +16,13 @@ public class NaredbaPetljeForBez implements Action {
     public void checkProduction(SemanticProduction production, Scope scope) {
         //1. provjeri(<izraz_naredba>1)
         SemanticProduction productionToCheck = new SemanticProduction(production.getRightStateNodes().get(2));
-        RuleFactory ruleFactory = RuleFactory.getRuleFactory();
-        Action action = (Action) ruleFactory.getRuleMap().get(productionToCheck);
+        RuleFactory ruleFactory= RuleFactory.getRuleFactory();
+        Action action= ruleFactory.getRuleMap().get(productionToCheck);
         action.checkProduction(productionToCheck,scope);
 
         //2. provjeri(<izraz_naredba>2)
         productionToCheck = new SemanticProduction(production.getRightStateNodes().get(3));
-        action= (Action) ruleFactory.getRuleMap().get(productionToCheck);
+        action= ruleFactory.getRuleMap().get(productionToCheck);
         action.checkProduction(productionToCheck,scope);
         NonTerminalSymbol symbol = (NonTerminalSymbol) production.getRightStates().get(3);
         String type = symbol.getAttributeMap().get("type").getAttribute().toString();
@@ -34,7 +34,7 @@ public class NaredbaPetljeForBez implements Action {
 
         //4. provjeri(<naredba>)
         productionToCheck = new SemanticProduction(production.getRightStateNodes().get(5));
-        action= (Action) ruleFactory.getRuleMap().get(productionToCheck);
+        action= ruleFactory.getRuleMap().get(productionToCheck);
         action.checkProduction(productionToCheck,scope);
     }
 }

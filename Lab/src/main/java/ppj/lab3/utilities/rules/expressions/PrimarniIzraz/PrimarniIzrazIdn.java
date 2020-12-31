@@ -7,15 +7,16 @@ import ppj.lab3.utilities.rules.Action;
 import ppj.lab3.utilities.scope.Scope;
 import ppj.lab3.utilities.scope.ScopeElement;
 import ppj.lab3.utilities.symbols.Symbol;
+import ppj.lab3.utilities.symbols.TerminalSymbol;
 
 public class PrimarniIzrazIdn implements Action {
 
     @Override
     public void checkProduction(SemanticProduction production, Scope scope) {
-        Symbol idn = production.getRightStates().get(0);
-
+        TerminalSymbol idn = (TerminalSymbol) production.getRightStates().get(0);
+        String name = idn.getLexicalUnits()[0];
         //1. IDN.ime je deklarirano
-        ScopeElement foundElement = scope.isDeclared(idn);
+        ScopeElement foundElement = scope.isDeclared(name);
         if(foundElement != null) {
             //tip ← IDN.tip
             //l-izraz ← IDN.l-izraz

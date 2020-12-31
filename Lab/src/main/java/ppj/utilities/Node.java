@@ -1,6 +1,7 @@
 package ppj.utilities;
 
 import ppj.lab3.utilities.symbols.NonTerminalSymbol;
+import ppj.lab3.utilities.symbols.TerminalSymbol;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -11,7 +12,7 @@ import java.util.List;
  * @created 30/11/2020
  */
 public class Node<T> {
-    private final T value;
+    private T value;
     private List<Node<T>> children;
     private Node<T> parent;
 
@@ -23,6 +24,7 @@ public class Node<T> {
         return value;
     }
 
+    public void setValue(T value) { this.value = value; }
     public Node<T> getParent() {
         return parent;
     }
@@ -66,5 +68,18 @@ public class Node<T> {
             else
                 return null;
         }
+    }
+
+    public int canGenerateNizZnakova() {
+        if(this.value.equals(new TerminalSymbol("NIZ_ZNAKOVA", 0, new String[0]))) {
+            TerminalSymbol symbol = (TerminalSymbol) this.value;
+            return symbol.getLexicalUnits()[0].length();
+        }
+        if(this.children == null)
+            return -1;
+        else if(this.children.size() == 1)
+            return this.children.get(0).canGenerateNizZnakova();
+        else
+            return -1;
     }
 }

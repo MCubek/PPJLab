@@ -10,6 +10,6 @@ public class PrimarniIzrazListSign implements Action {
     public void checkProduction(SemanticProduction production, Scope scope) {
         Symbol listSign = production.getRightStates().get(0);
 
-        //dovrsiti provjeru
+        //TODO dovrsiti provjeru za ListChar
     }
 }

@@ -18,8 +18,8 @@ public class PostfiksIzrazInc implements Action {
         //1. provjeri(<postfiks_izraz>)
         SemanticProduction productionToCheck = new SemanticProduction(production.getRightStateNodes().get(0));
         //pozovi funkciju iz mape
-        RuleFactory ruleFactory = RuleFactory.getRuleFactory();
-        Action action = (Action) ruleFactory.getRuleMap().get(productionToCheck);
+        RuleFactory ruleFactory= RuleFactory.getRuleFactory();
+        Action action= ruleFactory.getRuleMap().get(productionToCheck);
         action.checkProduction(productionToCheck,scope);
         NonTerminalSymbol expression = (NonTerminalSymbol) production.getRightStates().get(0);
 

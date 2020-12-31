@@ -17,15 +17,15 @@ public class ListaArgumenataVise implements Action {
     public void checkProduction(SemanticProduction production, Scope scope) {
         //1. provjeri(<lista_argumenata>)
         SemanticProduction productionToCheck = new SemanticProduction(production.getRightStateNodes().get(0));
-        RuleFactory ruleFactory = RuleFactory.getRuleFactory();
-        Action action = (Action) ruleFactory.getRuleMap().get(productionToCheck);
+        RuleFactory ruleFactory= RuleFactory.getRuleFactory();
+        Action action= ruleFactory.getRuleMap().get(productionToCheck);
         action.checkProduction(productionToCheck,scope);
         NonTerminalSymbol expression = (NonTerminalSymbol) production.getRightStates().get(0);
         String[] types = (String[]) expression.getAttributeMap().get("types").getAttribute();
 
         //2. provjeri(<izraz_pridruzivanja>)
         productionToCheck = new SemanticProduction(production.getRightStateNodes().get(2));
-        action = (Action) ruleFactory.getRuleMap().get(productionToCheck);
+        action = ruleFactory.getRuleMap().get(productionToCheck);
         action.checkProduction(productionToCheck,scope);
         expression = (NonTerminalSymbol) production.getRightStates().get(2);
         String type = expression.getAttributeMap().get("type").getAttribute().toString();

@@ -17,8 +17,8 @@ public class LogIliIzrazOp implements Action {
     public void checkProduction(SemanticProduction production, Scope scope) {
         //1. provjeri(<log_ili_izraz>)
         SemanticProduction productionToCheck = new SemanticProduction(production.getRightStateNodes().get(0));
-        RuleFactory ruleFactory = RuleFactory.getRuleFactory();
-        Action action = (Action) ruleFactory.getRuleMap().get(productionToCheck);
+        RuleFactory ruleFactory= RuleFactory.getRuleFactory();
+        Action action= ruleFactory.getRuleMap().get(productionToCheck);
         action.checkProduction(productionToCheck,scope);
         NonTerminalSymbol expression = (NonTerminalSymbol) production.getRightStates().get(0);
         String multiType = expression.getAttributeMap().get("type").getAttribute().toString();
@@ -30,7 +30,7 @@ public class LogIliIzrazOp implements Action {
 
         //3. provjeri(<log_i_izraz>)
         productionToCheck = new SemanticProduction(production.getRightStateNodes().get(2));
-        action= (Action) ruleFactory.getRuleMap().get(productionToCheck);
+        action= ruleFactory.getRuleMap().get(productionToCheck);
         action.checkProduction(productionToCheck,scope);
         expression = (NonTerminalSymbol) production.getRightStates().get(2);
         String castType = expression.getAttributeMap().get("type").getAttribute().toString();

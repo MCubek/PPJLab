@@ -4,6 +4,7 @@ import ppj.lab3.utilities.SemanticProduction;
 import ppj.lab3.utilities.rules.Action;
 import ppj.lab3.utilities.rules.RuleFactory;
 import ppj.lab3.utilities.scope.Scope;
+import ppj.lab3.utilities.scope.ScopeElement;
 
 public class SlozenaNaredbaBez implements Action {
 
@@ -13,10 +14,19 @@ public class SlozenaNaredbaBez implements Action {
         //slozena naredba stvara vlastiti djelokrug
         Scope newScope = new Scope(scope);
 
+        //provjeri parametre u slucaju funkcije
+        if(production.getLeftState().getAttributeMap().containsKey("listaParamNames")) {
+            String[] names = (String[]) production.getLeftState().getAttributeMap().get("listaParamNames").getAttribute();
+            String[] types = (String[]) production.getLeftState().getAttributeMap().get("listaParamNames").getAttribute();
+            for(int i = 0; i < names.length; i++) {
+                newScope.addScopeElement(new ScopeElement(names[i], types[i], true, true));
+            }
+        }
+
         //1. provjeri(<lista_naredbi>)
         SemanticProduction productionToCheck = new SemanticProduction(production.getRightStateNodes().get(1));
-        RuleFactory ruleFactory = RuleFactory.getRuleFactory();
-        Action action = (Action) ruleFactory.getRuleMap().get(productionToCheck);
+        RuleFactory ruleFactory= RuleFactory.getRuleFactory();
+        Action action= ruleFactory.getRuleMap().get(productionToCheck);
         action.checkProduction(productionToCheck,newScope);
     }
 }

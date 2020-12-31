@@ -19,6 +19,27 @@ import ppj.lab3.utilities.rules.commands.PrijevodnaJedinica.PrijevodnaJedinicaVi
 import ppj.lab3.utilities.rules.commands.SlozenaNaredba.SlozenaNaredbaBez;
 import ppj.lab3.utilities.rules.commands.SlozenaNaredba.SlozenaNaredbaDek;
 import ppj.lab3.utilities.rules.commands.VanjskaDeklaracija.VanjskaDeklaracija;
+import ppj.lab3.utilities.rules.definitions.DefinicijaFunkcije.DefinicijaFunkcijeParam;
+import ppj.lab3.utilities.rules.definitions.DefinicijaFunkcije.DefinicijaFunkcijeVoid;
+import ppj.lab3.utilities.rules.definitions.Deklaracija.Deklaracija;
+import ppj.lab3.utilities.rules.definitions.DeklaracijaParametra.DeklaracijaParametraJedan;
+import ppj.lab3.utilities.rules.definitions.DeklaracijaParametra.DeklaracijaParametraNiz;
+import ppj.lab3.utilities.rules.definitions.Inicijalizator.InicijalizatorJedan;
+import ppj.lab3.utilities.rules.definitions.Inicijalizator.InicijalizatorVise;
+import ppj.lab3.utilities.rules.definitions.InitDeklarator.InitDeklaratorBez;
+import ppj.lab3.utilities.rules.definitions.InitDeklarator.InitDeklaratorSa;
+import ppj.lab3.utilities.rules.definitions.IzravniDeklarator.IzravniDeklaratorFuncParam;
+import ppj.lab3.utilities.rules.definitions.IzravniDeklarator.IzravniDeklaratorFuncVoid;
+import ppj.lab3.utilities.rules.definitions.IzravniDeklarator.IzravniDeklaratorIdn;
+import ppj.lab3.utilities.rules.definitions.IzravniDeklarator.IzravniDeklaratorNiz;
+import ppj.lab3.utilities.rules.definitions.ListaDeklaracija.ListaDeklaracijaJedan;
+import ppj.lab3.utilities.rules.definitions.ListaDeklaracija.ListaDeklaracijaVise;
+import ppj.lab3.utilities.rules.definitions.ListaInitDeklaratora.ListaInitDeklaratoraJedan;
+import ppj.lab3.utilities.rules.definitions.ListaInitDeklaratora.ListaInitDeklaratoraVise;
+import ppj.lab3.utilities.rules.definitions.ListaIzrazaPridruzivanja.ListaIzrazaPridruzivanjaJedan;
+import ppj.lab3.utilities.rules.definitions.ListaIzrazaPridruzivanja.ListaIzrazaPridruzivanjaVise;
+import ppj.lab3.utilities.rules.definitions.ListaParametara.ListaParametaraJedan;
+import ppj.lab3.utilities.rules.definitions.ListaParametara.ListaParametaraVise;
 import ppj.lab3.utilities.rules.expressions.AditivniIzraz.AditivniIzrazBez;
 import ppj.lab3.utilities.rules.expressions.AditivniIzraz.AditivniIzrazOp;
 import ppj.lab3.utilities.rules.expressions.BinIIzraz.BinIIzrazBez;
@@ -63,7 +84,7 @@ import java.util.Map;
 
 public class RuleFactory {
 
-    private final Map<SemanticProduction, Object> ruleMap;
+    private final Map<SemanticProduction, Action> ruleMap;
 
     private static final RuleFactory singletonRuleFactory = new RuleFactory();
 
@@ -370,10 +391,98 @@ public class RuleFactory {
 
         //-----------------------------------------------------------------------------------
 
+        //<definicija_funkcije> ::= <ime_tipa> IDN L_ZAGRADA KR_VOID D_ZAGRADA <slozena_naredba>
+        SemanticProduction definicijaFunkcijeVoid = SemanticProduction.generateMapKeyProduction(new NonTerminalSymbol("<definicija_funkcije>"), new NonTerminalSymbol("<ime_tipa>"), new TerminalSymbol("IDN", 0 , new String[0]), new TerminalSymbol("L_ZAGRADA",0, new String[0]),
+                new TerminalSymbol("KR_VOID",0, new String[0]), new TerminalSymbol("D_ZAGRADA", 0, new String[0]), new NonTerminalSymbol("<slozena_naredba>"));
+        ruleMap.put(definicijaFunkcijeVoid, new DefinicijaFunkcijeVoid());
 
+        // <definicija_funkcije> ::= <ime_tipa> IDN L_ZAGRADA <lista_parametara> D_ZAGRADA <slozena_naredba>
+        SemanticProduction definicijaFunkcijeParam = SemanticProduction.generateMapKeyProduction(new NonTerminalSymbol("<definicija_funkcije>"), new NonTerminalSymbol("<ime_tipa>"), new TerminalSymbol("IDN", 0 , new String[0]), new TerminalSymbol("L_ZAGRADA",0, new String[0]),
+                new NonTerminalSymbol("<lista_parametara>"), new TerminalSymbol("D_ZAGRADA", 0, new String[0]), new NonTerminalSymbol("<slozena_naredba>"));
+        ruleMap.put(definicijaFunkcijeParam, new DefinicijaFunkcijeParam());
+
+        //<lista_parametara> ::= <deklaracija_parametra>
+        SemanticProduction listaParametaraJedan = SemanticProduction.generateMapKeyProduction(new NonTerminalSymbol("<lista_parametara>"), new NonTerminalSymbol("<deklaracija_parametra>"));
+        ruleMap.put(listaParametaraJedan, new ListaParametaraJedan());
+
+        //<lista_parametara> ::= <lista_parametara> ZAREZ <deklaracija_parametra>
+        SemanticProduction listaParametaraVise = SemanticProduction.generateMapKeyProduction(new NonTerminalSymbol("<lista_parametara>"),new NonTerminalSymbol("<lista_parametara>"), new TerminalSymbol("ZAREZ", 0, new String[0]), new NonTerminalSymbol("<deklaracija_parametra>"));
+        ruleMap.put(listaParametaraVise, new ListaParametaraVise());
+
+        //<deklaracija_parametra> ::= <ime_tipa> IDN
+        SemanticProduction deklaracijaParametraJedan = SemanticProduction.generateMapKeyProduction(new NonTerminalSymbol("<deklaracija_parametra>"), new NonTerminalSymbol("<ime_tipa>"), new TerminalSymbol("IDN", 0, new String[0]));
+        ruleMap.put(deklaracijaParametraJedan, new DeklaracijaParametraJedan());
+
+        //<deklaracija_parametra> ::= <ime_tipa> IDN L_UGL_ZAGRADA D_UGL_ZAGRADA
+        SemanticProduction deklaracijaParametraNiz = SemanticProduction.generateMapKeyProduction(new NonTerminalSymbol("<deklaracija_parametra>"), new NonTerminalSymbol("<ime_tipa>"), new TerminalSymbol("IDN", 0, new String[0]), new TerminalSymbol("L_UGL_ZAGRADA",0, new String[0]),
+                new TerminalSymbol("D_UGL_ZAGRADA", 0, new String[0]));
+        ruleMap.put(deklaracijaParametraNiz, new DeklaracijaParametraNiz());
+
+        //<lista_deklaracija> ::= <deklaracija>
+        SemanticProduction listaDeklaracijaJedan = SemanticProduction.generateMapKeyProduction(new NonTerminalSymbol("<lista_deklaracija>"), new NonTerminalSymbol("<deklaracija>"));
+        ruleMap.put(listaDeklaracijaJedan, new ListaDeklaracijaJedan());
+
+        //<lista_deklaracija> ::= <lista_deklaracija> <deklaracija>
+        SemanticProduction listaDeklaracijaVise = SemanticProduction.generateMapKeyProduction(new NonTerminalSymbol("<lista_deklaracija>"), new NonTerminalSymbol("<lista_deklaracija>") ,new NonTerminalSymbol("<deklaracija>"));
+        ruleMap.put(listaDeklaracijaVise, new ListaDeklaracijaVise());
+
+        //<deklaracija> ::= <ime_tipa> <lista_init_deklaratora> TOCKAZAREZ
+        SemanticProduction deklaracija = SemanticProduction.generateMapKeyProduction(new NonTerminalSymbol("<deklaracija>"), new NonTerminalSymbol("<ime_tipa>"), new NonTerminalSymbol("<lista_init_deklaratora>"), new TerminalSymbol("TOCKAZAREZ", 0, new String[0]));
+        ruleMap.put(deklaracija, new Deklaracija());
+
+        //<lista_init_deklaratora> ::= <init_deklarator>
+        SemanticProduction listaInitDeklaratoraJedan = SemanticProduction.generateMapKeyProduction(new NonTerminalSymbol("<lista_init_deklaratora>"), new NonTerminalSymbol("<init_deklarator>"));
+        ruleMap.put(listaInitDeklaratoraJedan, new ListaInitDeklaratoraJedan());
+
+        //<lista_init_deklaratora>1 ::= <lista_init_deklaratora>2 ZAREZ <init_deklarator>
+        SemanticProduction listaInitDeklaratoraVise = SemanticProduction.generateMapKeyProduction(new NonTerminalSymbol("<lista_init_deklaratora>"),new NonTerminalSymbol("<lista_init_deklaratora>"), new TerminalSymbol("ZAREZ", 0, new String[0]), new NonTerminalSymbol("<init_deklarator>"));
+        ruleMap.put(listaInitDeklaratoraVise, new ListaInitDeklaratoraVise());
+
+        //<init_deklarator> ::= <izravni_deklarator>
+        SemanticProduction initDeklaratorBez = SemanticProduction.generateMapKeyProduction(new NonTerminalSymbol("<init_deklarator>"), new NonTerminalSymbol("<izravni_deklarator>"));
+        ruleMap.put(initDeklaratorBez, new InitDeklaratorBez());
+
+        //<init_deklarator> ::= <izravni_deklarator> OP_PRIDRUZI <inicijalizator>
+        SemanticProduction initDeklaratorSa = SemanticProduction.generateMapKeyProduction(new NonTerminalSymbol("<init_deklarator>"), new NonTerminalSymbol("<izravni_deklarator>"), new TerminalSymbol("OP_PRIDRUZI",0, new String[0]), new NonTerminalSymbol("<inicijalizator>"));
+        ruleMap.put(initDeklaratorSa, new InitDeklaratorSa());
+
+        //<izravni_deklarator> ::= IDN
+        SemanticProduction izravniDeklaratorIdn = SemanticProduction.generateMapKeyProduction(new NonTerminalSymbol("<izravni_deklarator>"), new TerminalSymbol("IDN", 0, new String[0]));
+        ruleMap.put(izravniDeklaratorIdn, new IzravniDeklaratorIdn());
+
+        //<izravni_deklarator> ::= IDN L_UGL_ZAGRADA BROJ D_UGL_ZAGRADA
+        SemanticProduction izravniDeklaratorNiz = SemanticProduction.generateMapKeyProduction(new NonTerminalSymbol("<izravni_deklarator>"), new TerminalSymbol("IDN", 0, new String[0]), new TerminalSymbol("L_UGL_ZAGRADA", 0, new String[0]), new TerminalSymbol("BROJ", 0, new String[0]),
+                new TerminalSymbol("D_UGL_ZAGRADA", 0, new String[0]));
+        ruleMap.put(izravniDeklaratorNiz, new IzravniDeklaratorNiz());
+
+        //<izravni_deklarator> ::= IDN L_ZAGRADA KR_VOID D_ZAGRADA
+        SemanticProduction izravniDeklaratorFuncVoid = SemanticProduction.generateMapKeyProduction(new NonTerminalSymbol("<izravni_deklarator>"), new TerminalSymbol("IDN", 0, new String[0]), new TerminalSymbol("L_ZAGRADA", 0, new String[0]), new TerminalSymbol("KR_VOID", 0, new String[0]),
+                new TerminalSymbol("D_ZAGRADA", 0, new String[0]));
+        ruleMap.put(izravniDeklaratorFuncVoid, new IzravniDeklaratorFuncVoid());
+
+        //<izravni_deklarator> ::= IDN L_ZAGRADA <lista_parametara> D_ZAGRADA
+        SemanticProduction izravniDeklaratorFuncParam = SemanticProduction.generateMapKeyProduction(new NonTerminalSymbol("<izravni_deklarator>"), new TerminalSymbol("IDN", 0, new String[0]), new TerminalSymbol("L_ZAGRADA", 0, new String[0]), new NonTerminalSymbol("<lista_parametara>"),
+                new TerminalSymbol("D_ZAGRADA", 0, new String[0]));
+        ruleMap.put(izravniDeklaratorFuncParam, new IzravniDeklaratorFuncParam());
+
+        //<inicijalizator> ::= <izraz_pridruzivanja>
+        SemanticProduction inicijalizatorJedan = SemanticProduction.generateMapKeyProduction(new NonTerminalSymbol("<inicijalizator>"), new NonTerminalSymbol("<izraz_pridruzivanja>"));
+        ruleMap.put(inicijalizatorJedan, new InicijalizatorJedan());
+
+        //<inicijalizator> ::= L_VIT_ZAGRADA <lista_izraza_pridruzivanja> D_VIT_ZAGRADA
+        SemanticProduction incijalizatorVise = SemanticProduction.generateMapKeyProduction(new NonTerminalSymbol("<inicijalizator>"), new TerminalSymbol("L_VIT_ZAGRADA", 0, new String[0]), new NonTerminalSymbol("<lista_izraza_pridruzivanja>"), new TerminalSymbol("D_VIT_ZAGRADA",0, new String[0]));
+        ruleMap.put(incijalizatorVise, new InicijalizatorVise());
+
+        //<lista_izraza_pridruzivanja> ::= <izraz_pridruzivanja>
+        SemanticProduction listaIzrazaPridruzivanjaJedan = SemanticProduction.generateMapKeyProduction(new NonTerminalSymbol("<lista_izraza_pridruzivanja>"), new NonTerminalSymbol("<izraz_pridruzivanja>"));
+        ruleMap.put(listaIzrazaPridruzivanjaJedan, new ListaIzrazaPridruzivanjaJedan());
+
+        //<lista_izraza_pridruzivanja> ::= <lista_izraza_pridruzivanja> ZAREZ <izraz_pridruzivanja>
+        SemanticProduction listaIzrazaPridruzivanjaVise = SemanticProduction.generateMapKeyProduction(new NonTerminalSymbol("<lista_izraza_pridruzivanja>"),new NonTerminalSymbol("<lista_izraza_pridruzivanja>"), new TerminalSymbol("ZAREZ",0, new String[0]),new NonTerminalSymbol("<izraz_pridruzivanja>"));
+        ruleMap.put(listaIzrazaPridruzivanjaVise, new ListaIzrazaPridruzivanjaVise());
     }
 
-    public Map<SemanticProduction, Object> getRuleMap() {
+    public Map<SemanticProduction, Action> getRuleMap() {
         return ruleMap;
     }
 

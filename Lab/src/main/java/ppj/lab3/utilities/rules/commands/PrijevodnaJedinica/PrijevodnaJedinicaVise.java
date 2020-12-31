@@ -12,13 +12,13 @@ public class PrijevodnaJedinicaVise implements Action {
     public void checkProduction(SemanticProduction production, Scope scope) {
         //1. provjeri(<prijevodna_jedinica>)
         SemanticProduction productionToCheck = new SemanticProduction(production.getRightStateNodes().get(0));
-        RuleFactory ruleFactory = RuleFactory.getRuleFactory();
-        Action action = (Action) ruleFactory.getRuleMap().get(productionToCheck);
+        RuleFactory ruleFactory= RuleFactory.getRuleFactory();
+        Action action= ruleFactory.getRuleMap().get(productionToCheck);
         action.checkProduction(productionToCheck,scope);
 
         //2. provjeri(<vanjska_deklaracija>)
         productionToCheck = new SemanticProduction(production.getRightStateNodes().get(1));
-        action= (Action) ruleFactory.getRuleMap().get(productionToCheck);
+        action= ruleFactory.getRuleMap().get(productionToCheck);
         action.checkProduction(productionToCheck,scope);
     }
 }

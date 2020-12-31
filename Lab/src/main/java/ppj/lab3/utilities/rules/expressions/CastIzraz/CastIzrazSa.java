@@ -17,15 +17,15 @@ public class CastIzrazSa implements Action {
     public void checkProduction(SemanticProduction production, Scope scope) {
         //1. provjeri(<ime_tipa>)
         SemanticProduction productionToCheck = new SemanticProduction(production.getRightStateNodes().get(1));
-        RuleFactory ruleFactory = RuleFactory.getRuleFactory();
-        Action action = (Action) ruleFactory.getRuleMap().get(productionToCheck);
+        RuleFactory ruleFactory= RuleFactory.getRuleFactory();
+        Action action= ruleFactory.getRuleMap().get(productionToCheck);
         action.checkProduction(productionToCheck,scope);
         NonTerminalSymbol expression = (NonTerminalSymbol) production.getRightStates().get(1);
         String imeTipa =  expression.getAttributeMap().get("type").getAttribute().toString();
 
         //2. provjeri(<cast_izraz>)
         productionToCheck = new SemanticProduction(production.getRightStateNodes().get(3));
-        action= (Action) ruleFactory.getRuleMap().get(productionToCheck);
+        action= ruleFactory.getRuleMap().get(productionToCheck);
         action.checkProduction(productionToCheck,scope);
         expression = (NonTerminalSymbol) production.getRightStates().get(3);
         String castIzraz =  expression.getAttributeMap().get("type").getAttribute().toString();

@@ -1,6 +1,7 @@
 package ppj.lab3.utilities.attributes;
 
 import java.util.Arrays;
+import java.util.List;
 import java.util.Objects;
 
 /**
@@ -14,6 +15,8 @@ public class ListAttribute implements Attribute {
     public ListAttribute(String... values) {
         this.values = Objects.requireNonNull(values);
     }
+
+    public ListAttribute(List<String> values) { this.values = values.toArray(new String[0]);}
 
     @Override
     public Object getAttribute() {
