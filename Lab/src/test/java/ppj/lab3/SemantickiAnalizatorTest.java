@@ -1,6 +1,10 @@
 package ppj.lab3;
 
 import org.junit.jupiter.api.Test;
+import ppj.lab3.utilities.SemanticProduction;
+import ppj.lab3.utilities.rules.Action;
+import ppj.lab3.utilities.rules.RuleFactory;
+import ppj.lab3.utilities.scope.Scope;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -20,7 +24,16 @@ class SemantickiAnalizatorTest {
                 "");
         SemantickiAnalizator sem = new SemantickiAnalizator(root.resolve("test.in"));
 
-        assertEquals(Files.readString(root.resolve("test.out")), sem.getOutput());
+        SemanticProduction start = new SemanticProduction(sem.getRoot());
+        RuleFactory ruleFactory= RuleFactory.getRuleFactory();
+        Action action = ruleFactory.getRuleMap().get(start);
+        try {
+            action.checkProduction(start, new Scope(null));
+
+        } catch (SemanticException e) {
+            System.out.println(e.getMessage());
+            assertEquals(Files.readString(root.resolve("test.out")).trim(), e.getMessage());
+        }
     }
 
     @Test
@@ -29,7 +42,16 @@ class SemantickiAnalizatorTest {
                 "");
         SemantickiAnalizator sem = new SemantickiAnalizator(root.resolve("test.in"));
 
-        assertEquals(Files.readString(root.resolve("test.out")), sem.getOutput());
+        SemanticProduction start = new SemanticProduction(sem.getRoot());
+        RuleFactory ruleFactory= RuleFactory.getRuleFactory();
+        Action action = ruleFactory.getRuleMap().get(start);
+        try {
+            action.checkProduction(start, new Scope(null));
+
+        } catch (SemanticException e) {
+            System.out.println(e.getMessage());
+            assertEquals(Files.readString(root.resolve("test.out")).trim(), e.getMessage());
+        }
     }
 
     @Test
@@ -38,7 +60,16 @@ class SemantickiAnalizatorTest {
                 "");
         SemantickiAnalizator sem = new SemantickiAnalizator(root.resolve("test.in"));
 
-        assertEquals(Files.readString(root.resolve("test.out")), sem.getOutput());
+        SemanticProduction start = new SemanticProduction(sem.getRoot());
+        RuleFactory ruleFactory= RuleFactory.getRuleFactory();
+        Action action = ruleFactory.getRuleMap().get(start);
+        try {
+            action.checkProduction(start, new Scope(null));
+
+        } catch (SemanticException e) {
+            System.out.println(e.getMessage());
+            assertEquals(Files.readString(root.resolve("test.out")).trim(), e.getMessage());
+        }
     }
 
     @Test
@@ -47,7 +78,16 @@ class SemantickiAnalizatorTest {
                 "");
         SemantickiAnalizator sem = new SemantickiAnalizator(root.resolve("test.in"));
 
-        assertEquals(Files.readString(root.resolve("test.out")), sem.getOutput());
+        SemanticProduction start = new SemanticProduction(sem.getRoot());
+        RuleFactory ruleFactory= RuleFactory.getRuleFactory();
+        Action action = ruleFactory.getRuleMap().get(start);
+        try {
+            action.checkProduction(start, new Scope(null));
+
+        } catch (SemanticException e) {
+            System.out.println(e.getMessage());
+            assertEquals(Files.readString(root.resolve("test.out")).trim(), e.getMessage());
+        }
     }
 
     @Test
@@ -56,7 +96,16 @@ class SemantickiAnalizatorTest {
                 "");
         SemantickiAnalizator sem = new SemantickiAnalizator(root.resolve("test.in"));
 
-        assertEquals(Files.readString(root.resolve("test.out")), sem.getOutput());
+        SemanticProduction start = new SemanticProduction(sem.getRoot());
+        RuleFactory ruleFactory= RuleFactory.getRuleFactory();
+        Action action = ruleFactory.getRuleMap().get(start);
+        try {
+            action.checkProduction(start, new Scope(null));
+
+        } catch (SemanticException e) {
+            System.out.println(e.getMessage());
+            assertEquals(Files.readString(root.resolve("test.out")).trim(), e.getMessage());
+        }
     }
 
     @Test
@@ -65,7 +114,16 @@ class SemantickiAnalizatorTest {
                 "");
         SemantickiAnalizator sem = new SemantickiAnalizator(root.resolve("test.in"));
 
-        assertEquals(Files.readString(root.resolve("test.out")), sem.getOutput());
+        SemanticProduction start = new SemanticProduction(sem.getRoot());
+        RuleFactory ruleFactory= RuleFactory.getRuleFactory();
+        Action action = ruleFactory.getRuleMap().get(start);
+        try {
+            action.checkProduction(start, new Scope(null));
+
+        } catch (SemanticException e) {
+            System.out.println(e.getMessage());
+            assertEquals(Files.readString(root.resolve("test.out")).trim(), e.getMessage());
+        }
     }
 
     @Test
@@ -74,7 +132,16 @@ class SemantickiAnalizatorTest {
                 "");
         SemantickiAnalizator sem = new SemantickiAnalizator(root.resolve("test.in"));
 
-        assertEquals(Files.readString(root.resolve("test.out")), sem.getOutput());
+        SemanticProduction start = new SemanticProduction(sem.getRoot());
+        RuleFactory ruleFactory= RuleFactory.getRuleFactory();
+        Action action = ruleFactory.getRuleMap().get(start);
+        try {
+            action.checkProduction(start, new Scope(null));
+
+        } catch (SemanticException e) {
+            System.out.println(e.getMessage());
+            assertEquals(Files.readString(root.resolve("test.out")).trim(), e.getMessage());
+        }
     }
 
     @Test
@@ -83,8 +150,16 @@ class SemantickiAnalizatorTest {
                 "");
         SemantickiAnalizator sem = new SemantickiAnalizator(root.resolve("test.in"));
 
-        assertEquals(Files.readString(root.resolve("test.out")), sem.getOutput());
-    }
+        SemanticProduction start = new SemanticProduction(sem.getRoot());
+        RuleFactory ruleFactory= RuleFactory.getRuleFactory();
+        Action action = ruleFactory.getRuleMap().get(start);
+        try {
+            action.checkProduction(start, new Scope(null));
+
+        } catch (SemanticException e) {
+            System.out.println(e.getMessage());
+            assertEquals(Files.readString(root.resolve("test.out")).trim(), e.getMessage());
+        }    }
 
     @Test
     void testIspitniPrimjer17() throws IOException {
@@ -92,8 +167,16 @@ class SemantickiAnalizatorTest {
                 "");
         SemantickiAnalizator sem = new SemantickiAnalizator(root.resolve("test.in"));
 
-        assertEquals(Files.readString(root.resolve("test.out")), sem.getOutput());
-    }
+        SemanticProduction start = new SemanticProduction(sem.getRoot());
+        RuleFactory ruleFactory= RuleFactory.getRuleFactory();
+        Action action = ruleFactory.getRuleMap().get(start);
+        try {
+            action.checkProduction(start, new Scope(null));
+
+        } catch (SemanticException e) {
+            System.out.println(e.getMessage());
+            assertEquals(Files.readString(root.resolve("test.out")).trim(), e.getMessage());
+        }    }
 
     @Test
     void testIspitniPrimjer19() throws IOException {
@@ -101,8 +184,16 @@ class SemantickiAnalizatorTest {
                 "");
         SemantickiAnalizator sem = new SemantickiAnalizator(root.resolve("test.in"));
 
-        assertEquals(Files.readString(root.resolve("test.out")), sem.getOutput());
-    }
+        SemanticProduction start = new SemanticProduction(sem.getRoot());
+        RuleFactory ruleFactory= RuleFactory.getRuleFactory();
+        Action action = ruleFactory.getRuleMap().get(start);
+        try {
+            action.checkProduction(start, new Scope(null));
+
+        } catch (SemanticException e) {
+            System.out.println(e.getMessage());
+            assertEquals(Files.readString(root.resolve("test.out")).trim(), e.getMessage());
+        }    }
 
     @Test
     void testIspitniPrimjer21() throws IOException {
@@ -110,8 +201,16 @@ class SemantickiAnalizatorTest {
                 "");
         SemantickiAnalizator sem = new SemantickiAnalizator(root.resolve("test.in"));
 
-        assertEquals(Files.readString(root.resolve("test.out")), sem.getOutput());
-    }
+        SemanticProduction start = new SemanticProduction(sem.getRoot());
+        RuleFactory ruleFactory= RuleFactory.getRuleFactory();
+        Action action = ruleFactory.getRuleMap().get(start);
+        try {
+            action.checkProduction(start, new Scope(null));
+
+        } catch (SemanticException e) {
+            System.out.println(e.getMessage());
+            assertEquals(Files.readString(root.resolve("test.out")).trim(), e.getMessage());
+        }    }
 
     @Test
     void testIspitniPrimjer23() throws IOException {
@@ -119,8 +218,16 @@ class SemantickiAnalizatorTest {
                 "");
         SemantickiAnalizator sem = new SemantickiAnalizator(root.resolve("test.in"));
 
-        assertEquals(Files.readString(root.resolve("test.out")), sem.getOutput());
-    }
+        SemanticProduction start = new SemanticProduction(sem.getRoot());
+        RuleFactory ruleFactory= RuleFactory.getRuleFactory();
+        Action action = ruleFactory.getRuleMap().get(start);
+        try {
+            action.checkProduction(start, new Scope(null));
+
+        } catch (SemanticException e) {
+            System.out.println(e.getMessage());
+            assertEquals(Files.readString(root.resolve("test.out")).trim(), e.getMessage());
+        }    }
 
     @Test
     void testIspitniPrimjer25() throws IOException {
@@ -128,8 +235,16 @@ class SemantickiAnalizatorTest {
                 "");
         SemantickiAnalizator sem = new SemantickiAnalizator(root.resolve("test.in"));
 
-        assertEquals(Files.readString(root.resolve("test.out")), sem.getOutput());
-    }
+        SemanticProduction start = new SemanticProduction(sem.getRoot());
+        RuleFactory ruleFactory= RuleFactory.getRuleFactory();
+        Action action = ruleFactory.getRuleMap().get(start);
+        try {
+            action.checkProduction(start, new Scope(null));
+
+        } catch (SemanticException e) {
+            System.out.println(e.getMessage());
+            assertEquals(Files.readString(root.resolve("test.out")).trim(), e.getMessage());
+        }    }
 
     @Test
     void testIspitniPrimjer27() throws IOException {
@@ -137,8 +252,16 @@ class SemantickiAnalizatorTest {
                 "");
         SemantickiAnalizator sem = new SemantickiAnalizator(root.resolve("test.in"));
 
-        assertEquals(Files.readString(root.resolve("test.out")), sem.getOutput());
-    }
+        SemanticProduction start = new SemanticProduction(sem.getRoot());
+        RuleFactory ruleFactory= RuleFactory.getRuleFactory();
+        Action action = ruleFactory.getRuleMap().get(start);
+        try {
+            action.checkProduction(start, new Scope(null));
+
+        } catch (SemanticException e) {
+            System.out.println(e.getMessage());
+            assertEquals(Files.readString(root.resolve("test.out")).trim(), e.getMessage());
+        }    }
 
     @Test
     void testIspitniPrimjer29() throws IOException {
@@ -146,7 +269,15 @@ class SemantickiAnalizatorTest {
                 "");
         SemantickiAnalizator sem = new SemantickiAnalizator(root.resolve("test.in"));
 
-        assertEquals(Files.readString(root.resolve("test.out")), sem.getOutput());
-    }
+        SemanticProduction start = new SemanticProduction(sem.getRoot());
+        RuleFactory ruleFactory= RuleFactory.getRuleFactory();
+        Action action = ruleFactory.getRuleMap().get(start);
+        try {
+            action.checkProduction(start, new Scope(null));
+
+        } catch (SemanticException e) {
+            System.out.println(e.getMessage());
+            assertEquals(Files.readString(root.resolve("test.out")).trim(), e.getMessage());
+        }    }
 
 }

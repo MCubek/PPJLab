@@ -38,15 +38,16 @@ public class DefinicijaFunkcijeVoid implements Action {
         while(globalScope.getParent() != null)
             globalScope = globalScope.getParent();
         ScopeElement idnScope = globalScope.isDeclared(idnName);
-        if(idnScope == null)
-            throw new SemanticException(production.toString());
-        String scopeIdnType = idnScope.getType();
         String checkType = "funkcija(void -> " + type + ")";
-        if(!scopeIdnType.equals(checkType))
-            throw new SemanticException(production.toString());
 
+        if(idnScope != null) {
+            String scopeIdnType = idnScope.getType();
+            if (!scopeIdnType.equals(checkType))
+                throw new SemanticException(production.toString());
+
+        }
         //5. zabiljezi definiciju i deklaraciju funkcije
-        scope.addDefinition(idnName,scopeIdnType, false);
+        scope.addDefinition(idnName,checkType, false);
 
         //6. provjeri(<slozena_naredba>)
          productionToCheck = new SemanticProduction(production.getRightStateNodes().get(5));

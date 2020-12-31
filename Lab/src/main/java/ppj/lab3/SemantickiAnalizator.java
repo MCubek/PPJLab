@@ -50,6 +50,10 @@ public class SemantickiAnalizator {
         return "placeholder";
     }
 
+    public Node<Symbol> getRoot() {
+        return root;
+    }
+
     public static void main(String[] args) {
         BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
         SemantickiAnalizator sa = new SemantickiAnalizator(reader);
