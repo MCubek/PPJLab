@@ -15,6 +15,7 @@ import java.util.List;
 public class DefinicijaFunkcijeParam implements Action {
 
 
+    @SuppressWarnings("unchecked")
     @Override
     public void checkProduction(SemanticProduction production, Scope scope) {
         //1. provjeri(<ime_tipa>)

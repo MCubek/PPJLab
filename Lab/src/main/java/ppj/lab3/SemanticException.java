@@ -8,9 +8,6 @@ package ppj.lab3;
 public class SemanticException extends RuntimeException {
     private static final long serialVersionUID = - 5398476488074110611L;
 
-    public SemanticException() {
-    }
-
     public SemanticException(String message) {
         super(message);
     }

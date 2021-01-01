@@ -23,7 +23,6 @@ import java.nio.file.Path;
  */
 public class SemantickiAnalizator {
     private final Node<Symbol> root;
-    // TODO: 13.12.2020. strukture
 
     /**
      * Konstruktor koji parsira uzaz i stvara odgovarajuce strukture podataka
@@ -45,11 +44,6 @@ public class SemantickiAnalizator {
         this(Files.newBufferedReader(filePath));
     }
 
-    public String getOutput() {
-        // TODO: 23.12.2020. Get output!
-        return "placeholder";
-    }
-
     public Node<Symbol> getRoot() {
         return root;
     }
@@ -64,17 +58,14 @@ public class SemantickiAnalizator {
             System.err.println(e.getMessage());
         }
 
-        // TODO: 13.12.2020. Što dalje nakon parsiranja?
         SemanticProduction start = new SemanticProduction(sa.root);
-        RuleFactory ruleFactory= RuleFactory.getRuleFactory();
-        Action action = (Action) ruleFactory.getRuleMap().get(start);
+        RuleFactory ruleFactory = RuleFactory.getRuleFactory();
+        Action action = ruleFactory.getRuleMap().get(start);
         try {
             action.checkProduction(start, new Scope(null));
 
         } catch (SemanticException e) {
             System.out.println(e.getMessage());
         }
-
-        //System.out.println(sa.getOutput());
     }
 }
