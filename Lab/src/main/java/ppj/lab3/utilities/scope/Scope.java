@@ -1,5 +1,7 @@
 package ppj.lab3.utilities.scope;
 
+import ppj.lab3.SemanticException;
+
 import java.nio.charset.StandardCharsets;
 import java.util.*;
 import java.util.regex.Matcher;
@@ -72,7 +74,7 @@ public class Scope {
 
         Scope scope = (Scope) o;
 
-        if (parent != null ? ! parent.equals(scope.parent) : scope.parent != null) return false;
+        if (!Objects.equals(parent, scope.parent)) return false;
         if (! children.equals(scope.children)) return false;
         return elements.equals(scope.elements);
     }
@@ -120,19 +122,18 @@ public class Scope {
 
     public boolean checkAllDefined() {
         for (ScopeElement element : elements) {
-            boolean flag = true;
-            String value = element.getName();
-
-            switch (element.getType()) {
-                case "char":
-                    flag = charConstValid(value);
-                    break;
-                case "niz(const(char))":
-                    flag = charArrayValid(value);
-                    break;
-                default:
+            if (element.getType().startsWith("funkcija")) {
+                if (!element.isDefined())
+                    return false;
             }
-            if (! flag) return false;
+        }
+        boolean childResult;
+        if(this.children != null) {
+            for(Scope child : this.children) {
+                childResult = child.checkAllDefined();
+                if (!childResult)
+                    return false;
+            }
         }
         return true;
     }
