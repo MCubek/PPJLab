@@ -1,5 +1,7 @@
 package ppj.lab3.utilities.scope;
 
+import java.util.Objects;
+
 /**
  * @author MatejCubek, FraneB
  * @project PPJLab
@@ -39,22 +41,13 @@ public class ScopeElement {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-
-        ScopeElement that = (ScopeElement) o;
-
-        if (isLExpression != that.isLExpression) return false;
-        if (isDefined != that.isDefined) return false;
-        if (! name.equals(that.name)) return false;
-        return type.equals(that.type);
+        ScopeElement element = (ScopeElement) o;
+        return Objects.equals(name, element.name);
     }
 
     @Override
     public int hashCode() {
-        int result = name.hashCode();
-        result = 31 * result + type.hashCode();
-        result = 31 * result + (isLExpression ? 1 : 0);
-        result = 31 * result + (isDefined ? 1 : 0);
-        return result;
+        return Objects.hash(name);
     }
 
     @Override
