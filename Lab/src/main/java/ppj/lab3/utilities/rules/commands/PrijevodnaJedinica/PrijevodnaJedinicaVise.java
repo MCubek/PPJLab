@@ -27,7 +27,7 @@ public class PrijevodnaJedinicaVise implements Action {
         if(production.getLeftStateNode().getParent() == null) {
             //1. u programu postoji funkcija imena main i tipa funkcija(void → int)
             ScopeElement main = scope.isDeclared("main");
-            if (main == null || ! main.getName().equals("funkcija(void -> int)"))
+            if (main == null || !main.getType().equals("funkcija(void -> int)"))
                 throw new SemanticException("main");
 
             //2. svaka funkcija koja je deklarirana bilo gdje u programu (u bilo kojem djelokrugu)

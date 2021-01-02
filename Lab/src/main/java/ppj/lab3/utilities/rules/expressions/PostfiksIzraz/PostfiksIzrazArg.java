@@ -46,7 +46,7 @@ public class PostfiksIzrazArg implements Action {
 
         if(params.length == argTypes.length) {
             for(int i = 0; i < params.length; i++) {
-                if(!implicitCast(argTypes[i],params[i])) {
+                if(!implicitCast(argTypes[i],params[i].trim())) {
                     throw new SemanticException(production.toString());
                 }
             }

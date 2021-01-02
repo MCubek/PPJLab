@@ -2,6 +2,7 @@ package ppj.lab3.utilities.rules.definitions.IzravniDeklarator;
 
 import ppj.lab3.SemanticException;
 import ppj.lab3.utilities.SemanticProduction;
+import ppj.lab3.utilities.attributes.SimpleAttribute;
 import ppj.lab3.utilities.rules.Action;
 import ppj.lab3.utilities.rules.RuleFactory;
 import ppj.lab3.utilities.scope.Scope;
@@ -22,7 +23,7 @@ public class IzravniDeklaratorFuncParam implements Action {
         Action action= ruleFactory.getRuleMap().get(productionToCheck);
         action.checkProduction(productionToCheck,scope);
         NonTerminalSymbol expression = (NonTerminalSymbol) production.getRightStates().get(2);
-        String[] types = (String[]) expression.getAttributeMap().get("type").getAttribute();
+        String[] types = (String[]) expression.getAttributeMap().get("types").getAttribute();
 
         //2. ako je IDN.ime deklarirano u lokalnom djelokrugu, tip prethodne deklaracije
         //je jednak funkcija(<lista_parametara>.tipovi → ntip)
@@ -31,12 +32,12 @@ public class IzravniDeklaratorFuncParam implements Action {
         String idnName = idn.getLexicalUnits()[0];
         ScopeElement declaredIdn = scope.isDeclaredLocally(idnName);
         StringBuilder checkType = new StringBuilder("funkcija(");
-        for(String string : types) {
-            checkType.append(string);
-            if(!Arrays.asList(types).get(Arrays.asList(types).size()-1).equals(string))
+        for(int i = 0; i < types.length; i++) {
+            checkType.append(types[i]);
+            if(i != types.length-1)
                 checkType.append(", ");
         }
-        checkType.append(" -> ").append(ntype);
+        checkType.append(" -> ").append(ntype).append(")");
         if(declaredIdn != null) {
             if(!declaredIdn.getName().equals(checkType.toString()))
                 throw new SemanticException(production.toString());
@@ -45,5 +46,8 @@ public class IzravniDeklaratorFuncParam implements Action {
             //deklarirana u lokalnom djelokrugu
             scope.addScopeElement(new ScopeElement(idnName, checkType.toString(), false, false));
         }
+
+        //4. tip ← funkcija(<lista_parametara>.tipovi → ntip)
+        production.getLeftState().addAttribute("type", new SimpleAttribute(checkType.toString()));
     }
 }

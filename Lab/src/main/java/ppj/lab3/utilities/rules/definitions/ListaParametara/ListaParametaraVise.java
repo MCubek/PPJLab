@@ -9,6 +9,8 @@ import ppj.lab3.utilities.scope.Scope;
 import ppj.lab3.utilities.symbols.NonTerminalSymbol;
 
 import java.util.Arrays;
+import java.util.LinkedList;
+import java.util.List;
 
 public class ListaParametaraVise implements Action {
 
@@ -39,8 +41,12 @@ public class ListaParametaraVise implements Action {
         //tipovi ← <lista_parametara>.tipovi + [ <deklaracija_parametra>.tip ]
         //imena ← <lista_parametara>.imena + [ <deklaracija_parametra>.ime ]
 
-        Arrays.asList(names).add(deklName);
-        Arrays.asList(types).add(deklType);
+        List<String> tempNamesList = new LinkedList<>(Arrays.asList(names));
+        List<String> tempTypesList = new LinkedList<>(Arrays.asList(types));
+        tempNamesList.add(deklName);
+        tempTypesList.add(deklType);
+        names = tempNamesList.toArray(new String[0]);
+        types = tempTypesList.toArray(new String[0]);
         production.getLeftState().addAttribute("names", new ListAttribute(names));
         production.getLeftState().addAttribute("types", new ListAttribute(types));
     }

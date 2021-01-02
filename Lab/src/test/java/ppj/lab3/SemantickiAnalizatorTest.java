@@ -64,7 +64,7 @@ class SemantickiAnalizatorTest {
         RuleFactory ruleFactory= RuleFactory.getRuleFactory();
         Action action = ruleFactory.getRuleMap().get(start);
         try {
-            action.checkProduction(start, new Scope(null));
+            action.checkProduction(start, new Scope());
 
         } catch (SemanticException e) {
             System.out.println(e.getMessage());

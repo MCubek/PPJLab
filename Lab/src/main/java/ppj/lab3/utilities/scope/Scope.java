@@ -71,20 +71,13 @@ public class Scope {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-
         Scope scope = (Scope) o;
-
-        if (!Objects.equals(parent, scope.parent)) return false;
-        if (! children.equals(scope.children)) return false;
-        return elements.equals(scope.elements);
+        return Objects.equals(children, scope.children) && Objects.equals(elements, scope.elements);
     }
 
     @Override
     public int hashCode() {
-        int result = parent != null ? parent.hashCode() : 0;
-        result = 31 * result + children.hashCode();
-        result = 31 * result + elements.hashCode();
-        return result;
+        return Objects.hash(children, elements);
     }
 
     @Override
@@ -139,7 +132,8 @@ public class Scope {
     }
 
     public static boolean charConstValid(String charConst) {
-        if (charConst == null || charConst.length() > 2) return false;
+        if (charConst == null || charConst.length() > 4) return false;
+        charConst = charConst.substring(1, charConst.length()-1);
 
         if (charConst.startsWith("\\")) {
             switch (charConst.charAt(1)) {

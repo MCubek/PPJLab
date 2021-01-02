@@ -2,6 +2,7 @@ package ppj.lab3.utilities.rules.definitions.DefinicijaFunkcije;
 
 import ppj.lab3.SemanticException;
 import ppj.lab3.utilities.SemanticProduction;
+import ppj.lab3.utilities.attributes.SimpleAttribute;
 import ppj.lab3.utilities.rules.Action;
 import ppj.lab3.utilities.rules.RuleFactory;
 import ppj.lab3.utilities.scope.Scope;
@@ -48,6 +49,7 @@ public class DefinicijaFunkcijeVoid implements Action {
         }
         //5. zabiljezi definiciju i deklaraciju funkcije
         scope.addDefinition(idnName,checkType, false);
+        production.getLeftState().addAttribute("type", new SimpleAttribute(checkType));
 
         //6. provjeri(<slozena_naredba>)
          productionToCheck = new SemanticProduction(production.getRightStateNodes().get(5));

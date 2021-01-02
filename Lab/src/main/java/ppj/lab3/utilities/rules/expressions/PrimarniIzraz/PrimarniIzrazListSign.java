@@ -5,7 +5,6 @@ import ppj.lab3.utilities.SemanticProduction;
 import ppj.lab3.utilities.attributes.SimpleAttribute;
 import ppj.lab3.utilities.rules.Action;
 import ppj.lab3.utilities.scope.Scope;
-import ppj.lab3.utilities.symbols.Symbol;
 import ppj.lab3.utilities.symbols.TerminalSymbol;
 
 public class PrimarniIzrazListSign implements Action {

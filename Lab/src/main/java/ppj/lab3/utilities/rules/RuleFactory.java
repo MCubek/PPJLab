@@ -489,27 +489,29 @@ public class RuleFactory {
     public static boolean implicitCast(String typeBefore, String typeAfter) {
         if(typeBefore.equals(typeAfter))
             return true;
-        else if(typeAfter.contains(typeBefore))
+        else if(typeAfter.startsWith("const") && typeAfter.contains(typeBefore))
             return true;
         else if(typeBefore.length() > 4 && typeAfter.equals(typeBefore.substring(6,typeBefore.length()-1)))
             return true;
         else if(typeBefore.equals("char") && typeAfter.equals("int"))
             return true;
-        else if((typeBefore.contains("niz(") && !typeBefore.contains("const") ) && typeAfter.contains("niz(const("))
+        else if((typeBefore.startsWith("niz(") && !typeBefore.contains("const") ) && typeAfter.startsWith("niz(const(") && typeBefore.substring(4, typeBefore.length()-1).equals(typeAfter.substring(6,typeAfter.length()-1)))
             return true;
-        else {
-            String[] types = new String[] {"int","char","const(int)","const(char)","niz(int)", "niz(char)", "niz(const(int))", "niz(const(char))"};
-            for(String type : types) {
-                if(implicitCast(typeBefore,type) && implicitCast(type,typeAfter))
-                    return true;
-            }
+        else if(typeBefore.equals("char") && typeAfter.equals("const(int)"))
+            return true;
+        else if(typeBefore.equals("const(char)") && typeAfter.equals("const(int)"))
+            return true;
+        else if(typeBefore.equals("const(char)") && typeAfter.equals("int"))
+            return true;
+        else
             return false;
-        }
     }
 
     public static boolean explicitCast(String typeBefore, String typeAfter) {
-        if(typeBefore.equals("int") && typeAfter.equals("char"))
+        if(implicitCast(typeBefore,typeAfter))
             return true;
-        else return typeBefore.equals("int") || typeBefore.equals("char");
+        else if(typeBefore.equals("int") || typeBefore.equals("const(int)"))
+            return true;
+        else return false;
     }
 }

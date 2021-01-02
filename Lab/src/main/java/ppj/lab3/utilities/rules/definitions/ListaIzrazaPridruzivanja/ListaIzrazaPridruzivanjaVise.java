@@ -9,6 +9,8 @@ import ppj.lab3.utilities.scope.Scope;
 import ppj.lab3.utilities.symbols.NonTerminalSymbol;
 
 import java.util.Arrays;
+import java.util.LinkedList;
+import java.util.List;
 
 public class ListaIzrazaPridruzivanjaVise implements Action {
 
@@ -33,7 +35,9 @@ public class ListaIzrazaPridruzivanjaVise implements Action {
 
         //tipovi ← <lista_izraza_pridruzivanja>.tipovi + [ <izraz_pridruzivanja>.tip ]
         //br-elem ← <lista_izraza_pridruzivanja>.br-elem+ 1
-        Arrays.asList(types).add(type);
+        List<String> tempList = new LinkedList<>(Arrays.asList(types));
+        tempList.add(type);
+        types = tempList.toArray(new String[0]);
         production.getLeftState().addAttribute("types", new ListAttribute(types));
         String newNumElem = String.valueOf(Integer.parseInt(numElem) + 1);
         production.getLeftState().addAttribute("numElem", new SimpleAttribute(newNumElem));

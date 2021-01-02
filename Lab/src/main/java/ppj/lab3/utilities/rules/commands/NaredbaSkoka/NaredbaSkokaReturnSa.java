@@ -19,7 +19,7 @@ public class NaredbaSkokaReturnSa implements Action {
         RuleFactory ruleFactory= RuleFactory.getRuleFactory();
         Action action= ruleFactory.getRuleMap().get(productionToCheck);
         action.checkProduction(productionToCheck,scope);
-        NonTerminalSymbol expression = (NonTerminalSymbol) production.getRightStates().get(0);
+        NonTerminalSymbol expression = (NonTerminalSymbol) production.getRightStates().get(1);
         String izrazType = expression.getAttributeMap().get("type").getAttribute().toString();
 
         //2. naredba se nalazi unutar funkcije tipa funkcija(params → pov) i vrijedi
@@ -29,7 +29,7 @@ public class NaredbaSkokaReturnSa implements Action {
         if(commandType == null || !commandType.contains("funkcija"))
             throw new SemanticException(production.toString());
         String trimmedType = commandType.substring(commandType.indexOf(">") + 1, commandType.length()-1).trim();
-        if(!implicitCast(izrazType,commandType))
+        if(!implicitCast(izrazType,trimmedType))
             throw new SemanticException(production.toString());
     }
 }

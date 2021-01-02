@@ -30,7 +30,9 @@ public class InitDeklaratorSa implements Action {
         action.checkProduction(productionToCheck,scope);
         NonTerminalSymbol expression = (NonTerminalSymbol) production.getRightStates().get(0);
         String deklaratorType = expression.getAttributeMap().get("type").getAttribute().toString();
-        String deklaratorNumElem = expression.getAttributeMap().get("numElem").getAttribute().toString();
+        String deklaratorNumElem = "";
+        if(deklaratorType.startsWith("niz"))
+            deklaratorNumElem = expression.getAttributeMap().get("numElem").getAttribute().toString();
 
         //2. provjeri(<incijalizator>)
         productionToCheck = new SemanticProduction(production.getRightStateNodes().get(2));
@@ -38,8 +40,12 @@ public class InitDeklaratorSa implements Action {
         action.checkProduction(productionToCheck,scope);
         expression = (NonTerminalSymbol) production.getRightStates().get(2);
         String inicijalizatorType = expression.getAttributeMap().get("type").getAttribute().toString();
-        String inicijalizatorNumElem = expression.getAttributeMap().get("numElem").getAttribute().toString();
-        String[] inicijalizatorTypes = (String[]) expression.getAttributeMap().get("types").getAttribute();
+        String inicijalizatorNumElem = "";
+        String[] inicijalizatorTypes = new String[]{};
+        if(deklaratorType.startsWith("niz")) {
+            inicijalizatorNumElem = expression.getAttributeMap().get("numElem").getAttribute().toString();
+            inicijalizatorTypes = (String[]) expression.getAttributeMap().get("types").getAttribute();
+        }
 
         //3. ako je <izravni_deklarator>.tip T ili const(T)
         //<inicijalizator>.tip ∼ T
@@ -47,15 +53,24 @@ public class InitDeklaratorSa implements Action {
         //<inicijalizator>.br-elem ≤ <izravni_deklarator>.br-elem
         //za svaki U iz <inicijalizator>.tipovi vrijedi U ∼ T
         //inace greska
+        String T;
         String[] acceptableTypes = new String[] {"int","char","const(int)","const(char)"};
         if(Arrays.asList(acceptableTypes).contains(deklaratorType)) {
-            if(!implicitCast(inicijalizatorType,"int") || !implicitCast(inicijalizatorType,"char"))
+            if(!deklaratorType.startsWith("const"))
+                T = deklaratorType;
+            else
+                T = deklaratorType.substring(6, deklaratorType.length()-1);
+            if(!implicitCast(inicijalizatorType,T))
                 throw new SemanticException(production.toString());
         } else if(deklaratorType.startsWith("niz")){
+            if(deklaratorType.contains("const"))
+                T = deklaratorType.substring(10, deklaratorType.length()-2);
+            else
+                T = deklaratorType.substring(4, deklaratorType.length()-1);
             if(!(Integer.parseInt(inicijalizatorNumElem) <= Integer.parseInt(deklaratorNumElem)))
                 throw new SemanticException(production.toString());
             for(String s : inicijalizatorTypes)
-                if(!implicitCast(s,"int") || !implicitCast(s,"char"))
+                if(!implicitCast(s,T))
                     throw new SemanticException(production.toString());
         } else {
             throw new SemanticException(production.toString());
