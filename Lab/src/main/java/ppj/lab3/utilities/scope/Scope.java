@@ -1,9 +1,9 @@
 package ppj.lab3.utilities.scope;
 
-import ppj.lab3.utilities.symbols.Symbol;
-
-import java.util.HashSet;
-import java.util.Set;
+import java.nio.charset.StandardCharsets;
+import java.util.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * @author MatejCubek, FraneB
@@ -12,13 +12,36 @@ import java.util.Set;
  */
 public class Scope {
     private final Scope parent;
+    private final Set<Scope> children;
 
     private final Set<ScopeElement> elements;
 
-    public Scope(Scope parent) {
-        this.parent = parent;
-        this.elements = new HashSet<>();
+    public Scope() {
+        this(null);
     }
+
+    public Scope(Scope parent, Scope... children) {
+        this.parent = parent;
+
+        this.elements = new HashSet<>();
+        this.children = new HashSet<>();
+        if (children.length > 0)
+            this.children.addAll(Arrays.asList(children));
+
+        addChildrenToParent();
+    }
+
+    private void addChildrenToParent() {
+        if (parent == null) return;
+
+        parent.addChildren(this);
+    }
+
+    public void addChildren(Scope... children) {
+        if (children != null)
+            this.children.addAll(Arrays.asList(children));
+    }
+
 
     public void addScopeElement(ScopeElement element) {
         elements.add(element);
@@ -33,12 +56,12 @@ public class Scope {
     }
 
     public ScopeElement isDeclared(String name) {
-        for(ScopeElement element : this.elements) {
-            if(element.getName().equals(name))
+        for (ScopeElement element : this.elements) {
+            if (element.getName().equals(name))
                 return element;
         }
-        if(parent != null)
-         return parent.isDeclared(name);
+        if (parent != null)
+            return parent.isDeclared(name);
         return null;
     }
 
@@ -49,13 +72,15 @@ public class Scope {
 
         Scope scope = (Scope) o;
 
-        if (! parent.equals(scope.parent)) return false;
+        if (parent != null ? ! parent.equals(scope.parent) : scope.parent != null) return false;
+        if (! children.equals(scope.children)) return false;
         return elements.equals(scope.elements);
     }
 
     @Override
     public int hashCode() {
-        int result = parent.hashCode();
+        int result = parent != null ? parent.hashCode() : 0;
+        result = 31 * result + children.hashCode();
         result = 31 * result + elements.hashCode();
         return result;
     }
@@ -64,36 +89,77 @@ public class Scope {
     public String toString() {
         return "Scope{" +
                 "parent=" + parent +
+                ", children=" + children +
                 ", elements=" + elements +
                 '}';
     }
 
     public boolean isDefined(String name) {
-        for(ScopeElement element : this.elements) {
+        for (ScopeElement element : this.elements) {
             if (element.getName().equals(name) && element.isDefined())
                 return true;
         }
-        if(this.parent != null)
+        if (this.parent != null)
             return this.parent.isDefined(name);
         else
             return false;
     }
 
     public void addDefinition(String idnName, String type, boolean lExpression) {
-        ScopeElement scopeElement = new ScopeElement(idnName,type,lExpression,true);
+        ScopeElement scopeElement = new ScopeElement(idnName, type, lExpression, true);
         this.elements.add(scopeElement);
     }
 
     public ScopeElement isDeclaredLocally(String name) {
-        for(ScopeElement element : this.elements) {
-            if(element.getName().equals(name))
+        for (ScopeElement element : this.elements) {
+            if (element.getName().equals(name))
                 return element;
         }
         return null;
     }
 
-    //TODO dovrsiti ovu funkciju
     public boolean checkAllDefined() {
+        for (ScopeElement element : elements) {
+            boolean flag = true;
+            String value = element.getName();
+
+            switch (element.getType()) {
+                case "char":
+                    flag = charConstValid(value);
+                    break;
+                case "niz(const(char))":
+                    flag = charArrayValid(value);
+                    break;
+                default:
+            }
+            if (! flag) return false;
+        }
         return true;
+    }
+
+    public static boolean charConstValid(String charConst) {
+        if (charConst == null || charConst.length() > 2) return false;
+
+        if (charConst.startsWith("\\")) {
+            switch (charConst.charAt(1)) {
+                case 't':
+                case 'n':
+                case '0':
+                case '\'':
+                case '\"':
+                case '\\':
+                    break;
+                default:
+                    return false;
+
+            }
+        }
+        return StandardCharsets.US_ASCII.newEncoder().canEncode(charConst);
+    }
+
+    public static boolean charArrayValid(String charArray) {
+        Matcher matcher = Pattern.compile(".*\\\\[^tn0'\"\\\\].*").matcher(charArray);
+
+        return ! matcher.find() && StandardCharsets.US_ASCII.newEncoder().canEncode(charArray);
     }
 }
