@@ -39,7 +39,10 @@ public class InitDeklaratorSa implements Action {
         action= ruleFactory.getRuleMap().get(productionToCheck);
         action.checkProduction(productionToCheck,scope);
         expression = (NonTerminalSymbol) production.getRightStates().get(2);
-        String inicijalizatorType = expression.getAttributeMap().get("type").getAttribute().toString();
+        String[] acceptableTypes = new String[] {"int","char","const(int)","const(char)"};
+        String inicijalizatorType = "";
+        if(Arrays.asList(acceptableTypes).contains(deklaratorType))
+             inicijalizatorType = expression.getAttributeMap().get("type").getAttribute().toString();
         String inicijalizatorNumElem = "";
         String[] inicijalizatorTypes = new String[]{};
         if(deklaratorType.startsWith("niz")) {
@@ -54,7 +57,6 @@ public class InitDeklaratorSa implements Action {
         //za svaki U iz <inicijalizator>.tipovi vrijedi U ∼ T
         //inace greska
         String T;
-        String[] acceptableTypes = new String[] {"int","char","const(int)","const(char)"};
         if(Arrays.asList(acceptableTypes).contains(deklaratorType)) {
             if(!deklaratorType.startsWith("const"))
                 T = deklaratorType;

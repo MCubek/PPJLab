@@ -73,7 +73,9 @@ public class Node<T> {
     public int canGenerateNizZnakova() {
         if(this.value.equals(new TerminalSymbol("NIZ_ZNAKOVA", 0, new String[0]))) {
             TerminalSymbol symbol = (TerminalSymbol) this.value;
-            return symbol.getLexicalUnits()[0].length();
+            String lexicalUnit = symbol.getLexicalUnits()[0];
+            lexicalUnit = lexicalUnit.substring(1, lexicalUnit.length()-1);
+            return lexicalUnit.length();
         }
         if(this.children == null)
             return -1;
