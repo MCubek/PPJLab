@@ -2,7 +2,7 @@ package ppj.lab2.analizator;
 
 import ppj.lab2.utilities.Production;
 import ppj.lab2.utilities.actions.*;
-import ppj.lab2.utilities.Node;
+import ppj.utilities.Node;
 import ppj.lab2.utilities.NodeTreePrinter;
 import ppj.utilities.Pair;
 
