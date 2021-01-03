@@ -15,18 +15,18 @@ public class IzrazVise implements Action {
         //1. provjeri(<izraz>)
         SemanticProduction productionToCheck = new SemanticProduction(production.getRightStateNodes().get(0));
         RuleFactory ruleFactory= RuleFactory.getRuleFactory();
-        Action action= ruleFactory.getRuleMap().get(productionToCheck);
-        action.checkProduction(productionToCheck,scope);
+        Action action = ruleFactory.getRuleMap().get(productionToCheck);
+        action.checkProduction(productionToCheck, scope);
 
         //2. provjeri(<izraz_pridruzivanja>)
         productionToCheck = new SemanticProduction(production.getRightStateNodes().get(2));
-        action= ruleFactory.getRuleMap().get(productionToCheck);
-        action.checkProduction(productionToCheck,scope);
+        action = ruleFactory.getRuleMap().get(productionToCheck);
+        action.checkProduction(productionToCheck, scope);
         NonTerminalSymbol expression = (NonTerminalSymbol) production.getRightStates().get(2);
         String type = expression.getAttributeMap().get("type").getAttribute().toString();
 
-        //tip ← <izraz_pridruzivanja>.tip
-        //l-izraz ← 0
+        //tip <- <izraz_pridruzivanja>.tip
+        //l-izraz <- 0
         production.getLeftState().addAttribute("type", new SimpleAttribute(type));
         production.getLeftState().addAttribute("lExpression", new SimpleAttribute("false"));
     }

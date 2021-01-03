@@ -11,8 +11,6 @@ import ppj.lab3.utilities.symbols.NonTerminalSymbol;
 import java.util.Arrays;
 import java.util.List;
 
-import static ppj.lab3.utilities.rules.RuleFactory.implicitCast;
-
 public class PostfiksIzrazNiz implements Action {
 
 
@@ -30,26 +28,26 @@ public class PostfiksIzrazNiz implements Action {
         String[] X = {"niz(int)","niz(char)","niz(const(int))","niz(const(char))"};
         List<String> listX = Arrays.asList(X);
         String type = expression.getAttributeMap().get("type").getAttribute().toString();
-        if(!listX.contains(type)){
+        if (! listX.contains(type)) {
             throw new SemanticException(production.toString());
         }
 
         //3. provjeri(<izraz>)
         productionToCheck = new SemanticProduction(production.getRightStateNodes().get(2));
         action = ruleFactory.getRuleMap().get(productionToCheck);
-        action.checkProduction(productionToCheck,scope);
+        action.checkProduction(productionToCheck, scope);
         expression = (NonTerminalSymbol) production.getRightStates().get(2);
 
-        //4. <izraz>.tip ∼ int
-        if(!implicitCast(expression.getAttributeMap().get("type").getAttribute().toString(),"int")) {
+        //4. <izraz>.tip ?= int
+        if (! RuleFactory.implicitCast(expression.getAttributeMap().get("type").getAttribute().toString(), "int")) {
             throw new SemanticException(production.toString());
         }
 
-        //tip ← X
-        //l-izraz ← X != const(T)
-        String typeToAd = type.substring(4,type.length()-1);
+        //tip <- X
+        //l-izraz <- X != const(T)
+        String typeToAd = type.substring(4, type.length() - 1);
         production.getLeftState().addAttribute("type", new SimpleAttribute(typeToAd));
-        if(typeToAd.startsWith("const")) {
+        if (typeToAd.startsWith("const")) {
             production.getLeftState().addAttribute("lExpression", new SimpleAttribute("false"));
         } else {
             production.getLeftState().addAttribute("lExpression", new SimpleAttribute("true"));

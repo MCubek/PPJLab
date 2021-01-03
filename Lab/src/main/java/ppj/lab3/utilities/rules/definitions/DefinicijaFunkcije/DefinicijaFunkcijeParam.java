@@ -45,7 +45,7 @@ public class DefinicijaFunkcijeParam implements Action {
         String[] paramNames = (String[]) expression.getAttributeMap().get("names").getAttribute();
 
         //5. ako postoji deklaracija imena IDN.ime u globalnom djelokrugu onda je pripadni
-        //tip te deklaracije funkcija(<lista_parametara>.tipovi → <ime_tipa>.tip)
+        //tip te deklaracije funkcija(<lista_parametara>.tipovi -> <ime_tipa>.tip)
         Scope globalScope = scope;
         while(globalScope.getParent() != null)
             globalScope = globalScope.getParent();

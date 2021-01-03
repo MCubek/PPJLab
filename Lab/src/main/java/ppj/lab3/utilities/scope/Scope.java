@@ -1,9 +1,10 @@
 package ppj.lab3.utilities.scope;
 
-import ppj.lab3.SemanticException;
-
 import java.nio.charset.StandardCharsets;
-import java.util.*;
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Objects;
+import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 

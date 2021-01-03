@@ -29,17 +29,17 @@ public class ListaParametaraVise implements Action {
         //2. provjeri(<deklaracija_parametra>)
         productionToCheck = new SemanticProduction(production.getRightStateNodes().get(2));
         action = ruleFactory.getRuleMap().get(productionToCheck);
-        action.checkProduction(productionToCheck,scope);
+        action.checkProduction(productionToCheck, scope);
         expression = (NonTerminalSymbol) production.getRightStates().get(2);
         String deklName = expression.getAttributeMap().get("name").getAttribute().toString();
         String deklType = expression.getAttributeMap().get("type").getAttribute().toString();
 
         //3. <deklaracija_parametra>.ime ne postoji u <lista_parametara>.imena
-        if(Arrays.asList(names).contains(deklName))
+        if (Arrays.asList(names).contains(deklName))
             throw new SemanticException(production.toString());
 
-        //tipovi ← <lista_parametara>.tipovi + [ <deklaracija_parametra>.tip ]
-        //imena ← <lista_parametara>.imena + [ <deklaracija_parametra>.ime ]
+        //tipovi <- <lista_parametara>.tipovi + [ <deklaracija_parametra>.tip ]
+        //imena <- <lista_parametara>.imena + [ <deklaracija_parametra>.ime ]
 
         List<String> tempNamesList = new LinkedList<>(Arrays.asList(names));
         List<String> tempTypesList = new LinkedList<>(Arrays.asList(types));

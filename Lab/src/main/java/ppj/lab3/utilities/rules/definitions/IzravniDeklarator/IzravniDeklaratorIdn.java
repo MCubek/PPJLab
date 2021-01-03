@@ -6,7 +6,6 @@ import ppj.lab3.utilities.attributes.SimpleAttribute;
 import ppj.lab3.utilities.rules.Action;
 import ppj.lab3.utilities.scope.Scope;
 import ppj.lab3.utilities.scope.ScopeElement;
-import ppj.lab3.utilities.symbols.NonTerminalSymbol;
 import ppj.lab3.utilities.symbols.TerminalSymbol;
 
 public class IzravniDeklaratorIdn implements Action {
@@ -28,7 +27,7 @@ public class IzravniDeklaratorIdn implements Action {
         //3. zabiljezi deklaraciju IDN.ime s odgovarajucim tipom
         scope.addScopeElement(new ScopeElement(idnName, ntype, true, false));
 
-        //tip ← ntip
+        //tip <- ntip
         production.getLeftState().addAttribute("type", new SimpleAttribute(ntype));
     }
 }

@@ -17,20 +17,20 @@ public class PostfiksIzrazFunction implements Action {
         SemanticProduction productionToCheck = new SemanticProduction(production.getRightStateNodes().get(0));
         //pozovi funkciju iz mape
         RuleFactory ruleFactory= RuleFactory.getRuleFactory();
-        Action action= ruleFactory.getRuleMap().get(productionToCheck);
-        action.checkProduction(productionToCheck,scope);
+        Action action = ruleFactory.getRuleMap().get(productionToCheck);
+        action.checkProduction(productionToCheck, scope);
         NonTerminalSymbol expression = (NonTerminalSymbol) production.getRightStates().get(0);
 
-        //2. <postfiks_izraz>.tip = funkcija(void → pov)
+        //2. <postfiks_izraz>.tip = funkcija(void -> pov)
         String type = expression.getAttributeMap().get("type").getAttribute().toString();
-        if(!type.contains("funkcija(void")) {
+        if (! type.contains("funkcija(void")) {
             throw new SemanticException(production.toString());
         }
 
-        //tip ← pov
-        //l-izraz ← 0
-        String pov = type.replace("funkcija(void -> ","");
-        pov = pov.substring(0,pov.length()-1);
+        //tip <- pov
+        //l-izraz <- 0
+        String pov = type.replace("funkcija(void -> ", "");
+        pov = pov.substring(0, pov.length() - 1);
         production.getLeftState().addAttribute("type", new SimpleAttribute(pov));
         production.getLeftState().addAttribute("lExpression", new SimpleAttribute("false"));
 

@@ -8,8 +8,6 @@ import ppj.lab3.utilities.rules.RuleFactory;
 import ppj.lab3.utilities.scope.Scope;
 import ppj.lab3.utilities.symbols.NonTerminalSymbol;
 
-import static ppj.lab3.utilities.rules.RuleFactory.implicitCast;
-
 public class PostfiksIzrazInc implements Action {
 
 
@@ -23,17 +21,17 @@ public class PostfiksIzrazInc implements Action {
         action.checkProduction(productionToCheck,scope);
         NonTerminalSymbol expression = (NonTerminalSymbol) production.getRightStates().get(0);
 
-        //2. <postfiks_izraz>.l-izraz = 1 i <postfiks_izraz>.tip ∼ int
+        //2. <postfiks_izraz>.l-izraz = 1 i <postfiks_izraz>.tip ?= int
         String lExpression = expression.getAttributeMap().get("lExpression").getAttribute().toString();
         String type = expression.getAttributeMap().get("type").getAttribute().toString();
 
-        if(!lExpression.equals("true") && !implicitCast(type,"int")) {
+        if (! lExpression.equals("true") && ! RuleFactory.implicitCast(type, "int")) {
             throw new SemanticException(production.toString());
         }
 
-        //tip ← int
-        //l-izraz ← 0
-        production.getLeftState().addAttribute("type",new SimpleAttribute("int"));
+        //tip <- int
+        //l-izraz <- 0
+        production.getLeftState().addAttribute("type", new SimpleAttribute("int"));
         production.getLeftState().addAttribute("lExpression", new SimpleAttribute("false"));
     }
 }

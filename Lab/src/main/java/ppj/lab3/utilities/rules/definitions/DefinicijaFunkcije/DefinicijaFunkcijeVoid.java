@@ -34,7 +34,7 @@ public class DefinicijaFunkcijeVoid implements Action {
             throw new SemanticException(production.toString());
 
         //4. ako postoji deklaracija imena IDN.ime u globalnom djelokrugu onda je pripadni
-        //tip te deklaracije funkcija(void → <ime_tipa>.tip)
+        //tip te deklaracije funkcija(void -> <ime_tipa>.tip)
         Scope globalScope = scope;
         while(globalScope.getParent() != null)
             globalScope = globalScope.getParent();

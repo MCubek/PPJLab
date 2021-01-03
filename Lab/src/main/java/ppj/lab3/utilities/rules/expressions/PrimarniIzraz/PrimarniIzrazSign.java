@@ -14,11 +14,11 @@ public class PrimarniIzrazSign implements Action {
         //1. znak je ispravan po 4.3.2
         TerminalSymbol sign = (TerminalSymbol) production.getRightStates().get(0);
 
-        if(!Scope.charConstValid(sign.getLexicalUnits()[0]))
+        if (! Scope.charConstValid(sign.getLexicalUnits()[0]))
             throw new SemanticException(production.toString());
 
-        //tip ← char
-        //l-izraz ← 0
+        //tip <- char
+        //l-izraz <- 0
         production.getLeftState().addAttribute("type", new SimpleAttribute("char"));
         production.getLeftState().addAttribute("lExpression", new SimpleAttribute("false"));
     }

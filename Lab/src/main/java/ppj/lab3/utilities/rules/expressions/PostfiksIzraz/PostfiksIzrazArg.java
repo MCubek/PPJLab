@@ -9,8 +9,6 @@ import ppj.lab3.utilities.rules.RuleFactory;
 import ppj.lab3.utilities.scope.Scope;
 import ppj.lab3.utilities.symbols.NonTerminalSymbol;
 
-import static ppj.lab3.utilities.rules.RuleFactory.implicitCast;
-
 public class PostfiksIzrazArg implements Action {
 
 
@@ -31,9 +29,9 @@ public class PostfiksIzrazArg implements Action {
         action.checkProduction(productionToCheck,scope);
         expression = (NonTerminalSymbol) production.getRightStates().get(2);
 
-        //3. <postfiks_izraz>.tip = funkcija(params → pov) i redom po elementima
+        //3. <postfiks_izraz>.tip = funkcija(params -> pov) i redom po elementima
         //arg-tip iz <lista_argumenata>.tipovi i param-tip iz params vrijedi arg-tip
-        //∼ param-tip
+        //?= param-tip
         if(!typePostfix.contains("funkcija(")) {
             throw new SemanticException(production.toString());
         }
@@ -44,9 +42,9 @@ public class PostfiksIzrazArg implements Action {
         ListAttribute argTypesAttribute = (ListAttribute) expression.getAttributeMap().get("types");
         String[] argTypes = (String[]) argTypesAttribute.getAttribute();
 
-        if(params.length == argTypes.length) {
-            for(int i = 0; i < params.length; i++) {
-                if(!implicitCast(argTypes[i],params[i].trim())) {
+        if (params.length == argTypes.length) {
+            for (int i = 0; i < params.length; i++) {
+                if (! RuleFactory.implicitCast(argTypes[i], params[i].trim())) {
                     throw new SemanticException(production.toString());
                 }
             }
@@ -54,9 +52,9 @@ public class PostfiksIzrazArg implements Action {
             throw new SemanticException(production.toString());
         }
 
-        //tip ← pov
-        //l-izraz ← 0
-        String pov = typePostfix.substring(typePostfix.indexOf(">") + 1, typePostfix.length()-1).trim();
+        //tip <- pov
+        //l-izraz <- 0
+        String pov = typePostfix.substring(typePostfix.indexOf(">") + 1, typePostfix.length() - 1).trim();
         production.getLeftState().addAttribute("type", new SimpleAttribute(pov));
         production.getLeftState().addAttribute("lExpression", new SimpleAttribute("false"));
 

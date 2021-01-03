@@ -26,7 +26,7 @@ public class ImeTipaConst implements Action {
             throw new SemanticException(production.toString());
         }
 
-        //tip ← const(<specifikator_tipa>.tip)
+        //tip <- const(<specifikator_tipa>.tip)
         type = "const(" + type + ")";
         production.getLeftState().addAttribute("type",new SimpleAttribute(type));
     }

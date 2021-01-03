@@ -14,7 +14,7 @@ public class InitDeklaratorBez implements Action {
     @Override
     public void checkProduction(SemanticProduction production, Scope scope) {
         //1. provjeri(<izravni_deklarator>) uz nasljedno svojstvo
-        //<izravni_deklarator>.ntip ← <init_deklarator>.ntip
+        //<izravni_deklarator>.ntip <- <init_deklarator>.ntip
         String listaNTip = production.getLeftState().getAttributeMap().get("ntype").getAttribute().toString();
         NonTerminalSymbol izravniDeklarator = (NonTerminalSymbol) production.getRightStates().get(0);
         izravniDeklarator.addAttribute("ntype", new SimpleAttribute(listaNTip));

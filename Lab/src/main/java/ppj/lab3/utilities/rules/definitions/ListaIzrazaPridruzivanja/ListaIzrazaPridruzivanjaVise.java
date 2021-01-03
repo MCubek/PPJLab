@@ -28,13 +28,13 @@ public class ListaIzrazaPridruzivanjaVise implements Action {
 
         //2. provjeri(<izraz_pridruzivanja>)
         productionToCheck = new SemanticProduction(production.getRightStateNodes().get(2));
-        action= ruleFactory.getRuleMap().get(productionToCheck);
-        action.checkProduction(productionToCheck,scope);
+        action = ruleFactory.getRuleMap().get(productionToCheck);
+        action.checkProduction(productionToCheck, scope);
         expression = (NonTerminalSymbol) production.getRightStates().get(2);
         String type = expression.getAttributeMap().get("type").getAttribute().toString();
 
-        //tipovi ← <lista_izraza_pridruzivanja>.tipovi + [ <izraz_pridruzivanja>.tip ]
-        //br-elem ← <lista_izraza_pridruzivanja>.br-elem+ 1
+        //tipovi <- <lista_izraza_pridruzivanja>.tipovi + [ <izraz_pridruzivanja>.tip ]
+        //br-elem <- <lista_izraza_pridruzivanja>.br-elem+ 1
         List<String> tempList = new LinkedList<>(Arrays.asList(types));
         tempList.add(type);
         types = tempList.toArray(new String[0]);

@@ -19,7 +19,7 @@ public class IzrazNaredbaSa implements Action {
         action.checkProduction(productionToCheck,scope);
         NonTerminalSymbol symbol = (NonTerminalSymbol) production.getRightStates().get(0);
 
-        //tip ← <izraz>.tip
+        //tip <- <izraz>.tip
         production.getLeftState().addAttribute("type", new SimpleAttribute(symbol.getAttributeMap().get("type").getAttribute().toString()));
     }
 }

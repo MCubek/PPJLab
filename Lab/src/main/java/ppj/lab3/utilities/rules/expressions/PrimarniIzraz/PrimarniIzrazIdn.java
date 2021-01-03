@@ -6,7 +6,6 @@ import ppj.lab3.utilities.attributes.SimpleAttribute;
 import ppj.lab3.utilities.rules.Action;
 import ppj.lab3.utilities.scope.Scope;
 import ppj.lab3.utilities.scope.ScopeElement;
-import ppj.lab3.utilities.symbols.Symbol;
 import ppj.lab3.utilities.symbols.TerminalSymbol;
 
 public class PrimarniIzrazIdn implements Action {
@@ -18,8 +17,8 @@ public class PrimarniIzrazIdn implements Action {
         //1. IDN.ime je deklarirano
         ScopeElement foundElement = scope.isDeclared(name);
         if(foundElement != null) {
-            //tip ← IDN.tip
-            //l-izraz ← IDN.l-izraz
+            //tip <- IDN.tip
+            //l-izraz <- IDN.l-izraz
             production.getLeftState().addAttribute("type", new SimpleAttribute(foundElement.getType()));
             production.getLeftState().addAttribute("lExpression", new SimpleAttribute(String.valueOf(foundElement.isLExpression())));
         } else {

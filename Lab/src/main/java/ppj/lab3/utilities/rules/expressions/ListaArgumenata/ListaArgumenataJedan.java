@@ -19,7 +19,7 @@ public class ListaArgumenataJedan implements Action {
         action.checkProduction(productionToCheck,scope);
         NonTerminalSymbol expression = (NonTerminalSymbol) production.getRightStates().get(0);
 
-        //tipovi ← [ <izraz_pridruzivanja>.tip ]
+        //tipovi <- [ <izraz_pridruzivanja>.tip ]
         String type = expression.getAttributeMap().get("type").getAttribute().toString();
         production.getLeftState().addAttribute("types", new ListAttribute(type));
     }

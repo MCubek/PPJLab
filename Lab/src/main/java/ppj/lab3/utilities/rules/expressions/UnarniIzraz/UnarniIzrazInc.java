@@ -8,8 +8,6 @@ import ppj.lab3.utilities.rules.RuleFactory;
 import ppj.lab3.utilities.scope.Scope;
 import ppj.lab3.utilities.symbols.NonTerminalSymbol;
 
-import static ppj.lab3.utilities.rules.RuleFactory.implicitCast;
-
 public class UnarniIzrazInc implements Action {
 
 
@@ -19,18 +17,18 @@ public class UnarniIzrazInc implements Action {
         SemanticProduction productionToCheck = new SemanticProduction(production.getRightStateNodes().get(1));
         RuleFactory ruleFactory= RuleFactory.getRuleFactory();
         Action action= ruleFactory.getRuleMap().get(productionToCheck);
-        action.checkProduction(productionToCheck,scope);
+        action.checkProduction(productionToCheck, scope);
         NonTerminalSymbol expression = (NonTerminalSymbol) production.getRightStates().get(1);
 
-        //2. <unarni_izraz>.l-izraz = 1 i <unarni_izraz>.tip ∼ int
+        //2. <unarni_izraz>.l-izraz = 1 i <unarni_izraz>.tip ?= int
         String lExpression = expression.getAttributeMap().get("lExpression").getAttribute().toString();
         String type = expression.getAttributeMap().get("type").getAttribute().toString();
-        if(!lExpression.equals("true") && !implicitCast(type,"int")) {
+        if (! lExpression.equals("true") && ! RuleFactory.implicitCast(type, "int")) {
             throw new SemanticException(production.toString());
         }
 
-        //tip ← int
-        //l-izraz ← 0
+        //tip <- int
+        //l-izraz <- 0
         production.getLeftState().addAttribute("type", new SimpleAttribute("int"));
         production.getLeftState().addAttribute("lExpression", new SimpleAttribute("false"));
     }

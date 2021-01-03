@@ -31,7 +31,7 @@ public class ListaArgumenataVise implements Action {
         expression = (NonTerminalSymbol) production.getRightStates().get(2);
         String type = expression.getAttributeMap().get("type").getAttribute().toString();
 
-        //tipovi ← <lista_argumenata>.tipovi + [ <izraz_pridruzivanja>.tip ]
+        //tipovi <- <lista_argumenata>.tipovi + [ <izraz_pridruzivanja>.tip ]
         List<String> supportList = new LinkedList<>(Arrays.asList(types));
         supportList.add(type);
         types = supportList.toArray(new String[0]);

@@ -10,8 +10,6 @@ import ppj.lab3.utilities.scope.ScopeElement;
 import ppj.lab3.utilities.symbols.NonTerminalSymbol;
 import ppj.lab3.utilities.symbols.TerminalSymbol;
 
-import java.util.Arrays;
-
 public class IzravniDeklaratorFuncParam implements Action {
 
 
@@ -26,7 +24,7 @@ public class IzravniDeklaratorFuncParam implements Action {
         String[] types = (String[]) expression.getAttributeMap().get("types").getAttribute();
 
         //2. ako je IDN.ime deklarirano u lokalnom djelokrugu, tip prethodne deklaracije
-        //je jednak funkcija(<lista_parametara>.tipovi → ntip)
+        //je jednak funkcija(<lista_parametara>.tipovi -> ntip)
         String ntype = production.getLeftState().getAttributeMap().get("ntype").getAttribute().toString();
         TerminalSymbol idn = (TerminalSymbol) production.getRightStates().get(0);
         String idnName = idn.getLexicalUnits()[0];
@@ -47,7 +45,7 @@ public class IzravniDeklaratorFuncParam implements Action {
             scope.addScopeElement(new ScopeElement(idnName, checkType.toString(), false, false));
         }
 
-        //4. tip ← funkcija(<lista_parametara>.tipovi → ntip)
+        //4. tip <- funkcija(<lista_parametara>.tipovi -> ntip)
         production.getLeftState().addAttribute("type", new SimpleAttribute(checkType.toString()));
     }
 }
