@@ -15,12 +15,13 @@ class ScopeTest {
         char[] array = {'t', 'n', '0', '\'', '"', '\\'};
 
         for (char c : array) {
-            assertTrue(Scope.charConstValid("\\" + c));
+            assertTrue(Scope.charConstValid("'\\" + c +
+                    "'"));
         }
 
-        assertTrue(Scope.charConstValid("d"));
+        assertTrue(Scope.charConstValid("'d'"));
 
-        assertFalse(Scope.charConstValid("\\x"));
+        assertFalse(Scope.charConstValid("'\\x'"));
     }
 
     @Test
