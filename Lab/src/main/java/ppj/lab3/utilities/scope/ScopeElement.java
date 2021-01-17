@@ -52,11 +52,6 @@ public class ScopeElement {
 
     @Override
     public String toString() {
-        return "ScopeElement{" +
-                "name='" + name + '\'' +
-                ", type='" + type + '\'' +
-                ", isLExpression=" + isLExpression +
-                ", isDefined=" + isDefined +
-                '}';
+        return "ScopeElement";
     }
 }

@@ -15,6 +15,7 @@ import java.io.InputStreamReader;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.Map;
 
 /**
@@ -31,6 +32,8 @@ public class GeneratorKoda {
     public static String MOD_LABEL = "F_MOD";
     public static String MAIN_LABEL = "F_MAIN";
     public static Map<String, Integer> constants = new HashMap<>();
+    public static LinkedList<String> returnLabels = new LinkedList<>();
+    public static LinkedList<String> breakLabels = new LinkedList<>();
 
     private static int labelCounter = 0;
 
@@ -58,7 +61,7 @@ public class GeneratorKoda {
         }
 
         addDefaultFunctions();
-        addConstants();
+        addConstantsAndGlobalVars();
 
         return codeBuilder.toString();
     }
@@ -179,13 +182,16 @@ public class GeneratorKoda {
         codeBuilder.addCommand("RET");
     }
 
-    private void addConstants() {
+    private void addConstantsAndGlobalVars() {
         for (Map.Entry<String, Integer> entry : constants.entrySet()) {
             codeBuilder.addCommandWithLabel(getConstantLabel(entry.getKey()),
                     "DW %D " + entry.getValue());
         }
     }
 
+    public static String getGlobalLabel(String name) {
+        return String.format("G_%S", name);
+    }
 
     public static String getFunctionLabel(String name) {
         return String.format("F_%S", name.toUpperCase());

@@ -83,11 +83,7 @@ public class Scope {
 
     @Override
     public String toString() {
-        return "Scope{" +
-                "parent=" + parent +
-                ", children=" + children +
-                ", elements=" + elements +
-                '}';
+        return "Scope";
     }
 
     public boolean isDefined(String name) {
