@@ -25,14 +25,14 @@ import java.util.Map;
 public class GeneratorKoda {
     private final Node<Symbol> root;
 
-    public CodeBuilder codeBuilder;
+    public static CodeBuilder codeBuilder;
     public static String MUL_LABEL = "F_MUL";
     public static String DIV_LABEL = "F_DIV";
     public static String MOD_LABEL = "F_MOD";
     public static String MAIN_LABEL = "F_MAIN";
-    public Map<String, Integer> constants = new HashMap<>();
+    public static Map<String, Integer> constants = new HashMap<>();
 
-    private int labelCounter = 0;
+    private static int labelCounter = 0;
 
     public GeneratorKoda(BufferedReader bufferedReader) {
         this.root = TreeParser.generateNodeTree(bufferedReader.lines()
@@ -67,6 +67,7 @@ public class GeneratorKoda {
         codeBuilder.addCommand("MOVE 40000, R7");
         codeBuilder.addCommand("CALL " + MAIN_LABEL);
         codeBuilder.addCommand("HALT");
+        codeBuilder.addEmptyLine();
     }
 
     private void addDefaultFunctions() {
@@ -76,10 +77,12 @@ public class GeneratorKoda {
     }
 
     private void multiplyFunction() {
+        codeBuilder.addEmptyLine();
+
         codeBuilder.addCommandWithLabel(MUL_LABEL, "PUSH R0");
         codeBuilder.addCommand("PUSH R1");
 
-        codeBuilder.addCommand("LOAD R0, (R7+C)");
+        codeBuilder.addCommand("LOAD R0, (R7+0C)");
         codeBuilder.addCommand("LOAD R1, (R7+10)");
 
         codeBuilder.addCommand("MOVE 0, R6");
@@ -96,14 +99,16 @@ public class GeneratorKoda {
     }
 
     private void divideFunction() {
+        codeBuilder.addEmptyLine();
+
         codeBuilder.addCommandWithLabel(DIV_LABEL, "PUSH R0");
         codeBuilder.addCommand("PUSH R1");
         codeBuilder.addCommand("PUSH R2");
 
         //Dijeljenik
-        codeBuilder.addCommand("LOAD R1, (R7+10)");
+        codeBuilder.addCommand("LOAD R1, (R7+14)");
         //Dijelitelj
-        codeBuilder.addCommand("LOAD R2, (R7+14)");
+        codeBuilder.addCommand("LOAD R2, (R7+10)");
 
         //R0 je boolean za negativno
         codeBuilder.addCommand("MOVE 0, R0");
@@ -123,10 +128,7 @@ public class GeneratorKoda {
         codeBuilder.addCommand("ADD R1, 1, R1");
 
         codeBuilder.addCommandWithLabel(firstPositive, "CMP R2, 0");
-        codeBuilder.addCommand("JP_SGT ");
-
-        codeBuilder.addCommand("CMP R2, 0");
-        codeBuilder.addCommand("JP_SLT " + allPositive);
+        codeBuilder.addCommand("JP_SGT " + allPositive);
 
         codeBuilder.addCommand("XOR R0, 1 , R0");
         codeBuilder.addCommand("XOR R2, -1, R2");
@@ -150,20 +152,20 @@ public class GeneratorKoda {
     }
 
     private void moduloFunction() {
-        codeBuilder.addCommandWithLabel(MOD_LABEL, "PUSH R0");
-        codeBuilder.addCommand("PUSH R1");
+        codeBuilder.addEmptyLine();
+
+        codeBuilder.addCommandWithLabel(MOD_LABEL, "PUSH R1");
         codeBuilder.addCommand("PUSH R2");
 
         //Dijeljenik
         codeBuilder.addCommand("LOAD R1, (R7+10)");
         //Dijelitelj
-        codeBuilder.addCommand("LOAD R2, (R7+14)");
+        codeBuilder.addCommand("LOAD R2, (R7+0C)");
 
         codeBuilder.addCommand("PUSH R1");
         codeBuilder.addCommand("PUSH R2");
         codeBuilder.addCommand("CALL " + DIV_LABEL);
-        codeBuilder.addCommand("POP R2");
-        codeBuilder.addCommand("POP R1");
+        codeBuilder.addCommand("ADD R7, 8, R7");
 
         codeBuilder.addCommand("PUSH R6");
         codeBuilder.addCommand("PUSH R2");
@@ -174,7 +176,6 @@ public class GeneratorKoda {
 
         codeBuilder.addCommand("POP R2");
         codeBuilder.addCommand("POP R1");
-        codeBuilder.addCommand("POP R0");
         codeBuilder.addCommand("RET");
     }
 
@@ -186,15 +187,15 @@ public class GeneratorKoda {
     }
 
 
-    public String getFunctionLabel(String name) {
+    public static String getFunctionLabel(String name) {
         return String.format("F_%S", name.toUpperCase());
     }
 
-    public String getConstantLabel(String name) {
+    public static String getConstantLabel(String name) {
         return String.format("C_%S", name.toUpperCase());
     }
 
-    public String getNextLabel() {
+    public static String getNextLabel() {
         return "L_" + labelCounter++;
     }
 
