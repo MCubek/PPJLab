@@ -59,6 +59,5 @@ public class DefinicijaFunkcijeVoid implements Action {
         action = ruleFactory.getRuleMap().get(productionToCheck);
         action.checkProduction(productionToCheck, scope);
 
-        GeneratorKoda.codeBuilder.addCommand("RET");
     }
 }

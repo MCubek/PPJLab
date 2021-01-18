@@ -25,7 +25,7 @@ class GeneratorKodaTest {
         String result = runFRISC(generatorKoda.getAssembly());
         String expected = Files.readString(root.resolve("test.out"));
         System.out.println("Expected: " + expected);
-        assertEquals(expected, result);
+        assertEquals(expected.trim(), result.trim());
     }
 
     @Test
@@ -36,7 +36,7 @@ class GeneratorKodaTest {
         String result = runFRISC(generatorKoda.getAssembly());
         String expected = Files.readString(root.resolve("test.out"));
         System.out.println("Expected: " + expected);
-        assertEquals(expected, result);
+        assertEquals(expected.trim(), result.trim());
     }
 
     @Test
@@ -47,7 +47,7 @@ class GeneratorKodaTest {
         String result = runFRISC(generatorKoda.getAssembly());
         String expected = Files.readString(root.resolve("test.out"));
         System.out.println("Expected: " + expected);
-        assertEquals(expected, result);
+        assertEquals(expected.trim(), result.trim());
     }
 
     @Test
@@ -58,7 +58,7 @@ class GeneratorKodaTest {
         String result = runFRISC(generatorKoda.getAssembly());
         String expected = Files.readString(root.resolve("test.out"));
         System.out.println("Expected: " + expected);
-        assertEquals(expected, result);
+        assertEquals(expected.trim(), result.trim());
     }
 
     @Test
@@ -69,7 +69,7 @@ class GeneratorKodaTest {
         String result = runFRISC(generatorKoda.getAssembly());
         String expected = Files.readString(root.resolve("test.out"));
         System.out.println("Expected: " + expected);
-        assertEquals(expected, result);
+        assertEquals(expected.trim(), result.trim());
     }
 
     @Test
@@ -80,7 +80,7 @@ class GeneratorKodaTest {
         String result = runFRISC(generatorKoda.getAssembly());
         String expected = Files.readString(root.resolve("test.out"));
         System.out.println("Expected: " + expected);
-        assertEquals(expected, result);
+        assertEquals(expected.trim(), result.trim());
     }
 
     @Test
@@ -91,7 +91,7 @@ class GeneratorKodaTest {
         String result = runFRISC(generatorKoda.getAssembly());
         String expected = Files.readString(root.resolve("test.out"));
         System.out.println("Expected: " + expected);
-        assertEquals(expected, result);
+        assertEquals(expected.trim(), result.trim());
     }
 
     @Test
@@ -102,7 +102,7 @@ class GeneratorKodaTest {
         String result = runFRISC(generatorKoda.getAssembly());
         String expected = Files.readString(root.resolve("test.out"));
         System.out.println("Expected: " + expected);
-        assertEquals(expected, result);
+        assertEquals(expected.trim(), result.trim());
     }
 
     @Test
@@ -113,7 +113,7 @@ class GeneratorKodaTest {
         String result = runFRISC(generatorKoda.getAssembly());
         String expected = Files.readString(root.resolve("test.out"));
         System.out.println("Expected: " + expected);
-        assertEquals(expected, result);
+        assertEquals(expected.trim(), result.trim());
     }
 
     @Test
@@ -124,7 +124,7 @@ class GeneratorKodaTest {
         String result = runFRISC(generatorKoda.getAssembly());
         String expected = Files.readString(root.resolve("test.out"));
         System.out.println("Expected: " + expected);
-        assertEquals(expected, result);
+        assertEquals(expected.trim(), result.trim());
     }
 
     @Test
@@ -135,7 +135,7 @@ class GeneratorKodaTest {
         String result = runFRISC(generatorKoda.getAssembly());
         String expected = Files.readString(root.resolve("test.out"));
         System.out.println("Expected: " + expected);
-        assertEquals(expected, result);
+        assertEquals(expected.trim(), result.trim());
     }
 
     @Test
@@ -146,7 +146,7 @@ class GeneratorKodaTest {
         String result = runFRISC(generatorKoda.getAssembly());
         String expected = Files.readString(root.resolve("test.out"));
         System.out.println("Expected: " + expected);
-        assertEquals(expected, result);
+        assertEquals(expected.trim(), result.trim());
     }
 
     @Test
@@ -157,7 +157,7 @@ class GeneratorKodaTest {
         String result = runFRISC(generatorKoda.getAssembly());
         String expected = Files.readString(root.resolve("test.out"));
         System.out.println("Expected: " + expected);
-        assertEquals(expected, result);
+        assertEquals(expected.trim(), result.trim());
     }
 
     @Test
@@ -168,7 +168,7 @@ class GeneratorKodaTest {
         String result = runFRISC(generatorKoda.getAssembly());
         String expected = Files.readString(root.resolve("test.out"));
         System.out.println("Expected: " + expected);
-        assertEquals(expected, result);
+        assertEquals(expected.trim(), result.trim());
     }
 
     @Test
@@ -179,7 +179,7 @@ class GeneratorKodaTest {
         String result = runFRISC(generatorKoda.getAssembly());
         String expected = Files.readString(root.resolve("test.out"));
         System.out.println("Expected: " + expected);
-        assertEquals(expected, result);
+        assertEquals(expected.trim(), result.trim());
     }
 
     @Test
@@ -190,7 +190,7 @@ class GeneratorKodaTest {
         String result = runFRISC(generatorKoda.getAssembly());
         String expected = Files.readString(root.resolve("test.out"));
         System.out.println("Expected: " + expected);
-        assertEquals(expected, result);
+        assertEquals(expected.trim(), result.trim());
     }
 
     @Test
@@ -201,7 +201,7 @@ class GeneratorKodaTest {
         String result = runFRISC(generatorKoda.getAssembly());
         String expected = Files.readString(root.resolve("test.out"));
         System.out.println("Expected: " + expected);
-        assertEquals(expected, result);
+        assertEquals(expected.trim(), result.trim());
     }
 
     @Test
@@ -212,7 +212,7 @@ class GeneratorKodaTest {
         String result = runFRISC(generatorKoda.getAssembly());
         String expected = Files.readString(root.resolve("test.out"));
         System.out.println("Expected: " + expected);
-        assertEquals(expected, result);
+        assertEquals(expected.trim(), result.trim());
     }
 
     @Test
@@ -223,7 +223,7 @@ class GeneratorKodaTest {
         String result = runFRISC(generatorKoda.getAssembly());
         String expected = Files.readString(root.resolve("test.out"));
         System.out.println("Expected: " + expected);
-        assertEquals(expected, result);
+        assertEquals(expected.trim(), result.trim());
     }
 
     @Test
@@ -234,7 +234,7 @@ class GeneratorKodaTest {
         String result = runFRISC(generatorKoda.getAssembly());
         String expected = Files.readString(root.resolve("test.out"));
         System.out.println("Expected: " + expected);
-        assertEquals(expected, result);
+        assertEquals(expected.trim(), result.trim());
     }
 
     @Test
@@ -245,7 +245,7 @@ class GeneratorKodaTest {
         String result = runFRISC(generatorKoda.getAssembly());
         String expected = Files.readString(root.resolve("test.out"));
         System.out.println("Expected: " + expected);
-        assertEquals(expected, result);
+        assertEquals(expected.trim(), result.trim());
     }
 
     @Test
@@ -256,7 +256,7 @@ class GeneratorKodaTest {
         String result = runFRISC(generatorKoda.getAssembly());
         String expected = Files.readString(root.resolve("test.out"));
         System.out.println("Expected: " + expected);
-        assertEquals(expected, result);
+        assertEquals(expected.trim(), result.trim());
     }
 
     @Test
@@ -267,7 +267,7 @@ class GeneratorKodaTest {
         String result = runFRISC(generatorKoda.getAssembly());
         String expected = Files.readString(root.resolve("test.out"));
         System.out.println("Expected: " + expected);
-        assertEquals(expected, result);
+        assertEquals(expected.trim(), result.trim());
     }
 
     @Test
@@ -278,7 +278,7 @@ class GeneratorKodaTest {
         String result = runFRISC(generatorKoda.getAssembly());
         String expected = Files.readString(root.resolve("test.out"));
         System.out.println("Expected: " + expected);
-        assertEquals(expected, result);
+        assertEquals(expected.trim(), result.trim());
     }
 
     @Test
@@ -289,7 +289,7 @@ class GeneratorKodaTest {
         String result = runFRISC(generatorKoda.getAssembly());
         String expected = Files.readString(root.resolve("test.out"));
         System.out.println("Expected: " + expected);
-        assertEquals(expected, result);
+        assertEquals(expected.trim(), result.trim());
     }
 
     @Test
@@ -300,7 +300,7 @@ class GeneratorKodaTest {
         String result = runFRISC(generatorKoda.getAssembly());
         String expected = Files.readString(root.resolve("test.out"));
         System.out.println("Expected: " + expected);
-        assertEquals(expected, result);
+        assertEquals(expected.trim(), result.trim());
     }
 
     @Test
@@ -311,7 +311,7 @@ class GeneratorKodaTest {
         String result = runFRISC(generatorKoda.getAssembly());
         String expected = Files.readString(root.resolve("test.out"));
         System.out.println("Expected: " + expected);
-        assertEquals(expected, result);
+        assertEquals(expected.trim(), result.trim());
     }
 
     @Test
@@ -322,7 +322,7 @@ class GeneratorKodaTest {
         String result = runFRISC(generatorKoda.getAssembly());
         String expected = Files.readString(root.resolve("test.out"));
         System.out.println("Expected: " + expected);
-        assertEquals(expected, result);
+        assertEquals(expected.trim(), result.trim());
     }
 
     @Test
@@ -333,7 +333,7 @@ class GeneratorKodaTest {
         String result = runFRISC(generatorKoda.getAssembly());
         String expected = Files.readString(root.resolve("test.out"));
         System.out.println("Expected: " + expected);
-        assertEquals(expected, result);
+        assertEquals(expected.trim(), result.trim());
     }
 
     @Test
@@ -344,7 +344,7 @@ class GeneratorKodaTest {
         String result = runFRISC(generatorKoda.getAssembly());
         String expected = Files.readString(root.resolve("test.out"));
         System.out.println("Expected: " + expected);
-        assertEquals(expected, result);
+        assertEquals(expected.trim(), result.trim());
     }
 
     @Test
@@ -355,7 +355,7 @@ class GeneratorKodaTest {
         String result = runFRISC(generatorKoda.getAssembly());
         String expected = Files.readString(root.resolve("test.out"));
         System.out.println("Expected: " + expected);
-        assertEquals(expected, result);
+        assertEquals(expected.trim(), result.trim());
     }
 
     @Test
@@ -366,7 +366,7 @@ class GeneratorKodaTest {
         String result = runFRISC(generatorKoda.getAssembly());
         String expected = Files.readString(root.resolve("test.out"));
         System.out.println("Expected: " + expected);
-        assertEquals(expected, result);
+        assertEquals(expected.trim(), result.trim());
     }
 
     @Test
@@ -377,7 +377,7 @@ class GeneratorKodaTest {
         String result = runFRISC(generatorKoda.getAssembly());
         String expected = Files.readString(root.resolve("test.out"));
         System.out.println("Expected: " + expected);
-        assertEquals(expected, result);
+        assertEquals(expected.trim(), result.trim());
     }
 
     @Test
@@ -388,7 +388,7 @@ class GeneratorKodaTest {
         String result = runFRISC(generatorKoda.getAssembly());
         String expected = Files.readString(root.resolve("test.out"));
         System.out.println("Expected: " + expected);
-        assertEquals(expected, result);
+        assertEquals(expected.trim(), result.trim());
     }
 
     @Test
@@ -399,7 +399,7 @@ class GeneratorKodaTest {
         String result = runFRISC(generatorKoda.getAssembly());
         String expected = Files.readString(root.resolve("test.out"));
         System.out.println("Expected: " + expected);
-        assertEquals(expected, result);
+        assertEquals(expected.trim(), result.trim());
     }
 
     @Test
@@ -410,7 +410,7 @@ class GeneratorKodaTest {
         String result = runFRISC(generatorKoda.getAssembly());
         String expected = Files.readString(root.resolve("test.out"));
         System.out.println("Expected: " + expected);
-        assertEquals(expected, result);
+        assertEquals(expected.trim(), result.trim());
     }
 
     @Test
@@ -421,7 +421,7 @@ class GeneratorKodaTest {
         String result = runFRISC(generatorKoda.getAssembly());
         String expected = Files.readString(root.resolve("test.out"));
         System.out.println("Expected: " + expected);
-        assertEquals(expected, result);
+        assertEquals(expected.trim(), result.trim());
     }
 
     @Test
@@ -432,7 +432,7 @@ class GeneratorKodaTest {
         String result = runFRISC(generatorKoda.getAssembly());
         String expected = Files.readString(root.resolve("test.out"));
         System.out.println("Expected: " + expected);
-        assertEquals(expected, result);
+        assertEquals(expected.trim(), result.trim());
     }
 
     @Test

@@ -6,9 +6,11 @@ import ppj.lab3.utilities.rules.Action;
 import ppj.lab3.utilities.rules.RuleFactory;
 import ppj.lab3.utilities.scope.Scope;
 import ppj.lab3.utilities.symbols.NonTerminalSymbol;
+import ppj.lab4.CodeBuilder;
+import ppj.lab4.GeneratorKoda;
 
 public class NaredbaSkokaReturnSa implements Action {
-
+    private final CodeBuilder builder = GeneratorKoda.codeBuilder;
 
     @Override
     public void checkProduction(SemanticProduction production, Scope scope) {
@@ -29,5 +31,8 @@ public class NaredbaSkokaReturnSa implements Action {
         String trimmedType = commandType.substring(commandType.indexOf(">") + 1, commandType.length() - 1).trim();
         if (! RuleFactory.implicitCast(izrazType, trimmedType))
             throw new SemanticException(production.toString());
+
+        builder.addCommand("POP R6");
+        builder.addCommand("RET");
     }
 }

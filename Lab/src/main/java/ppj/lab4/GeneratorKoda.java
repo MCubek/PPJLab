@@ -184,7 +184,7 @@ public class GeneratorKoda {
 
     private void addConstantsAndGlobalVars() {
         for (Map.Entry<String, Integer> entry : constants.entrySet()) {
-            codeBuilder.addCommandWithLabel(getConstantLabel(entry.getKey()),
+            codeBuilder.addCommandWithLabel(entry.getKey(),
                     "DW %D " + entry.getValue());
         }
     }
