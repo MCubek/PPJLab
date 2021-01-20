@@ -35,6 +35,8 @@ public class NaredbaSkokaReturnSa implements Action {
         builder.addCommand("POP R0");
         builder.addCommand("MOVE R6, R7");
         builder.addCommand("MOVE R0, R6");
+        if (((NonTerminalSymbol) production.getRightStates().get(1)).getAttributeMap().get("lExpression").getAttribute().equals("true"))
+            builder.addCommand("LOAD R6, (R6)");
         builder.addCommand("RET");
     }
 }

@@ -8,12 +8,10 @@ package ppj.lab4;
 public class CodeBuilder {
     private final StringBuilder builder;
     private final StringBuilder globalBuilder;
-    private final Boolean globalFlag;
 
-    public CodeBuilder(Boolean globalFlag) {
+    public CodeBuilder() {
         builder = new StringBuilder();
         globalBuilder = new StringBuilder();
-        this.globalFlag = globalFlag;
     }
 
     /**
@@ -24,7 +22,7 @@ public class CodeBuilder {
      * @param command FRISC commanda.
      */
     public void addCommand(String command) {
-        if (! globalFlag) {
+        if (! GeneratorKoda.global) {
             builder.append("\t\t").append(command).append("\n");
         } else {
             globalBuilder.append("\t\t").append(command).append("\n");

@@ -83,9 +83,10 @@ public class DefinicijaFunkcijeParam implements Action {
         production.getRightStateNodes().get(5).setValue(slozenaFunkcija);
 
         productionToCheck = new SemanticProduction(production.getRightStateNodes().get(5));
-        action= ruleFactory.getRuleMap().get(productionToCheck);
-        action.checkProduction(productionToCheck,scope);
+        action = ruleFactory.getRuleMap().get(productionToCheck);
+        action.checkProduction(productionToCheck, scope);
 
-
+        GeneratorKoda.codeBuilder.addCommand("MOVE R6, R7");
+        GeneratorKoda.codeBuilder.addCommand("RET");
     }
 }

@@ -10,8 +10,11 @@ import ppj.lab3.utilities.symbols.NonTerminalSymbol;
 import ppj.lab3.utilities.symbols.Symbol;
 import ppj.lab3.utilities.symbols.TerminalSymbol;
 import ppj.lab4.GeneratorKoda;
+import ppj.utilities.Node;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 import java.util.stream.Collectors;
 
 public class InitDeklaratorBez implements Action {
@@ -44,28 +47,37 @@ public class InitDeklaratorBez implements Action {
         if (type.contains("const"))
             throw new SemanticException(production.toString());
 
-        //TODO DRUGI UVJEZ
+        var nextList = production.getRightStateNodes().get(0).getChildren().stream()
+                .map(Node::getValue)
+                .map(Symbol::getSymbolName)
+                .collect(Collectors.toList());
+
         if (GeneratorKoda.global) {
             String name = null;
-            var value = 0;
 
-            var nextList = productionToCheck.getRightStates().stream()
-                    .map(Symbol::getSymbolName)
-                    .collect(Collectors.toList());
 
             if (nextList.contains("IDN") && nextList.size() == 1) {
-                name = ((TerminalSymbol) productionToCheck.getRightStates().get(0)).getLexicalUnits()[0];
+                var value = 0;
+                name = ((TerminalSymbol) production.getRightStateNodes().get(0).getChildren().get(0).getValue()).getLexicalUnits()[0];
 
                 GeneratorKoda.codeBuilder.addCommand("POP R0");
-                GeneratorKoda.codeBuilder.addCommand("STORE RO, (" + GeneratorKoda.getGlobalLabel(name) + ")");
+                GeneratorKoda.memoryLocations.put(GeneratorKoda.getGlobalLabel(name), value);
+
             } else if (nextList.equals(Arrays.asList("IDN", "L_UGL_ZAGRADA", "BROJ", "D_UGL_ZAGRADA"))) {
-                //TODO
+                List<Integer> list = new ArrayList<>();
+                name = ((TerminalSymbol) production.getRightStateNodes().get(0).getChildren().get(0).getValue()).getLexicalUnits()[0];
+
+                //TODO NUMBER
+                int numOfEl = 0;
+                for (int i = 0; i < numOfEl; i++) {
+                    list.add(0);
+                    GeneratorKoda.codeBuilder.addCommand("POP R0");
+                }
+                GeneratorKoda.memoryArrays.put(GeneratorKoda.getGlobalLabel(name), list);
             }
 
-            if (name != null)
-                GeneratorKoda.memoryLocations.put(GeneratorKoda.getGlobalLabel(name), value);
+            GeneratorKoda.global = false;
         }
 
-        GeneratorKoda.global = false;
     }
 }

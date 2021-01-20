@@ -7,10 +7,15 @@ import ppj.lab3.utilities.rules.Action;
 import ppj.lab3.utilities.rules.RuleFactory;
 import ppj.lab3.utilities.scope.Scope;
 import ppj.lab3.utilities.symbols.NonTerminalSymbol;
+import ppj.lab3.utilities.symbols.Symbol;
 import ppj.lab3.utilities.symbols.TerminalSymbol;
 import ppj.lab4.GeneratorKoda;
+import ppj.utilities.Node;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
 
 public class InitDeklaratorSa implements Action {
 
@@ -83,23 +88,52 @@ public class InitDeklaratorSa implements Action {
             throw new SemanticException(production.toString());
         }
 
-        GeneratorKoda.codeBuilder.addCommand("PUSH R0");
-
-        if (GeneratorKoda.global) {
-            var name = ((TerminalSymbol) productionToCheck.getRightStates().get(0)).getLexicalUnits()[0];
-            var value = 0;
-
-            if (productionToCheck.getRightStates().get(0).getSymbolName().equals("IDN")) {
-                GeneratorKoda.codeBuilder.addCommand("POP R0");
-                GeneratorKoda.codeBuilder.addCommand("STORE RO, (" + GeneratorKoda.getGlobalLabel(name) + ")");
-            } else {
-                //IDN ZAGRADA BROJ ZAGRADA
-                //TODO
-            }
-
-            GeneratorKoda.memoryLocations.put(GeneratorKoda.getGlobalLabel(name), value);
+        if (! deklaratorType.startsWith("niz")) {
+            GeneratorKoda.codeBuilder.addCommand("POP R0");
+            //TODO LVALUE?
+        } else {
+            //TODO NIZ
         }
 
-        GeneratorKoda.global = false;
+        GeneratorKoda.codeBuilder.addCommand("PUSH R0");
+        if (GeneratorKoda.global) {
+            String name = null;
+
+            var nextList = production.getRightStateNodes().get(0).getChildren().stream()
+                    .map(Node::getValue)
+                    .map(Symbol::getSymbolName)
+                    .collect(Collectors.toList());
+
+            if (nextList.contains("IDN") && nextList.size() == 1) {
+                var value = 0;
+                name = ((TerminalSymbol) production.getRightStateNodes().get(0).getChildren().get(0).getValue()).getLexicalUnits()[0];
+
+                GeneratorKoda.codeBuilder.addCommand("POP R0");
+                GeneratorKoda.codeBuilder.addCommand("STORE R0, (" + GeneratorKoda.getGlobalLabel(name) + ")");
+                GeneratorKoda.memoryLocations.put(GeneratorKoda.getGlobalLabel(name), value);
+
+            } else if (nextList.equals(Arrays.asList("IDN", "L_UGL_ZAGRADA", "BROJ", "D_UGL_ZAGRADA"))) {
+
+                List<Integer> list = new ArrayList<>();
+                name = ((TerminalSymbol) production.getRightStateNodes().get(0).getChildren().get(0).getValue()).getLexicalUnits()[0];
+
+                //TODO Inicijalizator
+
+                GeneratorKoda.codeBuilder.addCommand("POP R0");
+                GeneratorKoda.codeBuilder.addCommand("MOVE " + GeneratorKoda.getGlobalLabel(name) + ", R1");
+
+                //TODO NUMBER
+                int numOfEl = 0;
+                for (int i = 0; i < numOfEl; i++) {
+                    list.add(0);
+                    GeneratorKoda.codeBuilder.addCommand("POP R0");
+                    GeneratorKoda.codeBuilder.addCommand("STORE R0, (R1)");
+                    GeneratorKoda.codeBuilder.addCommand("ADD R1, 4, R1");
+                }
+                GeneratorKoda.memoryArrays.put(GeneratorKoda.getGlobalLabel(name), list);
+            }
+
+            GeneratorKoda.global = false;
+        }
     }
 }

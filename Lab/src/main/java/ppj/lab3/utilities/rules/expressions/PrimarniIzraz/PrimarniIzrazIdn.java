@@ -7,6 +7,7 @@ import ppj.lab3.utilities.rules.Action;
 import ppj.lab3.utilities.scope.Scope;
 import ppj.lab3.utilities.scope.ScopeElement;
 import ppj.lab3.utilities.symbols.TerminalSymbol;
+import ppj.lab4.GeneratorKoda;
 
 public class PrimarniIzrazIdn implements Action {
 
@@ -16,7 +17,7 @@ public class PrimarniIzrazIdn implements Action {
         String name = idn.getLexicalUnits()[0];
         //1. IDN.ime je deklarirano
         ScopeElement foundElement = scope.isDeclared(name);
-        if(foundElement != null) {
+        if (foundElement != null) {
             //tip <- IDN.tip
             //l-izraz <- IDN.l-izraz
             production.getLeftState().addAttribute("type", new SimpleAttribute(foundElement.getType()));
@@ -24,5 +25,9 @@ public class PrimarniIzrazIdn implements Action {
         } else {
             throw new SemanticException(production.toString());
         }
+
+        GeneratorKoda.codeBuilder.addCommand("MOVE " + GeneratorKoda.getGlobalLabel(name) + ", R0");
+
+        GeneratorKoda.codeBuilder.addCommand("PUSH R0");
     }
 }

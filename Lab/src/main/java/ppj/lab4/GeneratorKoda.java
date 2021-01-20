@@ -28,7 +28,7 @@ public class GeneratorKoda {
     private final Node<Symbol> root;
 
     public static Boolean global = false;
-    public static CodeBuilder codeBuilder = new CodeBuilder(global);
+    public static CodeBuilder codeBuilder = new CodeBuilder();
     public static String MUL_LABEL = "F_MUL";
     public static String DIV_LABEL = "F_DIV";
     public static String MOD_LABEL = "F_MOD";
@@ -50,7 +50,7 @@ public class GeneratorKoda {
         GeneratorKoda.returnLabels = new LinkedList<>();
         GeneratorKoda.breakLabels = new LinkedList<>();
         GeneratorKoda.global = false;
-        GeneratorKoda.codeBuilder = new CodeBuilder(global);
+        GeneratorKoda.codeBuilder = new CodeBuilder();
     }
 
     public GeneratorKoda(Path inputPath) throws IOException {
