@@ -7,6 +7,7 @@ import ppj.lab3.utilities.rules.Action;
 import ppj.lab3.utilities.rules.RuleFactory;
 import ppj.lab3.utilities.scope.Scope;
 import ppj.lab3.utilities.symbols.NonTerminalSymbol;
+import ppj.lab4.GeneratorKoda;
 
 public class UnarniIzrazOp implements Action {
 
@@ -30,5 +31,18 @@ public class UnarniIzrazOp implements Action {
         //l-izraz <- 0
         production.getLeftState().addAttribute("type", new SimpleAttribute("int"));
         production.getLeftState().addAttribute("lExpression", new SimpleAttribute("false"));
+
+        GeneratorKoda.codeBuilder.addCommand("POP R0");
+        if (((NonTerminalSymbol) production.getRightStates().get(1)).getAttributeMap().get("lExpression").getAttribute().equals("true"))
+            GeneratorKoda.codeBuilder.addCommand("LOAD R0, (R0)");
+
+        String operator = production.getRightStateNodes().get(0).getChildren().get(0).getValue().getSymbolName();
+
+        if (operator.equals("MINUS")) {
+            GeneratorKoda.codeBuilder.addCommand("MOVE 0, R1");
+            GeneratorKoda.codeBuilder.addCommand("SUB R1, R0, R0");
+        }
+
+        GeneratorKoda.codeBuilder.addCommand("PUSH R0");
     }
 }
