@@ -6,12 +6,10 @@ import ppj.lab3.utilities.attributes.SimpleAttribute;
 import ppj.lab3.utilities.rules.Action;
 import ppj.lab3.utilities.scope.Scope;
 import ppj.lab3.utilities.symbols.TerminalSymbol;
-import ppj.lab4.CodeBuilder;
 import ppj.lab4.GeneratorKoda;
 
 
 public class PrimarniIzrazNumber implements Action {
-    CodeBuilder codeBuilder = GeneratorKoda.codeBuilder;
 
     @Override
     public void checkProduction(SemanticProduction production, Scope scope) {
@@ -26,8 +24,8 @@ public class PrimarniIzrazNumber implements Action {
 
             String label = GeneratorKoda.getConstantLabel(String.valueOf(value));
             GeneratorKoda.memoryLocations.put(label, value);
-            codeBuilder.addCommand(String.format("LOAD R0, (%S)", label));
-            codeBuilder.addCommand("PUSH R0");
+            GeneratorKoda.codeBuilder.addCommand(String.format("LOAD R0, (%S)", label));
+            GeneratorKoda.codeBuilder.addCommand("PUSH R0");
 
         } catch (NumberFormatException exception) {
             throw new SemanticException(production.toString());

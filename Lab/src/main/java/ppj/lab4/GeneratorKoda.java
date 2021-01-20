@@ -29,9 +29,9 @@ public class GeneratorKoda {
 
     public static Boolean global = false;
     public static CodeBuilder codeBuilder = new CodeBuilder();
-    public static String MUL_LABEL = "F_MUL";
-    public static String DIV_LABEL = "F_DIV";
-    public static String MOD_LABEL = "F_MOD";
+    public static final String MUL_LABEL = "F_MUL";
+    public static final String DIV_LABEL = "F_DIV";
+    public static final String MOD_LABEL = "F_MOD";
     public static Map<String, Integer> memoryLocations = new HashMap<>();
     public static Map<String, List<Integer>> memoryArrays = new HashMap<>();
     public static LinkedList<String> returnLabels = new LinkedList<>();
@@ -39,18 +39,21 @@ public class GeneratorKoda {
 
     private static int labelCounter = 0;
     private static final String MAIN_LABEL = "F_MAIN";
-    private static final String GLOBAL_LABEL = "F_GLOBAL";
 
     public GeneratorKoda(BufferedReader bufferedReader) {
         this.root = TreeParser.generateNodeTree(bufferedReader.lines()
                 .toArray(String[]::new));
 
-        GeneratorKoda.memoryLocations = new HashMap<>();
-        GeneratorKoda.memoryArrays = new HashMap<>();
-        GeneratorKoda.returnLabels = new LinkedList<>();
-        GeneratorKoda.breakLabels = new LinkedList<>();
-        GeneratorKoda.global = false;
-        GeneratorKoda.codeBuilder = new CodeBuilder();
+        refresh();
+    }
+
+    private void refresh() {
+        memoryLocations = new HashMap<>();
+        memoryArrays = new HashMap<>();
+        returnLabels = new LinkedList<>();
+        breakLabels = new LinkedList<>();
+        global = false;
+        codeBuilder = new CodeBuilder();
     }
 
     public GeneratorKoda(Path inputPath) throws IOException {
@@ -58,7 +61,9 @@ public class GeneratorKoda {
     }
 
     public String getAssembly() {
-        programStart();
+        StringBuilder sb = new StringBuilder();
+        sb.append("\t\tMOVE 40000, R7\n");
+
 
         SemanticProduction start = new SemanticProduction(root);
         RuleFactory ruleFactory = RuleFactory.getRuleFactory();
@@ -70,32 +75,22 @@ public class GeneratorKoda {
             return e.getMessage();
         }
 
-        globalFunction();
+        sb.append(codeBuilder.getGlobalCode());
+        sb.append("\t\tCALL " + MAIN_LABEL + "\n");
+        sb.append("\t\tHALT\n");
+
         addDefaultFunctions();
         addMemoryLocations();
         addMemoryArrays();
 
-        return codeBuilder.getCode();
-    }
-
-    private void programStart() {
-        codeBuilder.addCommand("MOVE 40000, R7");
-        codeBuilder.addCommand("CALL " + GLOBAL_LABEL);
-        codeBuilder.addCommand("HALT");
-        codeBuilder.addEmptyLine();
+        sb.append(codeBuilder.getCode());
+        return sb.toString();
     }
 
     private void addDefaultFunctions() {
         multiplyFunction();
         divideFunction();
         moduloFunction();
-    }
-
-    private void globalFunction() {
-        codeBuilder.addCommandWithLabel(GLOBAL_LABEL, "");
-        codeBuilder.append(codeBuilder.getGlobalCode());
-        codeBuilder.addCommand("CALL " + MAIN_LABEL);
-        codeBuilder.addCommand("RET");
     }
 
     private void multiplyFunction() {
