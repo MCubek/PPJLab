@@ -25,7 +25,7 @@ public class PrimarniIzrazNumber implements Action {
             production.getLeftState().addAttribute("lExpression", new SimpleAttribute("false"));
 
             String label = GeneratorKoda.getConstantLabel(String.valueOf(value));
-            GeneratorKoda.constants.put(label, value);
+            GeneratorKoda.memoryLocations.put(label, value);
             codeBuilder.addCommand(String.format("LOAD R0, (%S)", label));
             codeBuilder.addCommand("PUSH R0");
 

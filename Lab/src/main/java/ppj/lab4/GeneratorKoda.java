@@ -16,6 +16,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.HashMap;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -26,21 +27,30 @@ import java.util.Map;
 public class GeneratorKoda {
     private final Node<Symbol> root;
 
-    public static CodeBuilder codeBuilder;
+    public static Boolean global = false;
+    public static CodeBuilder codeBuilder = new CodeBuilder(global);
     public static String MUL_LABEL = "F_MUL";
     public static String DIV_LABEL = "F_DIV";
     public static String MOD_LABEL = "F_MOD";
-    public static String MAIN_LABEL = "F_MAIN";
-    public static Map<String, Integer> constants = new HashMap<>();
+    public static Map<String, Integer> memoryLocations = new HashMap<>();
+    public static Map<String, List<Integer>> memoryArrays = new HashMap<>();
     public static LinkedList<String> returnLabels = new LinkedList<>();
     public static LinkedList<String> breakLabels = new LinkedList<>();
 
     private static int labelCounter = 0;
+    private static final String MAIN_LABEL = "F_MAIN";
+    private static final String GLOBAL_LABEL = "F_GLOBAL";
 
     public GeneratorKoda(BufferedReader bufferedReader) {
         this.root = TreeParser.generateNodeTree(bufferedReader.lines()
                 .toArray(String[]::new));
-        codeBuilder = new CodeBuilder();
+
+        GeneratorKoda.memoryLocations = new HashMap<>();
+        GeneratorKoda.memoryArrays = new HashMap<>();
+        GeneratorKoda.returnLabels = new LinkedList<>();
+        GeneratorKoda.breakLabels = new LinkedList<>();
+        GeneratorKoda.global = false;
+        GeneratorKoda.codeBuilder = new CodeBuilder(global);
     }
 
     public GeneratorKoda(Path inputPath) throws IOException {
@@ -60,15 +70,17 @@ public class GeneratorKoda {
             return e.getMessage();
         }
 
+        globalFunction();
         addDefaultFunctions();
-        addConstantsAndGlobalVars();
+        addMemoryLocations();
+        addMemoryArrays();
 
-        return codeBuilder.toString();
+        return codeBuilder.getCode();
     }
 
     private void programStart() {
         codeBuilder.addCommand("MOVE 40000, R7");
-        codeBuilder.addCommand("CALL " + MAIN_LABEL);
+        codeBuilder.addCommand("CALL " + GLOBAL_LABEL);
         codeBuilder.addCommand("HALT");
         codeBuilder.addEmptyLine();
     }
@@ -77,6 +89,13 @@ public class GeneratorKoda {
         multiplyFunction();
         divideFunction();
         moduloFunction();
+    }
+
+    private void globalFunction() {
+        codeBuilder.addCommandWithLabel(GLOBAL_LABEL, "");
+        codeBuilder.append(codeBuilder.getGlobalCode());
+        codeBuilder.addCommand("CALL " + MAIN_LABEL);
+        codeBuilder.addCommand("RET");
     }
 
     private void multiplyFunction() {
@@ -182,11 +201,20 @@ public class GeneratorKoda {
         codeBuilder.addCommand("RET");
     }
 
-    private void addConstantsAndGlobalVars() {
-        for (Map.Entry<String, Integer> entry : constants.entrySet()) {
+    private void addMemoryLocations() {
+        for (Map.Entry<String, Integer> entry : memoryLocations.entrySet()) {
             codeBuilder.addCommandWithLabel(entry.getKey(),
                     "DW %D " + entry.getValue());
         }
+    }
+
+    private void addMemoryArrays() {
+        memoryArrays.forEach((k, v) -> {
+            codeBuilder.addCommandWithLabel(k, String.valueOf(v.get(0)));
+            for (int i = 1; i < v.size(); i++) {
+                codeBuilder.addCommand(String.valueOf(v.get(i)));
+            }
+        });
     }
 
     public static String getGlobalLabel(String name) {

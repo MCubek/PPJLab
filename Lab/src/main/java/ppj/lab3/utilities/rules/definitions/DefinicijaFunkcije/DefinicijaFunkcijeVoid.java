@@ -16,11 +16,17 @@ public class DefinicijaFunkcijeVoid implements Action {
 
     @Override
     public void checkProduction(SemanticProduction production, Scope scope) {
+
+        GeneratorKoda.codeBuilder.addCommandWithLabel(
+                GeneratorKoda.getFunctionLabel(((TerminalSymbol) production.getRightStates().get(1)).getLexicalUnits()[0]),
+                "MOVE R7, R6");
+
+
         //1. provjeri(<ime_tipa>)
         SemanticProduction productionToCheck = new SemanticProduction(production.getRightStateNodes().get(0));
-        RuleFactory ruleFactory= RuleFactory.getRuleFactory();
-        Action action= ruleFactory.getRuleMap().get(productionToCheck);
-        action.checkProduction(productionToCheck,scope);
+        RuleFactory ruleFactory = RuleFactory.getRuleFactory();
+        Action action = ruleFactory.getRuleMap().get(productionToCheck);
+        action.checkProduction(productionToCheck, scope);
         NonTerminalSymbol expression = (NonTerminalSymbol) production.getRightStates().get(0);
         String type = expression.getAttributeMap().get("type").getAttribute().toString();
 
@@ -34,8 +40,6 @@ public class DefinicijaFunkcijeVoid implements Action {
         if (scope.isDefined(idnName))
             throw new SemanticException(production.toString());
 
-        GeneratorKoda.codeBuilder.addCommandWithLabel(GeneratorKoda.getFunctionLabel(idnName), "");
-
         //4. ako postoji deklaracija imena IDN.ime u globalnom djelokrugu onda je pripadni
         //tip te deklaracije funkcija(void -> <ime_tipa>.tip)
         Scope globalScope = scope;
@@ -46,7 +50,7 @@ public class DefinicijaFunkcijeVoid implements Action {
 
         if (idnScope != null) {
             String scopeIdnType = idnScope.getType();
-            if (!scopeIdnType.equals(checkType))
+            if (! scopeIdnType.equals(checkType))
                 throw new SemanticException(production.toString());
 
         }

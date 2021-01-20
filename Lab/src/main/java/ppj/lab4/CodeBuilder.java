@@ -7,9 +7,13 @@ package ppj.lab4;
  */
 public class CodeBuilder {
     private final StringBuilder builder;
+    private final StringBuilder globalBuilder;
+    private final Boolean globalFlag;
 
-    public CodeBuilder() {
+    public CodeBuilder(Boolean globalFlag) {
         builder = new StringBuilder();
+        globalBuilder = new StringBuilder();
+        this.globalFlag = globalFlag;
     }
 
     /**
@@ -20,7 +24,11 @@ public class CodeBuilder {
      * @param command FRISC commanda.
      */
     public void addCommand(String command) {
-        builder.append("\t").append(command).append("\n");
+        if (! globalFlag) {
+            builder.append("\t\t").append(command).append("\n");
+        } else {
+            globalBuilder.append("\t\t").append(command).append("\n");
+        }
     }
 
     /**
@@ -38,8 +46,15 @@ public class CodeBuilder {
         builder.append("\n");
     }
 
-    @Override
-    public String toString() {
+    public String getCode() {
         return builder.toString();
+    }
+
+    public String getGlobalCode() {
+        return globalBuilder.toString();
+    }
+
+    public void append(String commands) {
+        builder.append(commands);
     }
 }

@@ -32,7 +32,9 @@ public class NaredbaSkokaReturnSa implements Action {
         if (! RuleFactory.implicitCast(izrazType, trimmedType))
             throw new SemanticException(production.toString());
 
-        builder.addCommand("POP R6");
+        builder.addCommand("POP R0");
+        builder.addCommand("MOVE R6, R7");
+        builder.addCommand("MOVE R0, R6");
         builder.addCommand("RET");
     }
 }

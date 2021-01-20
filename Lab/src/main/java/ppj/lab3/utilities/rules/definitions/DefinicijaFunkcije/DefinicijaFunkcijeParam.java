@@ -10,6 +10,7 @@ import ppj.lab3.utilities.scope.Scope;
 import ppj.lab3.utilities.scope.ScopeElement;
 import ppj.lab3.utilities.symbols.NonTerminalSymbol;
 import ppj.lab3.utilities.symbols.TerminalSymbol;
+import ppj.lab4.GeneratorKoda;
 
 import java.util.Arrays;
 
@@ -18,11 +19,16 @@ public class DefinicijaFunkcijeParam implements Action {
 
     @Override
     public void checkProduction(SemanticProduction production, Scope scope) {
+
+        GeneratorKoda.codeBuilder.addCommandWithLabel(
+                GeneratorKoda.getFunctionLabel(((TerminalSymbol) production.getRightStates().get(1)).getLexicalUnits()[0]),
+                "MOVE R7, R6");
+
         //1. provjeri(<ime_tipa>)
         SemanticProduction productionToCheck = new SemanticProduction(production.getRightStateNodes().get(0));
-        RuleFactory ruleFactory= RuleFactory.getRuleFactory();
-        Action action= ruleFactory.getRuleMap().get(productionToCheck);
-        action.checkProduction(productionToCheck,scope);
+        RuleFactory ruleFactory = RuleFactory.getRuleFactory();
+        Action action = ruleFactory.getRuleMap().get(productionToCheck);
+        action.checkProduction(productionToCheck, scope);
         NonTerminalSymbol expression = (NonTerminalSymbol) production.getRightStates().get(0);
         String imeTipa = expression.getAttributeMap().get("type").getAttribute().toString();
 
@@ -79,5 +85,7 @@ public class DefinicijaFunkcijeParam implements Action {
         productionToCheck = new SemanticProduction(production.getRightStateNodes().get(5));
         action= ruleFactory.getRuleMap().get(productionToCheck);
         action.checkProduction(productionToCheck,scope);
+
+
     }
 }
