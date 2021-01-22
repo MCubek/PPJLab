@@ -26,8 +26,11 @@ public class PrimarniIzrazIdn implements Action {
             throw new SemanticException(production.toString());
         }
 
-        GeneratorKoda.codeBuilder.addCommand("MOVE " + GeneratorKoda.getGlobalLabel(name) + ", R0");
+        if (! foundElement.getType().contains("funkcija")) {
+            GeneratorKoda.codeBuilder.addCommand("MOVE " + GeneratorKoda.getGlobalLabel(name) + ", R0");
 
-        GeneratorKoda.codeBuilder.addCommand("PUSH R0");
+            GeneratorKoda.codeBuilder.addCommand("PUSH R0");
+        }
+
     }
 }
