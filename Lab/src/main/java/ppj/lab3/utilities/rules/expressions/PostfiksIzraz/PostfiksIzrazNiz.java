@@ -7,6 +7,7 @@ import ppj.lab3.utilities.rules.Action;
 import ppj.lab3.utilities.rules.RuleFactory;
 import ppj.lab3.utilities.scope.Scope;
 import ppj.lab3.utilities.symbols.NonTerminalSymbol;
+import ppj.lab4.GeneratorKoda;
 
 import java.util.Arrays;
 import java.util.List;
@@ -52,5 +53,22 @@ public class PostfiksIzrazNiz implements Action {
         } else {
             production.getLeftState().addAttribute("lExpression", new SimpleAttribute("true"));
         }
+
+        GeneratorKoda.codeBuilder.addCommand("POP R0");
+        GeneratorKoda.codeBuilder.addCommand("POP R1");
+
+        //TODO CHeck l-value?
+
+        GeneratorKoda.codeBuilder.addCommand("PUSH R6");
+        GeneratorKoda.codeBuilder.addCommand("MOVE 4, R2");
+        GeneratorKoda.codeBuilder.addCommand("PUSH R2");
+        GeneratorKoda.codeBuilder.addCommand("PUSH R0");
+        GeneratorKoda.codeBuilder.addCommand("CALL " + GeneratorKoda.MUL_LABEL);
+        GeneratorKoda.codeBuilder.addCommand("MOVE R6, R0");
+        GeneratorKoda.codeBuilder.addCommand("ADD R7, 8, R7");
+        GeneratorKoda.codeBuilder.addCommand("POP R6");
+
+        GeneratorKoda.codeBuilder.addCommand("ADD R1, R0, R1");
+        GeneratorKoda.codeBuilder.addCommand("PUSH R1");
     }
 }

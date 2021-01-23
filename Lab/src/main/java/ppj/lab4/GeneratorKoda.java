@@ -206,9 +206,11 @@ public class GeneratorKoda {
 
     private void addMemoryArrays() {
         memoryArrays.forEach((k, v) -> {
-            codeBuilder.addCommandWithLabel(k, String.valueOf(v.get(0)));
-            for (int i = 1; i < v.size(); i++) {
-                codeBuilder.addCommand(String.valueOf(v.get(i)));
+            if (v.size() != 0) {
+                codeBuilder.addCommandWithLabel(k, "DW %D " + v.get(0));
+                for (int i = 1; i < v.size(); i++) {
+                    codeBuilder.addCommand("DW %D " + v.get(i));
+                }
             }
         });
     }

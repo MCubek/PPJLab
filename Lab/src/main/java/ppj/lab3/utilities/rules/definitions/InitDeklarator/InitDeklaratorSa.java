@@ -92,7 +92,10 @@ public class InitDeklaratorSa implements Action {
             GeneratorKoda.codeBuilder.addCommand("POP R0");
             //TODO LVALUE?
         } else {
-            //TODO NIZ
+            GeneratorKoda.codeBuilder.addCommand("ADD R7, %D " +
+                    4 * (Integer.parseInt((String) expression.getAttributeMap().get("numElem").getAttribute()) - 1)
+                    + ", R0")
+            ;
         }
 
         GeneratorKoda.codeBuilder.addCommand("PUSH R0");
@@ -122,13 +125,15 @@ public class InitDeklaratorSa implements Action {
                 GeneratorKoda.codeBuilder.addCommand("POP R0");
                 GeneratorKoda.codeBuilder.addCommand("MOVE " + GeneratorKoda.getGlobalLabel(name) + ", R1");
 
-                //TODO NUMBER
-                int numOfEl = 0;
-                for (int i = 0; i < numOfEl; i++) {
+                int num = (Integer.parseInt((String) expression.getAttributeMap().get("numElem").getAttribute()));
+
+                GeneratorKoda.codeBuilder.addCommand("ADD R1, %D " + 4 * (num - 1) + ", R1");
+
+                for (int i = 0; i < num; i++) {
                     list.add(0);
                     GeneratorKoda.codeBuilder.addCommand("POP R0");
                     GeneratorKoda.codeBuilder.addCommand("STORE R0, (R1)");
-                    GeneratorKoda.codeBuilder.addCommand("ADD R1, 4, R1");
+                    GeneratorKoda.codeBuilder.addCommand("SUB R1, 4, R1");
                 }
                 GeneratorKoda.memoryArrays.put(GeneratorKoda.getGlobalLabel(name), list);
             }
