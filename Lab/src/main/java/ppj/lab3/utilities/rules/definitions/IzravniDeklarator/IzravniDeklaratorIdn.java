@@ -25,7 +25,7 @@ public class IzravniDeklaratorIdn implements Action {
             throw new SemanticException(production.toString());
 
         //3. zabiljezi deklaraciju IDN.ime s odgovarajucim tipom
-        scope.addScopeElement(new ScopeElement(idnName, ntype, true, false));
+        scope.addScopeElement(new ScopeElement(idnName, ntype, true, false, scope.lastStackOffset()-4));
 
         //tip <- ntip
         production.getLeftState().addAttribute("type", new SimpleAttribute(ntype));

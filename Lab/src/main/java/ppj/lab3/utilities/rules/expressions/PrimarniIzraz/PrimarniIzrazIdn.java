@@ -36,7 +36,7 @@ public class PrimarniIzrazIdn implements Action {
                 GeneratorKoda.codeBuilder.addCommand("MOVE " + GeneratorKoda.getGlobalLabel(name) + ", R0");
             } else {
                 //TODO Što se dogada?
-                GeneratorKoda.codeBuilder.addCommand("ADD R6, %D " + 4 * getNumberOfElements(production.getLeftStateNode()) + ", R0");
+                GeneratorKoda.codeBuilder.addCommand("ADD R6, %D " + scope.getStackOffset(name) + ", R0");
             }
             GeneratorKoda.codeBuilder.addCommand("PUSH R0");
         }

@@ -18,8 +18,10 @@ public class SlozenaNaredbaBez implements Action {
         if(production.getLeftState().getAttributeMap().containsKey("listaParamNames")) {
             String[] names = (String[]) production.getLeftState().getAttributeMap().get("listaParamNames").getAttribute();
             String[] types = (String[]) production.getLeftState().getAttributeMap().get("listaParamTypes").getAttribute();
+            int size = types.length;
             for(int i = 0; i < names.length; i++) {
-                newScope.addScopeElement(new ScopeElement(names[i], types[i], true, true));
+
+                newScope.addScopeElement(new ScopeElement(names[i], types[i], true, true, 4*(size - i + 1)));
             }
         }
 
