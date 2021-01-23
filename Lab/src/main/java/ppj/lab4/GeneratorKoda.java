@@ -54,6 +54,7 @@ public class GeneratorKoda {
         breakLabels = new LinkedList<>();
         global = false;
         codeBuilder = new CodeBuilder();
+        labelCounter = 0;
     }
 
     public GeneratorKoda(Path inputPath) throws IOException {

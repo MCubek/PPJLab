@@ -6,6 +6,7 @@ import ppj.lab3.utilities.rules.Action;
 import ppj.lab3.utilities.rules.RuleFactory;
 import ppj.lab3.utilities.scope.Scope;
 import ppj.lab3.utilities.symbols.NonTerminalSymbol;
+import ppj.lab4.GeneratorKoda;
 
 public class NaredbaGrananjaIfElse implements Action {
 
@@ -25,14 +26,26 @@ public class NaredbaGrananjaIfElse implements Action {
             throw new SemanticException(production.toString());
         }
 
+        String jumpLabel1 = GeneratorKoda.getNextLabel();
+        String jumpLabel2 = GeneratorKoda.getNextLabel();
+
+        GeneratorKoda.codeBuilder.addCommand("POP R0");
+        GeneratorKoda.codeBuilder.addCommand("CMP R0, 0");
+        GeneratorKoda.codeBuilder.addCommand("JP_EQ " + jumpLabel1);
+
         //3. provjeri(<naredba>1)
         productionToCheck = new SemanticProduction(production.getRightStateNodes().get(4));
         action = ruleFactory.getRuleMap().get(productionToCheck);
         action.checkProduction(productionToCheck, scope);
 
+        GeneratorKoda.codeBuilder.addCommand("JP " + jumpLabel2);
+
+        GeneratorKoda.codeBuilder.addCommandWithLabel(jumpLabel1, "");
         //4. provjeri(<naredba>2)
         productionToCheck = new SemanticProduction(production.getRightStateNodes().get(6));
-        action= ruleFactory.getRuleMap().get(productionToCheck);
-        action.checkProduction(productionToCheck,scope);
+        action = ruleFactory.getRuleMap().get(productionToCheck);
+        action.checkProduction(productionToCheck, scope);
+
+        GeneratorKoda.codeBuilder.addCommandWithLabel(jumpLabel2, "");
     }
 }
