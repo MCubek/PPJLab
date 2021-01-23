@@ -154,4 +154,30 @@ public class Scope {
 
         return ! matcher.find() && StandardCharsets.US_ASCII.newEncoder().canEncode(charArray);
     }
+
+    public int getStackOffset(String name) {
+        Scope current = this;
+        do {
+            for(ScopeElement element : current.getElements()) {
+                if(element.getName().equals(name))
+                    return element.getOffset();
+            }
+            current = current.getParent();
+        } while(!(current == null) && !(current.getParent() == null));
+        return -1;
+    }
+
+    public int lastStackOffset() {
+        int min = 0;
+        Scope current = this;
+        do {
+            for (ScopeElement element : current.getElements()) {
+                if (element.getOffset() < min) {
+                    min = element.getOffset();
+                }
+            }
+            current = current.getParent();
+        } while (!(current == null) && !(current.getParent() == null));
+        return min;
+    }
 }
