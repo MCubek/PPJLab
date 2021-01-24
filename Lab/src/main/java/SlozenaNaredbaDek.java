@@ -1,0 +1,33 @@
+
+
+
+public class SlozenaNaredbaDek implements Action {
+
+
+    @Override
+    public void checkProduction(SemanticProduction production, Scope scope) {
+        //slozena naredba stvara vlastiti djelokrug
+        Scope newScope = new Scope(scope);
+
+        //provjeri parametre u slucaju funkcije
+        if(production.getLeftState().getAttributeMap().containsKey("listaParamNames")) {
+            String[] names = (String[]) production.getLeftState().getAttributeMap().get("listaParamNames").getAttribute();
+            String[] types = (String[]) production.getLeftState().getAttributeMap().get("listaParamTypes").getAttribute();
+            int size = types.length;
+            for(int i = 0; i < names.length; i++) {
+                newScope.addScopeElement(new ScopeElement(names[i], types[i], true, true, 4*(size - i + 1)));
+            }
+        }
+
+        //1. provjeri(<lista_deklaracija>)
+        SemanticProduction productionToCheck = new SemanticProduction(production.getRightStateNodes().get(1));
+        RuleFactory ruleFactory= RuleFactory.getRuleFactory();
+        Action action= ruleFactory.getRuleMap().get(productionToCheck);
+        action.checkProduction(productionToCheck,newScope);
+
+        //2. provjeri(<lista_naredbi>)
+        productionToCheck = new SemanticProduction(production.getRightStateNodes().get(2));
+        action = ruleFactory.getRuleMap().get(productionToCheck);
+        action.checkProduction(productionToCheck, newScope);
+    }
+}

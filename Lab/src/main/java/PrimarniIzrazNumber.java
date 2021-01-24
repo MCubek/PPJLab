@@ -1,0 +1,26 @@
+
+
+
+public class PrimarniIzrazNumber implements Action {
+
+    @Override
+    public void checkProduction(SemanticProduction production, Scope scope) {
+        TerminalSymbol number = (TerminalSymbol) production.getRightStates().get(0);
+        try {
+            //1. vrijednost je u rasponu tipa int
+            var value = Integer.parseInt(number.getLexicalUnits()[0]);
+            //tip <- int
+            //l-izraz <- 0
+            production.getLeftState().addAttribute("type", new SimpleAttribute("int"));
+            production.getLeftState().addAttribute("lExpression", new SimpleAttribute("false"));
+
+            String label = GeneratorKoda.getConstantLabel(String.valueOf(value));
+            GeneratorKoda.memoryLocations.put(label, value);
+            GeneratorKoda.codeBuilder.addCommand(String.format("LOAD R0, (%S)", label));
+            GeneratorKoda.codeBuilder.addCommand("PUSH R0");
+
+        } catch (NumberFormatException exception) {
+            throw new SemanticException(production.toString());
+        }
+    }
+}
