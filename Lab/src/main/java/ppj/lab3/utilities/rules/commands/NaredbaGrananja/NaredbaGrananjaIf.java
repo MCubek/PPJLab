@@ -26,7 +26,7 @@ public class NaredbaGrananjaIf implements Action {
             throw new SemanticException(production.toString());
         }
 
-        String jumpLabel = GeneratorKoda.getNextLabel();
+        String jumpLabel = GeneratorKoda.calculateNextLabel();
 
         GeneratorKoda.codeBuilder.addCommand("POP R0");
         GeneratorKoda.codeBuilder.addCommand("CMP R0, 0");

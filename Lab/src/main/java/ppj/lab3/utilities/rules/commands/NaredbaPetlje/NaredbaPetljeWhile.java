@@ -6,6 +6,7 @@ import ppj.lab3.utilities.rules.Action;
 import ppj.lab3.utilities.rules.RuleFactory;
 import ppj.lab3.utilities.scope.Scope;
 import ppj.lab3.utilities.symbols.NonTerminalSymbol;
+import ppj.lab4.GeneratorKoda;
 
 public class NaredbaPetljeWhile implements Action {
 
@@ -20,14 +21,27 @@ public class NaredbaPetljeWhile implements Action {
         NonTerminalSymbol symbol = (NonTerminalSymbol) production.getRightStates().get(2);
         String type = symbol.getAttributeMap().get("type").getAttribute().toString();
 
+        String start = GeneratorKoda.calculateNextLabel();
+        String end = GeneratorKoda.calculateNextLabel();
+
+        GeneratorKoda.codeBuilder.addCommandWithLabel(start, "");
+
         //2. <izraz>.tip ?= int
         if (! RuleFactory.implicitCast(type, "int")) {
             throw new SemanticException(production.toString());
         }
 
+        GeneratorKoda.codeBuilder.addCommand("POP R0");
+        GeneratorKoda.codeBuilder.addCommand("CMP R0, 0");
+        GeneratorKoda.codeBuilder.addCommand("JP_EQ " + end);
+
         //3. provjeri(<naredba>)
         productionToCheck = new SemanticProduction(production.getRightStateNodes().get(4));
         action = ruleFactory.getRuleMap().get(productionToCheck);
         action.checkProduction(productionToCheck, scope);
+
+        GeneratorKoda.codeBuilder.addCommand("JP " + start);
+
+        GeneratorKoda.codeBuilder.addCommandWithLabel(end, "");
     }
 }

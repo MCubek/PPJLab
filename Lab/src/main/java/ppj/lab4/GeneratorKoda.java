@@ -105,7 +105,7 @@ public class GeneratorKoda {
 
         codeBuilder.addCommand("MOVE 0, R6");
 
-        String label = getNextLabel();
+        String label = calculateNextLabel();
 
         codeBuilder.addCommandWithLabel(label, "ADD R0, R6, R6");
         codeBuilder.addCommand("SUB R1, 1 , R1");
@@ -133,10 +133,10 @@ public class GeneratorKoda {
 
         codeBuilder.addCommand("MOVE 0, R6");
 
-        String firstPositive = getNextLabel();
-        String allPositive = getNextLabel();
-        String countFinished = getNextLabel();
-        String end = getNextLabel();
+        String firstPositive = calculateNextLabel();
+        String allPositive = calculateNextLabel();
+        String countFinished = calculateNextLabel();
+        String end = calculateNextLabel();
 
         codeBuilder.addCommand("CMP R1, 0");
         codeBuilder.addCommand("JP_SGT " + firstPositive);
@@ -227,7 +227,7 @@ public class GeneratorKoda {
         return String.format("C_%S", name.toUpperCase());
     }
 
-    public static String getNextLabel() {
+    public static String calculateNextLabel() {
         return "L_" + labelCounter++;
     }
 

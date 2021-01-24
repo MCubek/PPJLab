@@ -7,6 +7,7 @@ import ppj.lab3.utilities.rules.Action;
 import ppj.lab3.utilities.rules.RuleFactory;
 import ppj.lab3.utilities.scope.Scope;
 import ppj.lab3.utilities.symbols.NonTerminalSymbol;
+import ppj.lab4.GeneratorKoda;
 
 public class OdnosniIzrazOp implements Action {
 
@@ -42,5 +43,40 @@ public class OdnosniIzrazOp implements Action {
         //l-izraz <- 0
         production.getLeftState().addAttribute("type", new SimpleAttribute("int"));
         production.getLeftState().addAttribute("lExpression", new SimpleAttribute("false"));
+
+        GeneratorKoda.codeBuilder.addCommand("POP R1");
+        if (((NonTerminalSymbol) production.getRightStateNodes().get(2).getValue()).getAttributeMap().get("lExpression").getAttribute().equals("true")) {
+            GeneratorKoda.codeBuilder.addCommand("LOAD R1, (R1)");
+        }
+        GeneratorKoda.codeBuilder.addCommand("POP R0");
+        if (((NonTerminalSymbol) production.getRightStateNodes().get(0).getValue()).getAttributeMap().get("lExpression").getAttribute().equals("true")) {
+            GeneratorKoda.codeBuilder.addCommand("LOAD R0, (R0)");
+        }
+
+        String end = GeneratorKoda.calculateNextLabel();
+
+        GeneratorKoda.codeBuilder.addCommand("CMP R0, R1");
+
+        String operator;
+        switch (production.getRightStates().get(1).getSymbolName()) {
+            case "OP_LT":
+                operator = "JP_SLT " + end;
+                break;
+            case "OP_LTE":
+                operator = "JP_SLE " + end;
+                break;
+            case "OP_GT":
+                operator = "JP_SGT " + end;
+                break;
+            case "OP_GTE":
+                operator = "JP_SGE " + end;
+                break;
+            default:
+                operator = "ERROR";
+        }
+        GeneratorKoda.codeBuilder.addCommand(operator);
+
+        GeneratorKoda.codeBuilder.addCommandWithLabel(end, "");
+
     }
 }
