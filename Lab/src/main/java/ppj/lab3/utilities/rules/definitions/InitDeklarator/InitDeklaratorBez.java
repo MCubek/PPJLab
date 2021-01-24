@@ -67,8 +67,7 @@ public class InitDeklaratorBez implements Action {
                 List<Integer> list = new ArrayList<>();
                 name = ((TerminalSymbol) production.getRightStateNodes().get(0).getChildren().get(0).getValue()).getLexicalUnits()[0];
 
-                //TODO NUMBER
-                int numOfEl = 0;
+                int numOfEl = Integer.parseInt((String) izravniDeklarator.getAttributeMap().get("numElem").getAttribute());
                 for (int i = 0; i < numOfEl; i++) {
                     list.add(0);
                     GeneratorKoda.codeBuilder.addCommand("POP R0");
