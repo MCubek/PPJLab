@@ -23,7 +23,7 @@ public class AditivniIzrazOp implements Action {
         String multiType = expression.getAttributeMap().get("type").getAttribute().toString();
 
         //2. <aditivni_izraz>.tip ?= int
-        if (! RuleFactory.implicitCast(multiType, "int")) {
+        if (!RuleFactory.implicitCast(multiType, "int")) {
             throw new SemanticException(production.toString());
         }
 
