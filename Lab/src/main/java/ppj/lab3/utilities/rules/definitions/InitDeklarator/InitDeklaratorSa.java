@@ -90,7 +90,11 @@ public class InitDeklaratorSa implements Action {
 
         if (! deklaratorType.startsWith("niz")) {
             GeneratorKoda.codeBuilder.addCommand("POP R0");
-            //TODO LVALUE?
+
+            if (((NonTerminalSymbol) productionToCheck.getRightStateNodes().get(0).getValue()).getAttributeMap().get("lExpression").getAttribute().equals("true")) {
+                GeneratorKoda.codeBuilder.addCommand("LOAD R0, (R0)");
+            }
+
         } else {
             GeneratorKoda.codeBuilder.addCommand("ADD R7, %D " +
                     4 * (Integer.parseInt((String) expression.getAttributeMap().get("numElem").getAttribute()) - 1)
