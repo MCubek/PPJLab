@@ -51,7 +51,7 @@ public class PostfiksIzrazArg implements Action {
                 }
             }
         } else {
-            throw new SemanticException(production.toString());
+            //throw new SemanticException(production.toString());
         }
 
         //tip <- pov
