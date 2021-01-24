@@ -180,4 +180,15 @@ public class Scope {
         } while (!(current == null) && !(current.getParent() == null));
         return min;
     }
+
+    public boolean isGlobal(String name) {
+        Scope current = this;
+        if(current.getParent() == null)
+            return true;
+        for(ScopeElement element : current.getElements()) {
+            if(element.getName().equals(name))
+                return false;
+        }
+        return current.getParent().isGlobal(name);
+    }
 }

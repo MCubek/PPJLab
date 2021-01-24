@@ -32,8 +32,11 @@ public class PrimarniIzrazIdn implements Action {
 
         if (! foundElement.getType().contains("funkcija")) {
 
-            if (scope.getParent().getParent() == null && scope.getElements().size() == 0) {
-                GeneratorKoda.codeBuilder.addCommand("MOVE " + GeneratorKoda.getGlobalLabel(name) + ", R0");
+            if (production.getLeftStateNode().isInFunction()) {
+                if(scope.isGlobal(name))
+                    GeneratorKoda.codeBuilder.addCommand("MOVE " + GeneratorKoda.getGlobalLabel(name) + ", R0");
+                else
+                    GeneratorKoda.codeBuilder.addCommand("ADD R6, %D " + scope.getStackOffset(name) + ", R0");
             } else {
                 GeneratorKoda.codeBuilder.addCommand("ADD R6, %D " + scope.getStackOffset(name) + ", R0");
             }
