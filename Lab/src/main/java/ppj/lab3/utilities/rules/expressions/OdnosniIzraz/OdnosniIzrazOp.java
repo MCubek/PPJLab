@@ -53,6 +53,9 @@ public class OdnosniIzrazOp implements Action {
             GeneratorKoda.codeBuilder.addCommand("LOAD R0, (R0)");
         }
 
+        //TODO STO JE OVO
+        GeneratorKoda.codeBuilder.addCommand("MOVE 1, R2");
+
         String end = GeneratorKoda.calculateNextLabel();
 
         GeneratorKoda.codeBuilder.addCommand("CMP R0, R1");
@@ -76,7 +79,8 @@ public class OdnosniIzrazOp implements Action {
         }
         GeneratorKoda.codeBuilder.addCommand(operator);
 
-        GeneratorKoda.codeBuilder.addCommandWithLabel(end, "");
+        GeneratorKoda.codeBuilder.addCommand("MOVE 0, R2");
+        GeneratorKoda.codeBuilder.addCommandWithLabel(end, "PUSH R2");
 
     }
 }
