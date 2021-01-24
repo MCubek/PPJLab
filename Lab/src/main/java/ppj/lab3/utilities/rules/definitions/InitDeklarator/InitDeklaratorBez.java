@@ -70,7 +70,8 @@ public class InitDeklaratorBez implements Action {
                 int numOfEl = Integer.parseInt((String) izravniDeklarator.getAttributeMap().get("numElem").getAttribute());
                 for (int i = 0; i < numOfEl; i++) {
                     list.add(0);
-                    GeneratorKoda.codeBuilder.addCommand("POP R0");
+                    //TODO WHAT?
+                    //GeneratorKoda.codeBuilder.addCommand("POP R0");
                 }
                 GeneratorKoda.memoryArrays.put(GeneratorKoda.getGlobalLabel(name), list);
             }
