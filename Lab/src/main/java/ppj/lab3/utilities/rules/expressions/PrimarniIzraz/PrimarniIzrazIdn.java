@@ -30,15 +30,18 @@ public class PrimarniIzrazIdn implements Action {
             throw new SemanticException(production.toString());
         }
 
+        boolean flag = true;
         if (! foundElement.getType().contains("funkcija")) {
 
             if (production.getLeftStateNode().isInFunction()) {
                 if (scope.isGlobal(name))
                     GeneratorKoda.codeBuilder.addCommand("MOVE " + GeneratorKoda.getGlobalLabel(name) + ", R0");
-                else
+                else {
                     GeneratorKoda.codeBuilder.addCommand("ADD R6, %D " + scope.getStackOffset(name) + ", R0");
+                }
             } else {
                 GeneratorKoda.codeBuilder.addCommand("ADD R6, %D " + scope.getStackOffset(name) + ", R0");
+                flag = false;
             }
 
             boolean isOnly = true;
@@ -55,9 +58,9 @@ public class PrimarniIzrazIdn implements Action {
                 parent = parent.getParent();
             }
 
-            if (checkArguement && (foundElement.isLExpression() || foundElement.getType().contains("niz"))) {
+            if (flag && checkArguement && (foundElement.isLExpression() || foundElement.getType().contains("niz"))) {
                 GeneratorKoda.codeBuilder.addCommand("LOAD R0, (R0)");
-            } else if(!checkArguement && !foundElement.isLExpression() && !foundElement.getType().contains("niz")) {
+            } else if (flag && ! checkArguement && ! foundElement.isLExpression() && ! foundElement.getType().contains("niz")) {
                 GeneratorKoda.codeBuilder.addCommand("LOAD R0, (R0)");
             }
 
