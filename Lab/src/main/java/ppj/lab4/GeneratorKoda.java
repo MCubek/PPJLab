@@ -15,7 +15,6 @@ import java.io.InputStreamReader;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.HashMap;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
@@ -34,11 +33,10 @@ public class GeneratorKoda {
     public static final String MOD_LABEL = "F_MOD";
     public static Map<String, Integer> memoryLocations = new HashMap<>();
     public static Map<String, List<Integer>> memoryArrays = new HashMap<>();
-    public static LinkedList<String> returnLabels = new LinkedList<>();
-    public static LinkedList<String> breakLabels = new LinkedList<>();
+    public static Map<String, Boolean> includeFunctions = new HashMap<>();
 
     private static int labelCounter = 0;
-    private static final String MAIN_LABEL = "F_MAIN";
+    private static final String MAIN_LABEL = getFunctionLabel("MAIN");
 
     public GeneratorKoda(BufferedReader bufferedReader) {
         this.root = TreeParser.generateNodeTree(bufferedReader.lines()
@@ -50,11 +48,10 @@ public class GeneratorKoda {
     private void refresh() {
         memoryLocations = new HashMap<>();
         memoryArrays = new HashMap<>();
-        returnLabels = new LinkedList<>();
-        breakLabels = new LinkedList<>();
         global = false;
         codeBuilder = new CodeBuilder();
         labelCounter = 0;
+        includeFunctions = new HashMap<>();
     }
 
     public GeneratorKoda(Path inputPath) throws IOException {
@@ -78,7 +75,7 @@ public class GeneratorKoda {
         }
 
         sb.append(codeBuilder.getGlobalCode());
-        sb.append("\t\tCALL " + MAIN_LABEL + "\n");
+        sb.append("\t\tCALL ").append(MAIN_LABEL).append("\n");
         sb.append("\t\tHALT\n");
 
         addDefaultFunctions();
@@ -90,9 +87,12 @@ public class GeneratorKoda {
     }
 
     private void addDefaultFunctions() {
-        multiplyFunction();
-        divideFunction();
-        moduloFunction();
+        if (includeFunctions.getOrDefault(MUL_LABEL, false))
+            multiplyFunction();
+        if (includeFunctions.getOrDefault(DIV_LABEL, false))
+            divideFunction();
+        if (includeFunctions.getOrDefault(MOD_LABEL, false))
+            moduloFunction();
     }
 
     private void multiplyFunction() {
@@ -217,19 +217,19 @@ public class GeneratorKoda {
     }
 
     public static String getGlobalLabel(String name) {
-        return String.format("G_%S", name);
+        return String.format("GL_%S", name.toUpperCase());
     }
 
     public static String getFunctionLabel(String name) {
-        return String.format("F_%S", name.toUpperCase());
+        return String.format("FUN_%S", name.toUpperCase());
     }
 
     public static String getConstantLabel(String name) {
-        return String.format("C_%S", name.toUpperCase());
+        return String.format("CON_%S", name.toUpperCase());
     }
 
     public static String calculateNextLabel() {
-        return "L_" + labelCounter++;
+        return "LABEL_" + labelCounter++;
     }
 
     public static void main(String[] args) {

@@ -65,6 +65,7 @@ public class PostfiksIzrazNiz implements Action {
         for (var el : scope.getElements()) {
             if (el.isLExpression()) {
                 lVal = true;
+                break;
             }
         }
 
@@ -76,7 +77,10 @@ public class PostfiksIzrazNiz implements Action {
         GeneratorKoda.codeBuilder.addCommand("MOVE 4, R2");
         GeneratorKoda.codeBuilder.addCommand("PUSH R2");
         GeneratorKoda.codeBuilder.addCommand("PUSH R0");
+
         GeneratorKoda.codeBuilder.addCommand("CALL " + GeneratorKoda.MUL_LABEL);
+        GeneratorKoda.includeFunctions.put(GeneratorKoda.MUL_LABEL, true);
+
         GeneratorKoda.codeBuilder.addCommand("MOVE R6, R0");
         GeneratorKoda.codeBuilder.addCommand("ADD R7, 8, R7");
         GeneratorKoda.codeBuilder.addCommand("POP R6");

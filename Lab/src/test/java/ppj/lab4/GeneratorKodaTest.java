@@ -1,6 +1,7 @@
 package ppj.lab4;
 
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.Disabled;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -293,6 +294,7 @@ class GeneratorKodaTest {
     }
 
     @Test
+    @Disabled
     public void testExample25() throws IOException {
         Path root = Path.of("src/test/resources/lab4/ferDB/25_niz3");
         GeneratorKoda generatorKoda = new GeneratorKoda(root.resolve("test.in"));
@@ -392,6 +394,7 @@ class GeneratorKodaTest {
     }
 
     @Test
+    @Disabled
     public void testExample34() throws IOException {
         Path root = Path.of("src/test/resources/lab4/ferDB/34_izraz");
         GeneratorKoda generatorKoda = new GeneratorKoda(root.resolve("test.in"));
@@ -454,7 +457,7 @@ class GeneratorKodaTest {
             public void run() {
                 BufferedReader input = new BufferedReader(new InputStreamReader(p.getInputStream()));
 
-                String line = null;
+                String line;
 
                 try {
                     while ((line = input.readLine()) != null) {
