@@ -53,7 +53,7 @@ public class InitDeklaratorBez implements Action {
                 .collect(Collectors.toList());
 
         if (GeneratorKoda.global) {
-            String name = null;
+            String name;
 
 
             if (nextList.contains("IDN") && nextList.size() == 1) {
@@ -70,8 +70,6 @@ public class InitDeklaratorBez implements Action {
                 int numOfEl = Integer.parseInt((String) izravniDeklarator.getAttributeMap().get("numElem").getAttribute());
                 for (int i = 0; i < numOfEl; i++) {
                     list.add(0);
-                    //TODO WHAT?
-                    //GeneratorKoda.codeBuilder.addCommand("POP R0");
                 }
                 GeneratorKoda.memoryArrays.put(GeneratorKoda.getGlobalLabel(name), list);
             }

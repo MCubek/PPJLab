@@ -53,7 +53,6 @@ public class OdnosniIzrazOp implements Action {
             GeneratorKoda.codeBuilder.addCommand("LOAD R0, (R0)");
         }
 
-        //TODO STO JE OVO
         GeneratorKoda.codeBuilder.addCommand("MOVE 1, R2");
 
         String end = GeneratorKoda.calculateNextLabel();

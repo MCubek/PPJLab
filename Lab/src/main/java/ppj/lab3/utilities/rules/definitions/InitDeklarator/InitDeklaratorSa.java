@@ -104,7 +104,7 @@ public class InitDeklaratorSa implements Action {
 
         GeneratorKoda.codeBuilder.addCommand("PUSH R0");
         if (GeneratorKoda.global) {
-            String name = null;
+            String name;
 
             var nextList = production.getRightStateNodes().get(0).getChildren().stream()
                     .map(Node::getValue)
@@ -123,8 +123,6 @@ public class InitDeklaratorSa implements Action {
 
                 List<Integer> list = new ArrayList<>();
                 name = ((TerminalSymbol) production.getRightStateNodes().get(0).getChildren().get(0).getValue()).getLexicalUnits()[0];
-
-                //TODO Inicijalizator
 
                 GeneratorKoda.codeBuilder.addCommand("POP R0");
                 GeneratorKoda.codeBuilder.addCommand("MOVE " + GeneratorKoda.getGlobalLabel(name) + ", R1");

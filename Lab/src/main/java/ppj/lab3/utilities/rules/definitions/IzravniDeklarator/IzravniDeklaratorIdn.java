@@ -7,7 +7,6 @@ import ppj.lab3.utilities.rules.Action;
 import ppj.lab3.utilities.scope.Scope;
 import ppj.lab3.utilities.scope.ScopeElement;
 import ppj.lab3.utilities.symbols.TerminalSymbol;
-import ppj.lab4.GeneratorKoda;
 
 public class IzravniDeklaratorIdn implements Action {
 
@@ -30,12 +29,5 @@ public class IzravniDeklaratorIdn implements Action {
 
         //tip <- ntip
         production.getLeftState().addAttribute("type", new SimpleAttribute(ntype));
-
-
-        //TODO NOT WORKING!?!??!
-        if (production.getLeftStateNode().getParent().getChildren().size() == 1 &&
-                production.getLeftStateNode().getParent().getChildren().get(0).getValue().getSymbolName().equals("<izravni_deklarator>")
-        )
-            GeneratorKoda.codeBuilder.addCommand("PUSH R0 ; DEKL");
     }
 }
