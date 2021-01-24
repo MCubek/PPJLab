@@ -1,7 +1,7 @@
 package ppj.lab3.utilities.symbols;
 
 /**
- * Sučelje objekata stabla
+ * Sucelje objekata stabla
  *
  * @author MatejCubek, FraneB
  * @project PPJLab
@@ -9,16 +9,16 @@ package ppj.lab3.utilities.symbols;
  */
 public interface Symbol {
     /**
-     * Metoda koja vraća ime tipa objekta.
+     * Metoda koja vraca ime tipa objekta.
      *
      * @return tip objekta.
      */
     SYMBOL_TYPE getType();
 
     /**
-     * Metoda koja će vratiti ime leksičke jedinke
+     * Metoda koja ce vratiti ime leksicke jedinke
      *
-     * @return ime leksičke jedinke.
+     * @return ime leksicke jedinke.
      */
     String getSymbolName();
 

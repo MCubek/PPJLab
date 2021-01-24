@@ -10,6 +10,7 @@ import ppj.lab3.utilities.scope.Scope;
 import ppj.lab3.utilities.scope.ScopeElement;
 import ppj.lab3.utilities.symbols.NonTerminalSymbol;
 import ppj.lab3.utilities.symbols.TerminalSymbol;
+import ppj.lab4.GeneratorKoda;
 
 import java.util.Arrays;
 
@@ -18,11 +19,16 @@ public class DefinicijaFunkcijeParam implements Action {
 
     @Override
     public void checkProduction(SemanticProduction production, Scope scope) {
+
+        GeneratorKoda.codeBuilder.addCommandWithLabel(
+                GeneratorKoda.getFunctionLabel(((TerminalSymbol) production.getRightStates().get(1)).getLexicalUnits()[0]),
+                "MOVE R7, R6");
+
         //1. provjeri(<ime_tipa>)
         SemanticProduction productionToCheck = new SemanticProduction(production.getRightStateNodes().get(0));
-        RuleFactory ruleFactory= RuleFactory.getRuleFactory();
-        Action action= ruleFactory.getRuleMap().get(productionToCheck);
-        action.checkProduction(productionToCheck,scope);
+        RuleFactory ruleFactory = RuleFactory.getRuleFactory();
+        Action action = ruleFactory.getRuleMap().get(productionToCheck);
+        action.checkProduction(productionToCheck, scope);
         NonTerminalSymbol expression = (NonTerminalSymbol) production.getRightStates().get(0);
         String imeTipa = expression.getAttributeMap().get("type").getAttribute().toString();
 
@@ -45,15 +51,15 @@ public class DefinicijaFunkcijeParam implements Action {
         String[] paramNames = (String[]) expression.getAttributeMap().get("names").getAttribute();
 
         //5. ako postoji deklaracija imena IDN.ime u globalnom djelokrugu onda je pripadni
-        //tip te deklaracije funkcija(<lista_parametara>.tipovi → <ime_tipa>.tip)
+        //tip te deklaracije funkcija(<lista_parametara>.tipovi -> <ime_tipa>.tip)
         Scope globalScope = scope;
         while(globalScope.getParent() != null)
             globalScope = globalScope.getParent();
 
         StringBuilder paramTypesString = new StringBuilder();
-        for (String string : paramTypes) {
-            paramTypesString.append(string);
-            if (!Arrays.asList(paramTypes).get(Arrays.asList(paramTypes).size() - 1).equals(string))
+        for (int i = 0; i < paramTypes.length; i++) {
+            paramTypesString.append(paramTypes[i]);
+            if (i != paramTypes.length-1)
                 paramTypesString.append(", ");
         }
         String checkType = "funkcija(" + paramTypesString + " -> " + imeTipa + ")";
@@ -77,7 +83,10 @@ public class DefinicijaFunkcijeParam implements Action {
         production.getRightStateNodes().get(5).setValue(slozenaFunkcija);
 
         productionToCheck = new SemanticProduction(production.getRightStateNodes().get(5));
-        action= ruleFactory.getRuleMap().get(productionToCheck);
-        action.checkProduction(productionToCheck,scope);
+        action = ruleFactory.getRuleMap().get(productionToCheck);
+        action.checkProduction(productionToCheck, scope);
+
+        GeneratorKoda.codeBuilder.addCommand("MOVE R6, R7");
+        GeneratorKoda.codeBuilder.addCommand("RET");
     }
 }

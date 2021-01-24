@@ -19,7 +19,7 @@ public class ImeTipaBez implements Action {
         action.checkProduction(productionToCheck,scope);
         NonTerminalSymbol expression = (NonTerminalSymbol) production.getRightStates().get(0);
 
-        //tip ← <specifikator_tipa>.tip
+        //tip <- <specifikator_tipa>.tip
         production.getLeftState().addAttribute("type", new SimpleAttribute(expression.getAttributeMap().get("type").getAttribute().toString()));
     }
 }

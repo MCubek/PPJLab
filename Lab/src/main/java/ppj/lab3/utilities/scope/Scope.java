@@ -1,9 +1,10 @@
 package ppj.lab3.utilities.scope;
 
-import ppj.lab3.SemanticException;
-
 import java.nio.charset.StandardCharsets;
-import java.util.*;
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Objects;
+import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -82,11 +83,7 @@ public class Scope {
 
     @Override
     public String toString() {
-        return "Scope{" +
-                "parent=" + parent +
-                ", children=" + children +
-                ", elements=" + elements +
-                '}';
+        return "Scope";
     }
 
     public boolean isDefined(String name) {
@@ -156,5 +153,42 @@ public class Scope {
         Matcher matcher = Pattern.compile(".*\\\\[^tn0'\"\\\\].*").matcher(charArray);
 
         return ! matcher.find() && StandardCharsets.US_ASCII.newEncoder().canEncode(charArray);
+    }
+
+    public int getStackOffset(String name) {
+        Scope current = this;
+        do {
+            for(ScopeElement element : current.getElements()) {
+                if(element.getName().equals(name))
+                    return element.getOffset();
+            }
+            current = current.getParent();
+        } while(!(current == null) && !(current.getParent() == null));
+        return -1;
+    }
+
+    public int lastStackOffset() {
+        int min = 0;
+        Scope current = this;
+        do {
+            for (ScopeElement element : current.getElements()) {
+                if (element.getOffset() < min) {
+                    min = element.getOffset();
+                }
+            }
+            current = current.getParent();
+        } while (!(current == null) && !(current.getParent() == null));
+        return min;
+    }
+
+    public boolean isGlobal(String name) {
+        Scope current = this;
+        if(current.getParent() == null)
+            return true;
+        for(ScopeElement element : current.getElements()) {
+            if(element.getName().equals(name))
+                return false;
+        }
+        return current.getParent().isGlobal(name);
     }
 }

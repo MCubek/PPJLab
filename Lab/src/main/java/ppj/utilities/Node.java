@@ -58,6 +58,18 @@ public class Node<T> {
         }
     }
 
+    public boolean isInFunction() {
+        NonTerminalSymbol value = (NonTerminalSymbol) this.getValue();
+        if (value.getSymbolName().equals("<slozena_naredba>")) {
+            return true;
+        } else {
+            if(this.parent != null)
+                return this.parent.isInFunction();
+            else
+                return false;
+        }
+    }
+
     public String returnFunctionType() {
         NonTerminalSymbol value = (NonTerminalSymbol) this.getValue();
         if (value.getSymbolName().equals("<definicija_funkcije>")) {

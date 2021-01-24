@@ -13,7 +13,7 @@ public class ListaInitDeklaratoraVise implements Action {
     @Override
     public void checkProduction(SemanticProduction production, Scope scope) {
         //1. provjeri(<lista_init_deklaratora>2) uz nasljedno svojstvo
-        //<lista_init_deklaratora>2.ntip ← <lista_init_deklaratora>1.ntip
+        //<lista_init_deklaratora>2.ntip <- <lista_init_deklaratora>1.ntip
         String listaNTip = production.getLeftState().getAttributeMap().get("ntype").getAttribute().toString();
         NonTerminalSymbol listaInitDeklaratora = (NonTerminalSymbol) production.getRightStates().get(0);
         listaInitDeklaratora.addAttribute("ntype", new SimpleAttribute(listaNTip));
@@ -25,7 +25,7 @@ public class ListaInitDeklaratoraVise implements Action {
         action.checkProduction(productionToCheck,scope);
 
         //provjeri(<init_deklarator>) uz nasljedno svojstvo
-        //<init_deklarator>.ntip ← <lista_init_deklaratora>1.ntip
+        //<init_deklarator>.ntip <- <lista_init_deklaratora>1.ntip
         NonTerminalSymbol initDeklarator = (NonTerminalSymbol) production.getRightStates().get(2);
         initDeklarator.addAttribute("ntype", new SimpleAttribute(listaNTip));
         production.getRightStateNodes().get(2).setValue(initDeklarator);

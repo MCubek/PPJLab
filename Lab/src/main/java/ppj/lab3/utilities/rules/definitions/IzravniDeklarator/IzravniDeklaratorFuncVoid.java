@@ -14,7 +14,7 @@ public class IzravniDeklaratorFuncVoid implements Action {
     @Override
     public void checkProduction(SemanticProduction production, Scope scope) {
         //1. ako je IDN.ime deklarirano u lokalnom djelokrugu, tip prethodne deklaracije
-        //je jednak funkcija(void → ntip)
+        //je jednak funkcija(void -> ntip)
         String ntype = production.getLeftState().getAttributeMap().get("ntype").getAttribute().toString();
         TerminalSymbol idn = (TerminalSymbol) production.getRightStates().get(0);
         String idnName = idn.getLexicalUnits()[0];
@@ -29,7 +29,7 @@ public class IzravniDeklaratorFuncVoid implements Action {
             scope.addScopeElement(new ScopeElement(idnName, checkType, false, false));
         }
 
-        //tip ← funkcija(void → ntip)
+        //tip <- funkcija(void -> ntip)
         production.getLeftState().addAttribute("type", new SimpleAttribute(checkType));
     }
 }

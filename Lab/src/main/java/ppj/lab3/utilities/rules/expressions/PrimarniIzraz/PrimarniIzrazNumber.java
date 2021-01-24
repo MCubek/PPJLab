@@ -5,8 +5,8 @@ import ppj.lab3.utilities.SemanticProduction;
 import ppj.lab3.utilities.attributes.SimpleAttribute;
 import ppj.lab3.utilities.rules.Action;
 import ppj.lab3.utilities.scope.Scope;
-import ppj.lab3.utilities.symbols.Symbol;
 import ppj.lab3.utilities.symbols.TerminalSymbol;
+import ppj.lab4.GeneratorKoda;
 
 
 public class PrimarniIzrazNumber implements Action {
@@ -16,11 +16,17 @@ public class PrimarniIzrazNumber implements Action {
         TerminalSymbol number = (TerminalSymbol) production.getRightStates().get(0);
         try {
             //1. vrijednost je u rasponu tipa int
-            Integer.parseInt(number.getLexicalUnits()[0]);
-            //tip ← int
-            //l-izraz ← 0
+            var value = Integer.parseInt(number.getLexicalUnits()[0]);
+            //tip <- int
+            //l-izraz <- 0
             production.getLeftState().addAttribute("type", new SimpleAttribute("int"));
-            production.getLeftState().addAttribute("lExpression",new SimpleAttribute("false"));
+            production.getLeftState().addAttribute("lExpression", new SimpleAttribute("false"));
+
+            String label = GeneratorKoda.getConstantLabel(String.valueOf(value));
+            GeneratorKoda.memoryLocations.put(label, value);
+            GeneratorKoda.codeBuilder.addCommand(String.format("LOAD R0, (%S)", label));
+            GeneratorKoda.codeBuilder.addCommand("PUSH R0");
+
         } catch (NumberFormatException exception) {
             throw new SemanticException(production.toString());
         }

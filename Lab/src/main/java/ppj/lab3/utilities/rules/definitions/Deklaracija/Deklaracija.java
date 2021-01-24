@@ -21,7 +21,7 @@ public class Deklaracija implements Action {
         String imeTipa = expression.getAttributeMap().get("type").getAttribute().toString();
 
         //2. provjeri(<lista_init_deklaratora>) uz nasljedno svojstvo
-        //<lista_init_deklaratora>.ntip ← <ime_tipa>.tip
+        //<lista_init_deklaratora>.ntip <- <ime_tipa>.tip
         NonTerminalSymbol listaInitDeklaratora = (NonTerminalSymbol) production.getRightStates().get(1);
         listaInitDeklaratora.addAttribute("ntype", new SimpleAttribute(imeTipa));
         production.getRightStateNodes().get(1).setValue(listaInitDeklaratora);

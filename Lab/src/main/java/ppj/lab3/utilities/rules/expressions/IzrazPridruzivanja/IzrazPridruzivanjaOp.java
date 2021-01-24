@@ -7,8 +7,7 @@ import ppj.lab3.utilities.rules.Action;
 import ppj.lab3.utilities.rules.RuleFactory;
 import ppj.lab3.utilities.scope.Scope;
 import ppj.lab3.utilities.symbols.NonTerminalSymbol;
-
-import static ppj.lab3.utilities.rules.RuleFactory.implicitCast;
+import ppj.lab4.GeneratorKoda;
 
 public class IzrazPridruzivanjaOp implements Action {
 
@@ -31,19 +30,29 @@ public class IzrazPridruzivanjaOp implements Action {
 
         //3. provjeri(<izraz_pridruzivanja>)
         productionToCheck = new SemanticProduction(production.getRightStateNodes().get(2));
-        action= ruleFactory.getRuleMap().get(productionToCheck);
-        action.checkProduction(productionToCheck,scope);
+        action = ruleFactory.getRuleMap().get(productionToCheck);
+        action.checkProduction(productionToCheck, scope);
         expression = (NonTerminalSymbol) production.getRightStates().get(2);
         String pridruzivanjeType = expression.getAttributeMap().get("type").getAttribute().toString();
 
-        //4. <izraz_pridruzivanja>.tip ∼ <postfiks_izraz>.tip
-        if(!implicitCast(pridruzivanjeType,postfiksType)) {
+        //4. <izraz_pridruzivanja>.tip ?= <postfiks_izraz>.tip
+        if (! RuleFactory.implicitCast(pridruzivanjeType, postfiksType)) {
             throw new SemanticException(production.toString());
         }
 
-        //tip ← <postfiks_izraz>.tip
-        //l-izraz ← 0
+        //tip <- <postfiks_izraz>.tip
+        //l-izraz <- 0
         production.getLeftState().addAttribute("type", new SimpleAttribute(postfiksType));
         production.getLeftState().addAttribute("lExpression", new SimpleAttribute("false"));
+
+        GeneratorKoda.codeBuilder.addCommand("POP R1");
+        GeneratorKoda.codeBuilder.addCommand("POP R0");
+
+        if (expression.getAttributeMap().get("lExpression").getAttribute().equals("true")) {
+            GeneratorKoda.codeBuilder.addCommand("LOAD R1, (R1)");
+        }
+
+        GeneratorKoda.codeBuilder.addCommand("STORE R1, (R0)");
+        GeneratorKoda.codeBuilder.addCommand("PUSH R1");
     }
 }

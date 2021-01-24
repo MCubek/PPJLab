@@ -14,11 +14,22 @@ public class ScopeElement {
     private final boolean isLExpression;
     private final boolean isDefined;
 
+    private int offset;
+
     public ScopeElement(String name, String type, boolean isLExpression, boolean isDefined) {
         this.name = name;
         this.type = type;
         this.isLExpression = isLExpression;
         this.isDefined = isDefined;
+        this.offset = 0;
+    }
+
+    public ScopeElement(String name, String type, boolean isLExpression, boolean isDefined, int offset) {
+        this.name = name;
+        this.type = type;
+        this.isLExpression = isLExpression;
+        this.isDefined = isDefined;
+        this.offset = offset;
     }
 
     public String getName() {
@@ -37,6 +48,14 @@ public class ScopeElement {
         return isDefined;
     }
 
+    public int getOffset() {
+        return offset;
+    }
+
+    public void setOffset(int offset) {
+        this.offset = offset;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -52,11 +71,6 @@ public class ScopeElement {
 
     @Override
     public String toString() {
-        return "ScopeElement{" +
-                "name='" + name + '\'' +
-                ", type='" + type + '\'' +
-                ", isLExpression=" + isLExpression +
-                ", isDefined=" + isDefined +
-                '}';
+        return "ScopeElement";
     }
 }
