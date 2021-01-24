@@ -73,6 +73,7 @@ public class GeneratorKoda {
         try {
             action.checkProduction(start, new Scope(null));
         } catch (SemanticException e) {
+            e.printStackTrace();
             return e.getMessage();
         }
 
