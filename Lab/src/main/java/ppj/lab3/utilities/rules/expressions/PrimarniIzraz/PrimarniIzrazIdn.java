@@ -41,7 +41,23 @@ public class PrimarniIzrazIdn implements Action {
                 GeneratorKoda.codeBuilder.addCommand("ADD R6, %D " + scope.getStackOffset(name) + ", R0");
             }
 
-            if (foundElement.isLExpression()) {
+            boolean isOnly = true;
+            boolean checkArguement = false;
+            Node parent = production.getLeftStateNode().getParent();
+            while(parent != null) {
+                if(parent.getValue().toString().equals("<lista_argumenata>")) {
+                    checkArguement = true & isOnly;
+                    break;
+                }
+                if(parent.getChildren().size() > 1) {
+                    isOnly = false;
+                }
+                parent = parent.getParent();
+            }
+
+            if (checkArguement && (foundElement.isLExpression() || foundElement.getType().contains("niz"))) {
+                GeneratorKoda.codeBuilder.addCommand("LOAD R0, (R0)");
+            } else if(!checkArguement && !foundElement.isLExpression() && !foundElement.getType().contains("niz")) {
                 GeneratorKoda.codeBuilder.addCommand("LOAD R0, (R0)");
             }
 
