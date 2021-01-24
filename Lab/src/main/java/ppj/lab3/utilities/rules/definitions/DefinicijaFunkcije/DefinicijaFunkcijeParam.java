@@ -57,9 +57,9 @@ public class DefinicijaFunkcijeParam implements Action {
             globalScope = globalScope.getParent();
 
         StringBuilder paramTypesString = new StringBuilder();
-        for (String string : paramTypes) {
-            paramTypesString.append(string);
-            if (!Arrays.asList(paramTypes).get(Arrays.asList(paramTypes).size() - 1).equals(string))
+        for (int i = 0; i < paramTypes.length; i++) {
+            paramTypesString.append(paramTypes[i]);
+            if (i != paramTypes.length-1)
                 paramTypesString.append(", ");
         }
         String checkType = "funkcija(" + paramTypesString + " -> " + imeTipa + ")";
