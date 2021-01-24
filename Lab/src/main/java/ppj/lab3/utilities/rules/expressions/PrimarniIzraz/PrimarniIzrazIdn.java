@@ -33,13 +33,18 @@ public class PrimarniIzrazIdn implements Action {
         if (! foundElement.getType().contains("funkcija")) {
 
             if (production.getLeftStateNode().isInFunction()) {
-                if(scope.isGlobal(name))
+                if (scope.isGlobal(name))
                     GeneratorKoda.codeBuilder.addCommand("MOVE " + GeneratorKoda.getGlobalLabel(name) + ", R0");
                 else
                     GeneratorKoda.codeBuilder.addCommand("ADD R6, %D " + scope.getStackOffset(name) + ", R0");
             } else {
                 GeneratorKoda.codeBuilder.addCommand("ADD R6, %D " + scope.getStackOffset(name) + ", R0");
             }
+
+            if (foundElement.isLExpression()) {
+                GeneratorKoda.codeBuilder.addCommand("LOAD R0, (R0)");
+            }
+
             GeneratorKoda.codeBuilder.addCommand("PUSH R0");
         }
     }

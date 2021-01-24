@@ -76,6 +76,5 @@ public class InitDeklaratorBez implements Action {
 
             GeneratorKoda.global = false;
         }
-
     }
 }
