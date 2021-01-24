@@ -20,13 +20,13 @@ public class PostfiksIzrazNiz implements Action {
         //1. provjeri(<postfiks_izraz>)
         SemanticProduction productionToCheck = new SemanticProduction(production.getRightStateNodes().get(0));
         //pozovi funkciju iz mape
-        RuleFactory ruleFactory= RuleFactory.getRuleFactory();
-        Action action= ruleFactory.getRuleMap().get(productionToCheck);
-        action.checkProduction(productionToCheck,scope);
+        RuleFactory ruleFactory = RuleFactory.getRuleFactory();
+        Action action = ruleFactory.getRuleMap().get(productionToCheck);
+        action.checkProduction(productionToCheck, scope);
         NonTerminalSymbol expression = (NonTerminalSymbol) production.getRightStates().get(0);
 
         //2. <postfiks_izraz>.tip = niz (X )
-        String[] X = {"niz(int)","niz(char)","niz(const(int))","niz(const(char))"};
+        String[] X = {"niz(int)", "niz(char)", "niz(const(int))", "niz(const(char))"};
         List<String> listX = Arrays.asList(X);
         String type = expression.getAttributeMap().get("type").getAttribute().toString();
         if (! listX.contains(type)) {
@@ -57,7 +57,20 @@ public class PostfiksIzrazNiz implements Action {
         GeneratorKoda.codeBuilder.addCommand("POP R0");
         GeneratorKoda.codeBuilder.addCommand("POP R1");
 
-        //TODO CHeck l-value?
+        if (expression.getAttributeMap().get("lExpression").getAttribute().equals("true")) {
+            GeneratorKoda.codeBuilder.addCommand("LOAD R0, (R0)");
+        }
+
+        boolean lVal = false;
+        for (var el : scope.getElements()) {
+            if (el.isLExpression()) {
+                lVal = true;
+            }
+        }
+
+        if (lVal) {
+            GeneratorKoda.codeBuilder.addCommand("LOAD R1, (R1)");
+        }
 
         GeneratorKoda.codeBuilder.addCommand("PUSH R6");
         GeneratorKoda.codeBuilder.addCommand("MOVE 4, R2");
