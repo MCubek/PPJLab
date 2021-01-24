@@ -13,6 +13,12 @@ public class NaredbaPetljeWhile implements Action {
 
     @Override
     public void checkProduction(SemanticProduction production, Scope scope) {
+
+        String start = GeneratorKoda.calculateNextLabel();
+        String end = GeneratorKoda.calculateNextLabel();
+
+        GeneratorKoda.codeBuilder.addCommandWithLabel(start, "");
+
         //1. provjeri(<izraz>)
         SemanticProduction productionToCheck = new SemanticProduction(production.getRightStateNodes().get(2));
         RuleFactory ruleFactory = RuleFactory.getRuleFactory();
@@ -20,11 +26,6 @@ public class NaredbaPetljeWhile implements Action {
         action.checkProduction(productionToCheck, scope);
         NonTerminalSymbol symbol = (NonTerminalSymbol) production.getRightStates().get(2);
         String type = symbol.getAttributeMap().get("type").getAttribute().toString();
-
-        String start = GeneratorKoda.calculateNextLabel();
-        String end = GeneratorKoda.calculateNextLabel();
-
-        GeneratorKoda.codeBuilder.addCommandWithLabel(start, "");
 
         //2. <izraz>.tip ?= int
         if (! RuleFactory.implicitCast(type, "int")) {
