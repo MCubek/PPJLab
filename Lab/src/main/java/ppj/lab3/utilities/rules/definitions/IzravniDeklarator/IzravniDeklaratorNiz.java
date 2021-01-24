@@ -32,7 +32,7 @@ public class IzravniDeklaratorNiz implements Action {
 
         //4. zabiljezi deklaraciju IDN.ime s odgovarajucim tipom
         String newType = "niz(" + ntype + ")";
-        int offsetValue = scope.lastStackOffset() -4*Integer.parseInt(numberValue) - 1;
+        int offsetValue = scope.lastStackOffset() -4*Integer.parseInt(numberValue);
         scope.addScopeElement(new ScopeElement(idnName, newType, true, false, offsetValue));
 
         //tip <- niz (ntip)
